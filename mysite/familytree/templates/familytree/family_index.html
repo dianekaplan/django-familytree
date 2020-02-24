@@ -1,0 +1,9 @@
+{% if family_list %}
+    <ul>
+    {% for family in family_list %}
+        <li><a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No families are available.</p>
+{% endif %}

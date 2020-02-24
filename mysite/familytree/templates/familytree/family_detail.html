@@ -1,0 +1,19 @@
+<h3>{{ family.display_name }}</h3>
+
+<!-- @@TODO: update to use person links, after foreign key stuff is worked out-->
+Partner 1: {{ family.partner1 }} <br/>
+Partner 2: {{ family.partner2 }}<br/>
+<br/>
+
+{% if kids %}
+List of kids:<br/>
+<ul>
+    {% for kid in kids %}
+    <li><a href="{% url 'person_detail' kid.id %}">{{ kid.display_name }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+
+<a href="{% url 'family_index' %}">Family index</a>

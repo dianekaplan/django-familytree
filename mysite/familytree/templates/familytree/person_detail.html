@@ -1,0 +1,14 @@
+
+<h3>{{ person.display_name }}</h3>
+
+{% if families_made %}
+This person made family:
+<ul>
+    {% for family in families_made %}
+        <li><a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<a href="{% url 'person_index' %}">Person index</a>
