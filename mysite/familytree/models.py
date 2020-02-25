@@ -9,7 +9,8 @@ class Person(models.Model):
     dob = models.DateField(null=True)
     dob_string = models.CharField(max_length=30, blank=True, default='')
     dob_place = models.CharField(max_length=30, blank=True, default='')
-    origin_family= models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL)
+    origin_family = models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL)
+    orig_fam_indi = models.CharField(max_length=30, blank=True, default='')
     sex = models.CharField(max_length=2, blank=True, default='')
     occupation = models.CharField(max_length=75, blank=True, default='')
     death_place = models.CharField(max_length=30, blank=True, default='')
@@ -26,7 +27,8 @@ class Family(models.Model):
     partner2 = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='partner2')
     wife_indi = models.CharField(max_length=10, blank=True, default='')
     husband_indi = models.CharField(max_length=10, blank=True, default='')
-    no_kids = bool
+    child_indi = models.CharField(max_length=10, blank=True, default='')
+    no_kids = models.BooleanField(null=True)
     marriage_date = models.DateField(null=True)
     marriage_date_string = models.CharField(max_length=30, blank=True, default='')
 

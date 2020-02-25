@@ -67,7 +67,10 @@ class Command(BaseCommand):
 
 
                 if isinstance(element, FamilyElement):
+                    gedcom_indi = str(element).replace(" FAM", "").replace("0 ", "")
                     gedcom_family_records += 1
+                    no_kids_bool = True
+                    child_indi = ""
                     element_children = element.get_child_elements()
                     for child in element_children:
                         print(element.to_gedcom_string(recursive=True))
@@ -83,11 +86,15 @@ class Command(BaseCommand):
                             wife_indi = str(child).replace("1 WIFE ", "")
                         if "HUSB" in str(child):
                             husband_indi = str(child).replace("1 HUSB ", "")
+                        if "CHIL" in str(child):
+                           no_kids_bool = False
+                           child_indi += str(child).replace("1 CHIL ", "").replace("\r\n", "")
 
                     display_name = wife_indi + " & " + husband_indi
                     (obj, created_bool) = Family.objects.get_or_create(gedcom_indi=gedcom_indi, display_name = display_name,
                                                                        wife_indi=wife_indi, husband_indi=husband_indi,
-                                                                       marriage_date_string=marriage_date)
+                                                                       marriage_date_string=marriage_date, no_kids = no_kids_bool,
+                                                                       child_indi = child_indi)
                     if created_bool:
                         family_added_count += 1
 
