@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Person(models.Model):
+    gedcom_indi = models.CharField(max_length=30, blank=True, default='')
     first_name = models.CharField(max_length=30, blank=True, default='')
     last_name = models.CharField(max_length=30, blank=True, default='')
     display_name = models.CharField(max_length=40)
@@ -19,9 +20,12 @@ class Person(models.Model):
 
 
 class Family(models.Model):
+    gedcom_indi = models.CharField(max_length=10, blank=True, default='')
     display_name = models.CharField(max_length=50)
     partner1 = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='partner1')
     partner2 = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='partner2')
+    wife_indi = models.CharField(max_length=10, blank=True, default='')
+    husband_indi = models.CharField(max_length=10, blank=True, default='')
     no_kids = bool
     marriage_date = models.DateField(null=True)
     marriage_date_string = models.CharField(max_length=30, blank=True, default='')
