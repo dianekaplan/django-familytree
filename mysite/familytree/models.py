@@ -3,10 +3,11 @@ from django.db import models
 
 class Person(models.Model):
     gedcom_indi = models.CharField(max_length=30, blank=True, default='')
+    gedcom_UUID = models.CharField(max_length=30, blank=True, default='')
     first_name = models.CharField(max_length=30, blank=True, default='')
     last_name = models.CharField(max_length=30, blank=True, default='')
     display_name = models.CharField(max_length=40)
-    dob = models.DateField(null=True)
+    dob = models.DateField(null=True, blank=True)
     dob_string = models.CharField(max_length=30, blank=True, default='')
     dob_place = models.CharField(max_length=30, blank=True, default='')
     origin_family = models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL)
@@ -15,6 +16,7 @@ class Person(models.Model):
     occupation = models.CharField(max_length=75, blank=True, default='')
     death_place = models.CharField(max_length=30, blank=True, default='')
     death_date_note = models.CharField(max_length=30, blank=True, default='')
+    hidden = models.BooleanField(null=False, default=False)
 
     def __str__(self):
         return self.display_name

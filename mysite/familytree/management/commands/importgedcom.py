@@ -19,53 +19,51 @@ class Command(BaseCommand):
         person_added_count = 0;
         family_added_count = 0;
 
-        #filename = Path("Test_tree.ged") # @@TODO: take this out when you learn to properly add configuration
-
         # validate that the user gave file with extension ged
         if filename.suffix!= '.ged':
             raise CommandError('Please specify GEDCOM file, ex: myGedcom.ged')
 
         # Check that the file is there
-        path = Path("familytree/management/commands/gedcom_files/")
+        path = Path("familytree/management/commands/gedcom_files/") # @@TODO: update to take the whole path (so it doesn't need to be saved in a particular folder)
         path_plus_file = path.joinpath(filename)
 
         if (path_plus_file.is_file()):
-            gedcom_parser = Parser()  # Initialize the parser
-            gedcom_parser.parse_file(path_plus_file) # Parse your file
+            gedcom_parser = Parser()
+            gedcom_parser.parse_file(path_plus_file)
             root_child_elements = gedcom_parser.get_root_child_elements()
 
-            # Iterate through all root child elements
             for element in root_child_elements:
 
-                # Is the `element` an actual `IndividualElement`? (Allows usage of extra functions such as `surname_match` and `get_name`.)
+                # find/add any person record as a person
                 if isinstance(element, IndividualElement):
                     gedcom_person_records += 1
-
-                    # Unpack the name tuple
                     (gedcom_first_middle, last) = element.get_name()
+                    gedcom_UUID = ''
 
                     if "INDI" in str(element):
                         gedcom_indi = str(element).replace(" INDI", "").replace("0 ", "")
+                    # get the fields available from our parser
+                    (birthdate, birthplace, sources) = element.get_birth_data()
+                    sex = element.get_gender()
+                    occupation = element.get_occupation()
+                    (deathdate, deathplace, sources) = element.get_death_data()
+                    display_name = gedcom_first_middle + " " + last
 
+                    # check the children for our custom UUID field
                     element_children = element.get_child_elements()
                     for child in element_children:
-                        print(element.to_gedcom_string(recursive=True))
+                       # print(element.to_gedcom_string(recursive=True))
+                        if "ALIA" in str(child):
+                            gedcom_UUID = str(child).replace("1 ALIA ", "")
 
-                        (birthdate, birthplace, sources) = element.get_birth_data()
-                        sex = element.get_gender()
-                        occupation = element.get_occupation()
-                        (deathdate, deathplace, sources) = element.get_death_data()
+                    (obj, created_bool) = Person.objects.get_or_create(gedcom_indi = gedcom_indi, gedcom_UUID = gedcom_UUID, first_name=gedcom_first_middle, last_name=last, display_name=display_name, dob_string = birthdate, dob_place=birthplace, sex=sex, occupation=occupation, death_date_note=deathdate, death_place=deathplace)
+                    if created_bool:
+                        person_added_count += 1
 
-                        display_name = gedcom_first_middle + " " + last
-                        person_info = gedcom_first_middle + " " + last + "\t" + "birthday info: " + birthdate + " " + birthplace + "\t sex: " + sex + " occupation: " + occupation + " Death info: " + deathdate, deathplace, sources
-                        print(person_info)
+                    person_info = gedcom_first_middle + " " + last + " gedcom_UUID: " + gedcom_UUID + "birthday info: " + birthdate + " " + birthplace + "\t sex: " + sex + " occupation: " + occupation + " Death info: " + deathdate, deathplace, sources
+                    print(person_info)
 
-                        (obj, created_bool) = Person.objects.get_or_create(gedcom_indi = gedcom_indi, first_name=gedcom_first_middle, last_name=last, display_name=display_name, dob_string = birthdate, dob_place=birthplace, sex=sex, occupation=occupation, death_date_note=deathdate, death_place=deathplace)
-                        if created_bool:
-                            person_added_count += 1
-                    #print(element.to_gedcom_string(recursive=True))
-
-
+                # find/add any family record as a family
                 if isinstance(element, FamilyElement):
                     gedcom_indi = str(element).replace(" FAM", "").replace("0 ", "")
                     gedcom_family_records += 1
