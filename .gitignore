@@ -31,4 +31,17 @@ media
 
 # Python #
 *.py[cod]
-*$py.class 
+*$py.class
+
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+../.idea/*
+../.idea/.name
+../.idea/family-django.iml
+../.idea/familytree-django.iml
+../.idea/modules.xml
+../.idea/workspace.xml
