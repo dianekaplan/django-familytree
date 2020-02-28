@@ -20,13 +20,10 @@ def person_index(request):
 def person_detail(request, person_id):
     person = get_object_or_404(Person, pk=person_id)
 
-    # @TODO: come back and fix for both parents- this way doesn't work (all end up 404)
-    # right_list = get_list_or_404(Family, partner1=person_id)
-    # left_list = get_list_or_404(Family, partner2=person_id)
-    # families_made = right_list & left_list
-
     try:
-        families_made = Family.objects.filter(partner1=person_id)
+        wife_of = Family.objects.filter(wife=person_id)
+        husband_of = Family.objects.filter(husband=person_id)
+        families_made = wife_of | husband_of
     except Family.DoesNotExist:
         families_made = None
 
@@ -40,14 +37,4 @@ def family_detail(request, family_id):
     except Person.DoesNotExist:
         kids = None
 
-    #
-    #kids = get_list_or_404(Person, origin_family=family_id)
     return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids})
-
-
-# def results(request, question_id):
-#     response = "You're looking at the results of question %s."
-#     return HttpResponse(response % question_id)
-#
-# def vote(request, question_id):
-#     return HttpResponse("You're voting on question %s." % question_id)
