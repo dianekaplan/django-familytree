@@ -1,0 +1,47 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+#exclude any gedcom file
+*.gedcom
+
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
+
+# Backup files #
+*.bak
+
+# If you are using PyCharm #
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.xml
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/gradle.xml
+.idea/**/libraries
+*.iws /out/
+
+# Python #
+*.py[cod]
+*$py.class
+
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+../.idea/*
+../.idea/.name
+../.idea/family-django.iml
+../.idea/familytree-django.iml
+../.idea/modules.xml
+../.idea/workspace.xml

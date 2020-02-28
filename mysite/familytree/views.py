@@ -8,12 +8,12 @@ def index(request):
     return HttpResponse("Here is the familytree index.")
 
 def family_index(request):
-    family_list = Family.objects.order_by('-display_name')[:25]
+    family_list = Family.objects.order_by('-display_name')
     context = { 'family_list': family_list}
     return render(request, 'familytree/family_index.html', context)
 
 def person_index(request):
-    person_list = Person.objects.order_by('-display_name')[:25]
+    person_list = Person.objects.order_by('-display_name') # add this to limit list displayed: [:125]
     context = { 'person_list': person_list}
     return render(request, 'familytree/person_index.html', context)
 
