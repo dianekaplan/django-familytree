@@ -34,7 +34,7 @@ class Family(models.Model):
     husband_indi = models.CharField(max_length=10, blank=True, default='')
     child_indi = models.CharField(max_length=10, blank=True, default='')
     no_kids = models.BooleanField(null=True)
-    marriage_date = models.DateField(null=True)
+    marriage_date = models.DateField(null=True, blank=True)
     marriage_date_string = models.CharField(max_length=30, blank=True, default='')
 
     class Meta(object):
