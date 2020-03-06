@@ -127,12 +127,18 @@ class Command(BaseCommand):
                         marriage_date = str(item).replace("2 DATE ", "")
             if "WIFE" in str(child):
                 wife_indi = str(child).replace("1 WIFE ", "").replace("\r\n", "")
-                this_person = Person.objects.get(gedcom_indi=wife_indi) #this person does not exist for our family @F118@
-                wife = this_person
+                try:
+                    this_person = Person.objects.get(gedcom_indi=wife_indi) #this person does not exist for our family @F118@
+                    wife = this_person
+                except:
+                    print("For family " + gedcom_indi + ", couldn't find person matching wife_indi " + wife_indi)
             if "HUSB" in str(child):
                 husband_indi = str(child).replace("1 HUSB ", "").replace("\r\n", "")
-                this_person = Person.objects.get(gedcom_indi=husband_indi)
-                husband = this_person
+                try:
+                    this_person = Person.objects.get(gedcom_indi=husband_indi)
+                    husband = this_person
+                except:
+                    print("For family " + gedcom_indi + ", couldn't find person matching husband_indi " + husband_indi)
             if "CHIL" in str(child):
                 no_kids_bool = False
                 child_indi = str(child).replace("1 CHIL ", "").replace("\r\n",
@@ -167,6 +173,6 @@ class Command(BaseCommand):
             this_person.save()
 
     def check_matching_record(self, matching_record, element):
-        print("This person exists already: " + matching_record.first)
+        print("This record with ALIA tag exists already: " + matching_record.first + " " +  matching_record.last)
         skip_record = True
         return skip_record
