@@ -1,5 +1,9 @@
 
-<h3>{{ person.display_name }}</h3>
+{%  if person.display_name %}
+    <h3>{{ person.display_name }}</h3>
+{%  else %}
+    <h3>{{ person.first }} {{ person.last }}</h3>
+{%  endif %}
 
 {% if families_made %}
 This person made family:

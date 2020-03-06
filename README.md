@@ -9,6 +9,10 @@ Background info about IDs:
 
 
 Setup/data import: 
+- For local environment, update .bash_profile with: 
+export ENV_ROLE=development
+export FAMILY_LOCAL_DB_PASS=[your local password]
+
 - save gedcom file in expected place (to start: mysite/familytree/management/commands/gedcom_files)
 - run in directory with manage.py: python3 manage.py importgedcom your_file.ged
 
