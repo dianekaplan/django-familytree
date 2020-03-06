@@ -1,15 +1,30 @@
 <h3>{{ family.display_name }}</h3>
 
-<!-- @@TODO: update to use person links, after foreign key stuff is worked out-->
-wife: {{ family.wife }} <br/>
-husband: {{ family.husband }}<br/>
+wife:
+        {%  if family.wife.display_name %}
+            <a href="{% url 'person_detail' family.wife.id %}">{{ family.wife.display_name }}</a>
+        {%  else %}
+            <a href="{% url 'person_detail' family.wife.id %}">{{ family.wife.first }} {{ family.wife.last }}</a>
+        {%  endif %}
 <br/>
 
+husband:
+        {%  if family.husband.display_name %}
+            <a href="{% url 'person_detail' family.husband.id %}">{{ family.husband.display_name }}</a>
+        {%  else %}
+            <a href="{% url 'person_detail' family.husband.id %}">{{ family.husband.first }} {{ family.husband.last }}</a>
+        {%  endif %}
+<br/>
+<br/>
 {% if kids %}
 List of kids:<br/>
 <ul>
     {% for kid in kids %}
-    <li><a href="{% url 'person_detail' kid.id %}">{{ kid.display_name }}</a></li>
+        {%  if kid.display_name %}
+            <li><a href="{% url 'person_detail' kid.id %}">{{ kid.display_name }}</a></li>
+        {%  else %}
+            <li><a href="{% url 'person_detail' kid.id %}">{{ kid.first }} {{ kid.last }}</a></li>
+        {%  endif %}
     {% endfor %}
 </ul>
 {% endif %}

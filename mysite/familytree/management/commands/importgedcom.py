@@ -85,10 +85,10 @@ class Command(BaseCommand):
 
         # make the person record
         (obj, created_bool) = Person.objects.get_or_create(gedcom_indi=gedcom_indi, gedcom_UUID=gedcom_UUID,
-                                                           first_name=gedcom_first_middle, last_name=last,
-                                                           display_name=display_name, dob_string=birthdate,
-                                                           dob_place=birthplace, sex=sex, occupation=occupation,
-                                                           death_date_note=deathdate, death_place=deathplace)
+                                                           first=gedcom_first_middle, last=last,
+                                                           display_name=display_name, birthdate_note=birthdate,
+                                                           birthplace=birthplace, sex=sex, work=occupation,
+                                                           deathdate_note=deathdate, resting_place=deathplace)
         if created_bool:
             self.person_added_count += 1
 
@@ -132,7 +132,7 @@ class Command(BaseCommand):
 
         (obj, created_bool) = Family.objects.get_or_create(gedcom_indi=gedcom_indi, display_name=display_name,
                                                            wife_indi=wife_indi, husband_indi=husband_indi,
-                                                           marriage_date_string=marriage_date, no_kids=no_kids_bool)
+                                                           marriage_date_note=marriage_date, no_kids_bool=no_kids_bool)
 
         # then link the parents that are known
         if wife != "":
