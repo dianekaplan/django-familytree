@@ -12,6 +12,7 @@ class Command(BaseCommand):
     gedcom_family_records = 0;
     person_added_count = 0;
     family_added_count = 0;
+    person_skipped_count = 0;
     child_family_dict = {}
 
     def add_arguments(self, parser):
@@ -53,6 +54,7 @@ class Command(BaseCommand):
         run_results = 'gedcom_person_records: ' + str(self.gedcom_person_records) +  '\n'
         run_results += 'gedcom_family_records: ' + str(self.gedcom_family_records) +  '\n'
         run_results += 'person_added_count: ' + str(self.person_added_count) +  '\n'
+        run_results += 'person_skipped_count: ' + str(self.person_skipped_count) +  '\n'
         run_results += 'family_added_count: ' + str(self.family_added_count) +  '\n'
 
         # Display and log them
@@ -66,6 +68,7 @@ class Command(BaseCommand):
         self.gedcom_person_records += 1
         (gedcom_first_middle, last) = element.get_name()
         gedcom_UUID = ''
+        skip_record = False
 
         if "INDI" in str(element):
             gedcom_indi = str(element).replace(" INDI", "").replace("0 ", "").replace("\r\n", "")
@@ -81,16 +84,26 @@ class Command(BaseCommand):
         for child in element_children:
             # print(element.to_gedcom_string(recursive=True))
             if "ALIA" in str(child):
-                gedcom_UUID = str(child).replace("1 ALIA ", "")
+                gedcom_UUID = str(child).replace("1 ALIA ", "").replace("\r\n", "")
 
-        # make the person record
-        (obj, created_bool) = Person.objects.get_or_create(gedcom_indi=gedcom_indi, gedcom_UUID=gedcom_UUID,
+                try:
+                    matching_record = Person.objects.get(gedcom_UUID=gedcom_UUID)
+                    if matching_record != "":
+                        skip_record = self.check_matching_record(matching_record, element)
+                except:
+                    print(gedcom_first_middle + " " + last + " gedcom record with ALIA tag had no matching value in our data")
+
+        if not skip_record:
+            # make the person record
+            (obj, created_bool) = Person.objects.get_or_create(gedcom_indi=gedcom_indi, gedcom_UUID=gedcom_UUID,
                                                            first=gedcom_first_middle, last=last,
                                                            display_name=display_name, birthdate_note=birthdate,
                                                            birthplace=birthplace, sex=sex, work=occupation,
-                                                           deathdate_note=deathdate, resting_place=deathplace)
-        if created_bool:
-            self.person_added_count += 1
+                                                           deathdate_note=deathdate, resting_place=deathplace, reviewed=False)
+            if created_bool:
+                self.person_added_count += 1
+        else:
+            self.person_skipped_count += 1
 
     def handle_family(self, element):
         gedcom_indi = str(element).replace(" FAM", "").replace("0 ", "").replace("\r\n", "")
@@ -114,7 +127,7 @@ class Command(BaseCommand):
                         marriage_date = str(item).replace("2 DATE ", "")
             if "WIFE" in str(child):
                 wife_indi = str(child).replace("1 WIFE ", "").replace("\r\n", "")
-                this_person = Person.objects.get(gedcom_indi=wife_indi)
+                this_person = Person.objects.get(gedcom_indi=wife_indi) #this person does not exist for our family @F118@
                 wife = this_person
             if "HUSB" in str(child):
                 husband_indi = str(child).replace("1 HUSB ", "").replace("\r\n", "")
@@ -132,7 +145,7 @@ class Command(BaseCommand):
 
         (obj, created_bool) = Family.objects.get_or_create(gedcom_indi=gedcom_indi, display_name=display_name,
                                                            wife_indi=wife_indi, husband_indi=husband_indi,
-                                                           marriage_date_note=marriage_date, no_kids_bool=no_kids_bool)
+                                                           marriage_date_note=marriage_date, no_kids_bool=no_kids_bool, reviewed=False)
 
         # then link the parents that are known
         if wife != "":
@@ -152,3 +165,8 @@ class Command(BaseCommand):
             orig_family = Family.objects.get(gedcom_indi=self.child_family_dict.get(entry))
             this_person.origin_family = orig_family
             this_person.save()
+
+    def check_matching_record(self, matching_record, element):
+        print("This person exists already: " + matching_record.first)
+        skip_record = True
+        return skip_record

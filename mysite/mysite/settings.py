@@ -107,6 +107,14 @@ DATABASES = {
         "PASSWORD": FAMILY_LOCAL_DB_PASS,
         "HOST": "localhost",
         "PORT": "5432",
+    },
+    "source": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "postgres",
+        "USER": "family",
+        "PASSWORD": FAMILY_LOCAL_DB_PASS,
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 

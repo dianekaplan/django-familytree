@@ -41,6 +41,7 @@ class Person(models.Model):
     flag3 = models.CharField(max_length=10, blank=True, default='') # will probably get rid of these anyway
     created_at = models.DateField(null=True, blank=True)
     updated_at = models.DateField(null=True, blank=True)
+    reviewed = models.BooleanField(null=True, default=False)
 
     class Meta(object):
         verbose_name_plural = 'People'
@@ -52,7 +53,7 @@ class Person(models.Model):
 
 class Family(models.Model):
     gedcom_indi = models.CharField(max_length=10, blank=True, default='')
-    display_name = models.CharField(max_length=50)
+    display_name = models.CharField(max_length=50, blank=True)
     wife = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='partner1')
     husband = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='partner2')
     wife_indi = models.CharField(max_length=10, blank=True, default='')
@@ -74,6 +75,7 @@ class Family(models.Model):
     branch_seq = models.IntegerField(blank=True, null=True)
     flag1 = models.CharField(max_length=10, blank=True, default='') # will probably get rid of these anyway
     flag2 = models.CharField(max_length=10, blank=True, default='') # will probably get rid of these anyway
+    reviewed = models.BooleanField(null=True, default=False)
 
     class Meta(object):
         verbose_name_plural = 'Families'
