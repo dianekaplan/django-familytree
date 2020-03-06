@@ -4,6 +4,7 @@ from gedcom.element.family import FamilyElement
 from gedcom.parser import Parser
 from ...models import Person, Family
 from pathlib import Path
+from django.utils import timezone
 
 class Command(BaseCommand):
     help = 'Imports records from GEDCOM file'
@@ -99,7 +100,8 @@ class Command(BaseCommand):
                                                            first=gedcom_first_middle, last=last,
                                                            display_name=display_name, birthdate_note=birthdate,
                                                            birthplace=birthplace, sex=sex, work=occupation,
-                                                           deathdate_note=deathdate, resting_place=deathplace, reviewed=False)
+                                                           deathdate_note=deathdate, resting_place=deathplace,
+                                                           created_at = timezone.now() , reviewed=False)
             if created_bool:
                 self.person_added_count += 1
         else:
@@ -151,7 +153,8 @@ class Command(BaseCommand):
 
         (obj, created_bool) = Family.objects.get_or_create(gedcom_indi=gedcom_indi, display_name=display_name,
                                                            wife_indi=wife_indi, husband_indi=husband_indi,
-                                                           marriage_date_note=marriage_date, no_kids_bool=no_kids_bool, reviewed=False)
+                                                           marriage_date_note=marriage_date, no_kids_bool=no_kids_bool,
+                                                           created_at = timezone.now(), reviewed=False)
 
         # then link the parents that are known
         if wife != "":
@@ -167,12 +170,20 @@ class Command(BaseCommand):
     def add_orig_family_values(self, child_family_dict):
         # loop through dictionary
         for entry in self.child_family_dict:
-            this_person = Person.objects.get(gedcom_indi=entry)
-            orig_family = Family.objects.get(gedcom_indi=self.child_family_dict.get(entry))
-            this_person.origin_family = orig_family
-            this_person.save()
+            try:
+                this_person = Person.objects.get(gedcom_indi=entry)
+                orig_family = Family.objects.get(gedcom_indi=self.child_family_dict.get(entry))
+                this_person.origin_family = orig_family
+                this_person.save()
+            except:
+                print("We have a family person whose record didn't get saved with gedcom_indi: " + entry)
 
     def check_matching_record(self, matching_record, element):
         print("This record with ALIA tag exists already: " + matching_record.first + " " +  matching_record.last)
+        # @TODO: come back and look into whether there are fields we'd want to update (ex: add birthdate, etc)
+        # If gedcom entry has values for fields we have blank, can fill them in
+
+        # matching_record.reviewed = False
+        # matching_record.save()
         skip_record = True
         return skip_record

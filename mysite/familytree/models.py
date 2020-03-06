@@ -1,3 +1,5 @@
+from datetime import timezone, datetime
+
 from django.db import models
 
 
@@ -47,6 +49,9 @@ class Person(models.Model):
         verbose_name_plural = 'People'
         db_table = 'people'
 
+    def unreviewed_people(self):
+        return self.reviewed == False
+
     def __str__(self):
         return self.first + " " + self.last
 
@@ -80,6 +85,9 @@ class Family(models.Model):
     class Meta(object):
         verbose_name_plural = 'Families'
         db_table = 'families'
+
+    def unreviewed_families(self):
+        return self.reviewed == False
 
     def __str__(self):
         return self.display_name
