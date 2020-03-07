@@ -101,7 +101,7 @@ class Command(BaseCommand):
                                                            display_name=display_name, birthdate_note=birthdate,
                                                            birthplace=birthplace, sex=sex, work=occupation,
                                                            deathdate_note=deathdate, resting_place=deathplace,
-                                                           created_at = timezone.now() , reviewed=False)
+                                                           created_at = timezone.now(), updated_at = timezone.now(), reviewed=False)
             if created_bool:
                 self.person_added_count += 1
         else:
@@ -154,7 +154,7 @@ class Command(BaseCommand):
         (obj, created_bool) = Family.objects.get_or_create(gedcom_indi=gedcom_indi, display_name=display_name,
                                                            wife_indi=wife_indi, husband_indi=husband_indi,
                                                            marriage_date_note=marriage_date, no_kids_bool=no_kids_bool,
-                                                           created_at = timezone.now(), reviewed=False)
+                                                           created_at = timezone.now(), updated_at = timezone.now(), reviewed=False)
 
         # then link the parents that are known
         if wife != "":
