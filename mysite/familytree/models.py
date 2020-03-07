@@ -5,7 +5,7 @@ from django.db import models
 
 class Person(models.Model):
     gedcom_indi = models.CharField(max_length=10, blank=True, default='')
-    gedcom_UUID = models.CharField(max_length=10, blank=True, default='')
+    gedcom_UUID = models.CharField(max_length=40, blank=True, default='')
     first = models.CharField(max_length=30, blank=True, default='')
     middle = models.CharField(max_length=20, blank=True, default='')
     last = models.CharField(max_length=20, blank=True, default='')
@@ -22,7 +22,7 @@ class Person(models.Model):
     kemler_line = models.BooleanField(null=True, default=False)
     kaplan_line = models.BooleanField(null=True, default=False)
     sex = models.CharField(max_length=2, blank=True, default='')
-    origin = models.CharField(max_length=20, blank=True, default='') # big description of background, probably will remove
+    origin = models.CharField(max_length=100, blank=True, default='') # big description of background, probably will remove
     face = models.CharField(max_length=20, blank=True, default='')
     current_location = models.CharField(max_length=20, blank=True, default='')
     work = models.CharField(max_length=150, blank=True, default='')
@@ -41,8 +41,8 @@ class Person(models.Model):
     flag1 = models.CharField(max_length=10, blank=True, default='') # will probably get rid of these anyway
     flag2 = models.CharField(max_length=10, blank=True, default='') # will probably get rid of these anyway
     flag3 = models.CharField(max_length=10, blank=True, default='') # will probably get rid of these anyway
-    created_at = models.DateField(null=True, blank=True)
-    updated_at = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
     reviewed = models.BooleanField(null=True, default=False)
 
     class Meta(object):
@@ -51,6 +51,9 @@ class Person(models.Model):
 
     def unreviewed_people(self):
         return self.reviewed == False
+    #
+    # def missing_uuid(self):
+    #     return self.gedcom_UUID == ""
 
     def __str__(self):
         return self.first + " " + self.last
@@ -72,8 +75,8 @@ class Family(models.Model):
     marriage_date = models.DateField(null=True, blank=True)
     marriage_date_note = models.CharField(max_length=30, blank=True, default='')
     divorced = models.BooleanField(null=True, default=False)
-    created_at = models.DateField(null=True, blank=True)
-    updated_at = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
     show_on_branch_view = models.BooleanField(null=False, default=False)
     sequence = models.IntegerField(blank=True, null=True)
     branch = models.IntegerField(blank=True, null=True)
