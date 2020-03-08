@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Person, Family, Image, ImagePerson
+from .models import Person, Family, Image, ImagePerson, Note
 
 #admin.site.register(Person)
 #admin.site.register(Family)
@@ -31,4 +31,11 @@ class ImagePersonAdmin(admin.ModelAdmin):
     search_fields = ('person_id',)
     list_display = ('image_id', 'person_id', 'created_at')
     ordering = ('-created_at', 'image_id')
+    pass
+
+@admin.register(Note)
+class NoteAdmin(admin.ModelAdmin):
+    search_fields = ('author_name',)
+    list_display = ('author_name', 'person_id', 'family_id','created_at')
+    ordering = ('-created_at', 'author_name')
     pass

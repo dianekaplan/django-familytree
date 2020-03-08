@@ -51,6 +51,21 @@ Interests: {{ person.interests }} <br/>
 {% if person.notes3 %} {{ person.notes3 }} <br/>{% endif %}
 
 
+{% if notes %}
+Notes added:
+<ul>
+    {% for note in notes %}
+        <li>
+            {% if note.date %}
+                {{ note.date }}
+            {% endif %}
+            {{ note.author }}: {{ note.body }}
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<br/>
 {% if images %}
 Solo images:
 <ul>

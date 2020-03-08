@@ -128,24 +128,22 @@ class ImagePerson(models.Model):
     def __str__(self):
         return str(self.image_id)
 
-# class Note(models.Model):
-#     type = models.IntegerField(null=True)  # 1 for person, 2 for family
-#     author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='author')
-#     author_name = models.CharField(max_length=50, blank=True)
-#     body = models.CharField(max_length=200, blank=True)
-#     date = models.DateField(null=True, blank=True)
-#
-#     #Need to figure out how to set this to Person or Family based on type, or break out into two models (person_note and family_note)
-#     ref_id = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='ref_id')
-#     active = models.BooleanField(null=True, default=True)
-#     for_self = models.BooleanField(null=True, default=False)
-#     created_at = models.DateTimeField(null=True, blank=True)
-#     updated_at = models.DateTimeField(null=True, blank=True)
-#     reviewed = models.BooleanField(null=True, default=False)
-#
-#     class Meta(object):
-#         verbose_name_plural = 'Notes'
-#         db_table = 'notes'
-#
-#     def __str__(self):
-#         return self.author_name + self.id
+class Note(models.Model):
+    type = models.IntegerField(null=True)  # 1 for person, 2 for family
+    author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='author')
+    author_name = models.CharField(max_length=50, blank=True)
+    body = models.CharField(max_length=200, blank=True)
+    date = models.DateField(null=True, blank=True)
+    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='note_person')
+    family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family_note')
+    active = models.BooleanField(null=True, default=True)
+    for_self = models.BooleanField(null=True, default=False)
+    created_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta(object):
+        verbose_name_plural = 'Notes'
+        db_table = 'notes'
+
+    def __str__(self):
+        return self.author_name + self.body
