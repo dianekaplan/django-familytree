@@ -117,20 +117,19 @@ class Image(models.Model):
         db_table = 'images'
 
     def __str__(self):
-        return self.author_name + self.id
+        return self.big_name
 
 class ImagePerson(models.Model):
     image = models.ForeignKey(Image, null=True, blank=True, on_delete=models.SET_NULL, related_name='image_id')
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_id')
     created_at = models.DateTimeField(null=True, blank=True)
-    updated_at = models.DateTimeField(null=True, blank=True)
 
     class Meta(object):
         verbose_name_plural = 'ImagePerson records'
         db_table = 'image_person'
 
     def __str__(self):
-        return self.author_name + self.id
+        return str(self.image_id)
 
 # class Note(models.Model):
 #     type = models.IntegerField(null=True)  # 1 for person, 2 for family
