@@ -33,14 +33,12 @@ def person_detail(request, person_id):
         images = None
 
     try:
-        group_image_listings = ImagePerson.objects.filter(person_id=person_id)
-        # group_images = Image.objects.select_related('ImagePerson').all()
-        # #group_images = Image.objects.filter(image_id=id).prefetch_related('image')
+        group_images = ImagePerson.objects.filter(person_id=person_id)
     except ImagePerson.DoesNotExist:
         group_images = None
 
     return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made,
-                                                             'images': images, 'group_image_listings': group_image_listings})
+                                                             'images': images, 'group_images': group_images})
 
 def family_detail(request, family_id):
     family = get_object_or_404(Family, pk=family_id)

@@ -52,9 +52,6 @@ class Person(models.Model):
 
     def unreviewed_people(self):
         return self.reviewed == False
-    #
-    # def missing_uuid(self):
-    #     return self.gedcom_UUID == ""
 
     def __str__(self):
         return self.first + " " + self.last

@@ -60,11 +60,11 @@ Solo images:
 </ul>
 {% endif %}
 
-{% if group_image_listings %}
+{% if group_images %}
 Group images:
 <ul>
-    {% for listing in group_image_listings %}
-        <li>{{ listing.id}}</li>
+    {% for listing in group_images %}
+        <li>{{ listing.image.big_name}}</li>
     {% endfor %}
 </ul>
 {% endif %}
