@@ -60,4 +60,13 @@ Solo images:
 </ul>
 {% endif %}
 
+{% if group_image_listings %}
+Group images:
+<ul>
+    {% for listing in group_image_listings %}
+        <li>{{ listing.id}}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <a href="{% url 'person_index' %}">Person index</a>

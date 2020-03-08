@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Person, Family, Image
+from .models import Person, Family, Image, ImagePerson
 
 #admin.site.register(Person)
 #admin.site.register(Family)
@@ -24,4 +24,11 @@ class FamilyAdmin(admin.ModelAdmin):
     search_fields = ('big_name',)
     list_display = ('big_name', 'year', 'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at')
     ordering = ('-created_at', 'big_name')
+    pass
+
+@admin.register(ImagePerson)
+class ImagePersonAdmin(admin.ModelAdmin):
+    search_fields = ('person_id',)
+    list_display = ('image_id', 'person_id', 'created_at')
+    ordering = ('-created_at', 'image_id')
     pass

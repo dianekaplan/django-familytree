@@ -44,6 +44,7 @@ class Person(models.Model):
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
     reviewed = models.BooleanField(null=True, default=False)
+    # group_images = models.ManyToManyField(models.Image)
 
     class Meta(object):
         verbose_name_plural = 'People'
@@ -101,7 +102,7 @@ class Image(models.Model):
     little_name = models.CharField(max_length=50, blank=True) # optional file name for zoomed-in thumbnail (rather than just resized)
     caption = models.CharField(max_length=50, blank=True)
     year = models.CharField(max_length=10, blank=True)
-    subject = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='subject')
+    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person')
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family')
     featured = models.BooleanField(null=True, default=False)
     keem_line = models.BooleanField(null=True, default=False)
@@ -114,6 +115,19 @@ class Image(models.Model):
     class Meta(object):
         verbose_name_plural = 'Images'
         db_table = 'images'
+
+    def __str__(self):
+        return self.author_name + self.id
+
+class ImagePerson(models.Model):
+    image = models.ForeignKey(Image, null=True, blank=True, on_delete=models.SET_NULL, related_name='image_id')
+    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_id')
+    created_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta(object):
+        verbose_name_plural = 'ImagePerson records'
+        db_table = 'image_person'
 
     def __str__(self):
         return self.author_name + self.id
