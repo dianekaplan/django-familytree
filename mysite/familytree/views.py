@@ -2,7 +2,7 @@ from django.http import HttpResponse, Http404
 from django.template import loader
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 
-from .models import Person, Family
+from .models import Person, Family, Image
 
 def index(request):
     return HttpResponse("Here is the familytree index.")
@@ -27,7 +27,12 @@ def person_detail(request, person_id):
     except Family.DoesNotExist:
         families_made = None
 
-    return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made})
+    try:
+        images = Image.objects.filter(subject=person_id)
+    except Image.DoesNotExist:
+        images = None
+
+    return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made, 'images': images})
 
 def family_detail(request, family_id):
     family = get_object_or_404(Family, pk=family_id)

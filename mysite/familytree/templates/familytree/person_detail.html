@@ -5,18 +5,31 @@
     <h3>{{ person.first }} {{ person.last }}</h3>
 {%  endif %}
 
+{% if person.maiden %}
+    Born: {{ person.first }} {{ person.middle }} {{ person.maiden }}<br/>
+{% else %}
+    Born: {{ person.first }} {{ person.middle }} {{ person.last }}<br/>
+{% endif %}
 
+{% if person.birthdate %}
+    Birthdate: {{ person.birthdate }} <br/>
+{% else %}
+    Birthdate: {{ person.birthdate_note }}<br/>
+{% endif %}
 
+Born in:  {{ person.birthplace}}<br/>
 
 {% if person.origin_family %}
-This person came from family:
+Grew up in family:
 <ul>
     <li><a href="{% url 'family_detail' person.origin_family.id %}">{{ person.origin_family.display_name }}</a></li>
 </ul>
 {% endif %}
+National Origin: {{ person.origin }} <br/>
+
 
 {% if families_made %}
-This person made family:
+Raised family:
 <ul>
     {% for family in families_made %}
         <li><a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a></li>
@@ -24,5 +37,27 @@ This person made family:
 </ul>
 {% endif %}
 
+Education: {{ person.education }} <br/>
+Work: {{ person.work }} <br/>
+Interests: {{ person.interests }} <br/>
+{% if person.deathdate %}
+    Deathdate: {{ person.birthdate }} <br/>
+{% elif person.deathdate_note%}
+    Deathdate: {{ person.deathdate_note }}<br/>
+{% endif %}
+
+{% if person.notes1 %} {{ person.notes1 }} <br/>{% endif %}
+{% if person.notes2 %} {{ person.notes2 }} <br/>{% endif %}
+{% if person.notes3 %} {{ person.notes3 }} <br/>{% endif %}
+
+
+{% if images %}
+Solo images:
+<ul>
+    {% for image in images %}
+        <li>{{ image.big_name }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 
 <a href="{% url 'person_index' %}">Person index</a>
