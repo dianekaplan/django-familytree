@@ -18,18 +18,18 @@ Featured image:
 
 <br/>
 {% if person.maiden %}
-    Born: {{ person.first }} {{ person.middle }} {{ person.maiden }}<br/>
+    <b>Born:</b> {{ person.first }} {{ person.middle }} {{ person.maiden }}<br/>
 {% else %}
-    Born: {{ person.first }} {{ person.middle }} {{ person.last }}<br/>
+    <b>Born:</b> {{ person.first }} {{ person.middle }} {{ person.last }}<br/>
 {% endif %}
 
 {% if person.birthdate %}
-    Birthdate: {{ person.birthdate }} <br/>
+    <b>Birthdate:</b> {{ person.birthdate }} <br/>
 {% else %}
-    Birthdate: {{ person.birthdate_note }}<br/>
+   <b> Birthdate: </b>{{ person.birthdate_note }}<br/>
 {% endif %}
 
-Born in:  {{ person.birthplace}}<br/>
+<b>Born in:</b>  {{ person.birthplace}}<br/>
 
 {% if person.origin_family %}
 Grew up in family:
@@ -37,7 +37,7 @@ Grew up in family:
     <li><a href="{% url 'family_detail' person.origin_family.id %}">{{ person.origin_family.display_name }}</a></li>
 </ul>
 {% endif %}
-National Origin: {{ person.origin }} <br/>
+<b>National Origin:</b> {{ person.origin }} <br/>
 
 
 {% if families_made %}
@@ -49,13 +49,13 @@ Raised family:
 </ul>
 {% endif %}
 
-Education: {{ person.education }} <br/>
-Work: {{ person.work }} <br/>
-Interests: {{ person.interests }} <br/>
+<b>Education: </b>{{ person.education }} <br/>
+<b>Work: </b>{{ person.work }} <br/>
+<b>Interests:</b> {{ person.interests }} <br/>
 {% if person.deathdate %}
-    Deathdate: {{ person.birthdate }} <br/>
+    <b>Deathdate:</b> {{ person.birthdate }} <br/>
 {% elif person.deathdate_note%}
-    Deathdate: {{ person.deathdate_note }}<br/>
+    <b>Deathdate: </b>{{ person.deathdate_note }}<br/>
 {% endif %}
 
 {% if person.notes1 %} {{ person.notes1 }} <br/>{% endif %}
@@ -79,7 +79,7 @@ Notes: <br/>
 
 <br/>
 {% if images %}
-Solo images:
+Pictures of {{ person.first }}:
 <ul>
     {% for image in images %}
         {% include "familytree/image_link.html" with image=image %}
@@ -88,7 +88,7 @@ Solo images:
 {% endif %}
 
 {% if group_images %}
-Group images:
+Group pictures:
 <ul>
     {% for listing in group_images %}
         {% include "familytree/image_link.html" with image=listing.image %}
