@@ -52,14 +52,14 @@ Interests: {{ person.interests }} <br/>
 
 
 {% if notes %}
-Notes added:
+Notes: <br/>
 <ul>
     {% for note in notes %}
         <li>
             {% if note.date %}
                 {{ note.date }}
             {% endif %}
-            {{ note.author }}: {{ note.body }}
+            <a href="{% url 'person_detail' note.author.id %}">{{ note.author.face}} {{ note.author }}</a>: {{ note.body }}
         </li>
     {% endfor %}
 </ul>

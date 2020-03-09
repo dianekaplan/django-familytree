@@ -30,5 +30,15 @@ List of kids:<br/>
 {% endif %}
 
 
+{% if notes %}
+Notes: <br/>
+    {% for note in notes %}
+        {% if note.date %}
+            {{ note.date }}
+        {% endif %}
+        <a href="{% url 'person_detail' note.author.id %}">{{ note.author.face}} {{ note.author }}</a>: {{ note.body }}
+    {% endfor %}
+{% endif %}
 
+<br/>
 <a href="{% url 'family_index' %}">Family index</a>

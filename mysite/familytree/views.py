@@ -53,4 +53,9 @@ def family_detail(request, family_id):
     except Person.DoesNotExist:
         kids = None
 
-    return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids})
+    try:
+        notes = Note.objects.filter(family_id=family_id)
+    except ImagePerson.DoesNotExist:
+        notes = None
+
+    return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes})
