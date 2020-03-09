@@ -1,3 +1,7 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - family index{% endblock title %}
+{% block content %}
+
 {% if family_list %}
     <ul>
     {% for family in family_list %}
@@ -7,3 +11,5 @@
 {% else %}
     <p>No families are available.</p>
 {% endif %}
+
+{% endblock content %}

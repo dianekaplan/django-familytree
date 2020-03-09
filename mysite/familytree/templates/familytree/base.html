@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>
+        Our big family tree
+           {% block title %}
+           {{ page_title|default:"Untitled Page" }}
+          {% endblock title %}
+        </title>
+    </head>
+
+    <body>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'familytree/style.css' %}">
+
+    {% include "familytree/top_nav.html" with user=user %} <br/>
+    {% block content %}
+        <p>Placeholder text in base template- this gets replaced with page content.</p>
+    {% endblock content %}
+    </body>
+</html>

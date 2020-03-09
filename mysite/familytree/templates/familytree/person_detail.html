@@ -1,3 +1,6 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - {{ person.display_name }}{% endblock title %}
+{% block content %}
 
 {%  if person.display_name %}
     <h3>{{ person.display_name }}</h3>
@@ -5,8 +8,40 @@
     <h3>{{ person.first }} {{ person.last }}</h3>
 {%  endif %}
 
+<br/>
+{% if featured_images %}
+Featured image:
+    {% for image in featured_images %}
+        <img src="{{ image.big_name }}"/>
+    {% endfor %}
+{% endif %}
+
+<br/>
+{% if person.maiden %}
+    <b>Born:</b> {{ person.first }} {{ person.middle }} {{ person.maiden }}<br/>
+{% else %}
+    <b>Born:</b> {{ person.first }} {{ person.middle }} {{ person.last }}<br/>
+{% endif %}
+
+{% if person.birthdate %}
+    <b>Birthdate:</b> {{ person.birthdate }} <br/>
+{% else %}
+   <b> Birthdate: </b>{{ person.birthdate_note }}<br/>
+{% endif %}
+
+<b>Born in:</b>  {{ person.birthplace}}<br/>
+
+{% if person.origin_family %}
+Grew up in family:
+<ul>
+    <li><a href="{% url 'family_detail' person.origin_family.id %}">{{ person.origin_family.display_name }}</a></li>
+</ul>
+{% endif %}
+<b>National Origin:</b> {{ person.origin }} <br/>
+
+
 {% if families_made %}
-This person made family:
+Raised family:
 <ul>
     {% for family in families_made %}
         <li><a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a></li>
@@ -14,5 +49,53 @@ This person made family:
 </ul>
 {% endif %}
 
+<b>Education: </b>{{ person.education }} <br/>
+<b>Work: </b>{{ person.work }} <br/>
+<b>Interests:</b> {{ person.interests }} <br/>
+{% if person.deathdate %}
+    <b>Deathdate:</b> {{ person.birthdate }} <br/>
+{% elif person.deathdate_note%}
+    <b>Deathdate: </b>{{ person.deathdate_note }}<br/>
+{% endif %}
+
+{% if person.notes1 %} {{ person.notes1 }} <br/>{% endif %}
+{% if person.notes2 %} {{ person.notes2 }} <br/>{% endif %}
+{% if person.notes3 %} {{ person.notes3 }} <br/>{% endif %}
+
+
+{% if notes %}
+Notes: <br/>
+<ul>
+    {% for note in notes %}
+        <li>
+            {% if note.date %}
+                {{ note.date }}
+            {% endif %}
+            {% include "familytree/face_name_link.html" with person=note.author %}: {{ note.body }}
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<br/>
+{% if images %}
+Pictures of {{ person.first }}:
+<ul>
+    {% for image in images %}
+        {% include "familytree/image_link.html" with image=image %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if group_images %}
+Group pictures:
+<ul>
+    {% for listing in group_images %}
+        {% include "familytree/image_link.html" with image=listing.image %}
+    {% endfor %}
+</ul>
+{% endif %}
 
 <a href="{% url 'person_index' %}">Person index</a>
+
+{% endblock content %}

@@ -7,9 +7,12 @@
 *.log
 *.pot
 *.pyc
-__pycache__
+*__pycache__*
 db.sqlite3
 media
+
+# Temporary files for this app #
+mysite/ImportInfo.txt
 
 # Backup files #
 *.bak
