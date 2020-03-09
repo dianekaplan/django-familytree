@@ -5,6 +5,15 @@
     <h3>{{ person.first }} {{ person.last }}</h3>
 {%  endif %}
 
+<br/>
+{% if featured_images %}
+Featured image:
+    {% for image in featured_images %}
+        <img src="{{ image.big_name }}"/>
+    {% endfor %}
+{% endif %}
+
+<br/>
 {% if person.maiden %}
     Born: {{ person.first }} {{ person.middle }} {{ person.maiden }}<br/>
 {% else %}
@@ -59,7 +68,7 @@ Notes: <br/>
             {% if note.date %}
                 {{ note.date }}
             {% endif %}
-            <a href="{% url 'person_detail' note.author.id %}">{{ note.author.face}} {{ note.author }}</a>: {{ note.body }}
+            {% include "familytree/face_name_link.html" with person=note.author %}: {{ note.body }}
         </li>
     {% endfor %}
 </ul>

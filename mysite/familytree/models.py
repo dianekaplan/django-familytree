@@ -101,7 +101,7 @@ class Image(models.Model):
     year = models.CharField(max_length=10, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person')
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family')
-    featured = models.BooleanField(null=True, default=False)
+    featured = models.IntegerField(null=True, default=False)
     keem_line = models.BooleanField(null=True, default=False)
     husband_line = models.BooleanField(null=True, default=False)
     kemler_line = models.BooleanField(null=True, default=False)

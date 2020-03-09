@@ -1,11 +1,7 @@
 {% if person_list %}
     <ul>
     {% for person in person_list %}
-        {%  if person.display_name %}
-            <li><a href="{% url 'person_detail' person.id %}">{{ person.display_name }}</a></li>
-        {%  else %}
-            <li><a href="{% url 'person_detail' person.id %}">{{ person.first }} {{ person.last }}</a></li>
-        {%  endif %}
+        {% include "familytree/face_name_link.html" with person=person %} <br/>
     {% endfor %}
     </ul>
 {% else %}

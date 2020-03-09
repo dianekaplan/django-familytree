@@ -1,7 +1,5 @@
 from django.http import HttpResponse, Http404
-from django.template import loader
 from django.shortcuts import render, get_object_or_404, get_list_or_404
-
 from .models import Person, Family, Image, ImagePerson, Note
 
 def index(request):
@@ -10,7 +8,7 @@ def index(request):
 def family_index(request):
     family_list = Family.objects.order_by('display_name')
     context = { 'family_list': family_list}
-    return render(request, 'familytree/family_index.html', context)
+    return render(request, 'familytree/family_index.html', {'title': "test title"}, context)
 
 def person_index(request):
     person_list = Person.objects.order_by('display_name') # add this to limit list displayed: [:125]
@@ -42,8 +40,14 @@ def person_detail(request, person_id):
     except ImagePerson.DoesNotExist:
         notes = None
 
+    try:
+        featured_images = Image.objects.filter(person_id=person_id) & Image.objects.filter(featured=1)
+    except Image.DoesNotExist:
+        featured_images = None
+
     return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made,
-                                                             'images': images, 'group_images': group_images, 'notes': notes})
+                                                             'images': images, 'group_images': group_images, 'notes': notes,
+                                                             'featured_images': featured_images})
 
 def family_detail(request, family_id):
     family = get_object_or_404(Family, pk=family_id)
@@ -58,4 +62,10 @@ def family_detail(request, family_id):
     except ImagePerson.DoesNotExist:
         notes = None
 
-    return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes})
+    try:
+        featured_images = Image.objects.filter(family_id=family_id) & Image.objects.filter(featured=1)
+    except Image.DoesNotExist:
+        featured_images = None
+
+    return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes,
+                                                             'featured_images': featured_images})
