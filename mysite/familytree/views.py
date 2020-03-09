@@ -67,5 +67,20 @@ def family_detail(request, family_id):
     except Image.DoesNotExist:
         featured_images = None
 
+    try:
+        images = Image.objects.filter(family_id=family_id)
+    except Image.DoesNotExist:
+        images = None
+
     return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes,
-                                                             'featured_images': featured_images})
+                                                             'featured_images': featured_images, 'images': images})
+
+def image_detail(request, image_id):
+    image = get_object_or_404(Image, pk=image_id)
+
+    return render(request, 'familytree/image_detail.html', {'image': image})
+
+def image_index(request):
+    image_list = Image.objects.order_by('year') # add this to limit list displayed: [:125]
+    context = { 'image_list': image_list}
+    return render(request, 'familytree/image_index.html', context)

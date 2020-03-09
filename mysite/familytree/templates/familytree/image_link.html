@@ -1,0 +1,9 @@
+{%  if image.id %}  {#  shouldn't need this, but there were some records coming through without ID! #}
+    <a href="{% url 'image_detail' image.id  %}">
+        <img src="{{ image.big_name }}"/>
+        {%  if image.caption %}
+          {{ image.caption }}
+        {%  endif %}
+        ({{ image.year }})
+    </a>
+{%  endif %}

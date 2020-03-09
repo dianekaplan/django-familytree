@@ -53,6 +53,17 @@ Notes: <br/>
     {% endfor %}
 {% endif %}
 
+
+<br/>
+{% if images %}
+Family images:
+<ul>
+    {% for image in images %}
+        {% include "familytree/image_link.html" with image=image %}
+    {% endfor %}
+</ul>
+{% endif %}
+
 <br/><br/>
 <a href="{% url 'family_index' %}">Family index</a>
 

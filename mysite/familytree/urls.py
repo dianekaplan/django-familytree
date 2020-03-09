@@ -17,5 +17,11 @@ urlpatterns = [
 
     # ex: /families/5/
     path('families/<int:family_id>/', views.family_detail, name='family_detail'),
+
+    # ex: /images/
+    path('images/', views.image_index, name='image_index'),
+
+    # ex: /images/5/
+    path('images/<int:image_id>/', views.image_detail, name='image_detail'),
 ]
 

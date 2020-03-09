@@ -1,0 +1,15 @@
+{#{% extends 'familytree/base.html' %}#}
+{#{% block title %}{{ title }}{% endblock title %}#}
+{#{% block content %}#}
+
+<h3>{{ image.big_name }}</h3>
+
+<br/>
+<img src="image.big_name" />
+
+<br/><br/>
+
+
+<a href="{% url 'family_index' %}">Family index</a>
+
+{#{% endblock content %}#}

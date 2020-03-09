@@ -79,7 +79,7 @@ Notes: <br/>
 Solo images:
 <ul>
     {% for image in images %}
-        <li>{{ image.big_name }}</li>
+        {% include "familytree/image_link.html" with image=image %}
     {% endfor %}
 </ul>
 {% endif %}
@@ -88,7 +88,7 @@ Solo images:
 Group images:
 <ul>
     {% for listing in group_images %}
-        <li>{{ listing.image.big_name}}</li>
+        {% include "familytree/image_link.html" with image=listing.image %}
     {% endfor %}
 </ul>
 {% endif %}

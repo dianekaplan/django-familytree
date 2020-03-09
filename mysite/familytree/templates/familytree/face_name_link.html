@@ -1,0 +1,7 @@
+        {%  if person.display_name %}
+            {% include "familytree/face_link.html" with person=person %}
+            <a href="{% url 'person_detail' person.id %}">{{ person.display_name }}</a>
+        {%  else %}
+            {% include "familytree/face_link.html" with person=person %}
+            <a href="{% url 'person_detail' person.id %}">{{ person.first }} {{ person.last }}</a>
+        {%  endif %}
