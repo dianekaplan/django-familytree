@@ -1,3 +1,6 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - {{ person.display_name }}{% endblock title %}
+{% block content %}
 
 {%  if person.display_name %}
     <h3>{{ person.display_name }}</h3>
@@ -94,3 +97,5 @@ Group images:
 {% endif %}
 
 <a href="{% url 'person_index' %}">Person index</a>
+
+{% endblock content %}

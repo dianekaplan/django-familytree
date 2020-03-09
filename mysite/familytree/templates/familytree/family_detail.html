@@ -1,6 +1,6 @@
-{#{% extends 'familytree/base.html' %}#}
-{#{% block title %}{{ title }}{% endblock title %}#}
-{#{% block content %}#}
+{% extends 'familytree/base.html' %}
+{% block title %} - {{ family.display_name }}{% endblock title %}
+{% block content %}
 
 <h3>{{ family.display_name }}</h3>
 
@@ -67,4 +67,4 @@ Family images:
 <br/><br/>
 <a href="{% url 'family_index' %}">Family index</a>
 
-{#{% endblock content %}#}
+{% endblock content %}

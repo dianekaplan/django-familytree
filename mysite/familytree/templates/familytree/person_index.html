@@ -1,3 +1,8 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - person index{% endblock title %}
+{% block content %}
+
+
 {% if person_list %}
     <ul>
     {% for person in person_list %}
@@ -7,3 +12,5 @@
 {% else %}
     <p>No people are available.</p>
 {% endif %}
+
+{% endblock content %}

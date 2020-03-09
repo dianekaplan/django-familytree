@@ -1,3 +1,8 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - family album{% endblock title %}
+{% block content %}
+
+
 <h1>Family Album</h1>
 
 {% if image_list %}
@@ -9,3 +14,5 @@
 {% else %}
     <p>No images are available.</p>
 {% endif %}
+
+{% endblock content %}

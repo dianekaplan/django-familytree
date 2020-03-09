@@ -2,18 +2,23 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from .models import Person, Family, Image, ImagePerson, Note
 
+
 def index(request):
-    return HttpResponse("Here is the familytree index.")
+    user = request.user
+    return render(request, 'familytree/dashboard.html', {'user': user})
+
 
 def family_index(request):
     family_list = Family.objects.order_by('display_name')
     context = { 'family_list': family_list}
-    return render(request, 'familytree/family_index.html', {'title': "test title"}, context)
+    return render(request, 'familytree/family_index.html', context)
+
 
 def person_index(request):
     person_list = Person.objects.order_by('display_name') # add this to limit list displayed: [:125]
     context = { 'person_list': person_list}
     return render(request, 'familytree/person_index.html', context)
+
 
 def person_detail(request, person_id):
     person = get_object_or_404(Person, pk=person_id)
@@ -49,6 +54,7 @@ def person_detail(request, person_id):
                                                              'images': images, 'group_images': group_images, 'notes': notes,
                                                              'featured_images': featured_images})
 
+
 def family_detail(request, family_id):
     family = get_object_or_404(Family, pk=family_id)
 
@@ -75,10 +81,12 @@ def family_detail(request, family_id):
     return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes,
                                                              'featured_images': featured_images, 'images': images})
 
+
 def image_detail(request, image_id):
     image = get_object_or_404(Image, pk=image_id)
 
     return render(request, 'familytree/image_detail.html', {'image': image})
+
 
 def image_index(request):
     image_list = Image.objects.order_by('year') # add this to limit list displayed: [:125]
