@@ -18,9 +18,9 @@ Featured image:
 
 <br/>
 {% if person.maiden %}
-    <b>Born:</b> {{ person.first }} {{ person.middle }} {{ person.maiden }}<br/>
+    <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.maiden }}<br/>
 {% else %}
-    <b>Born:</b> {{ person.first }} {{ person.middle }} {{ person.last }}<br/>
+    <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.last }}<br/>
 {% endif %}
 
 {% if person.birthdate %}
@@ -29,7 +29,7 @@ Featured image:
    <b> Birthdate: </b>{{ person.birthdate_note }}<br/>
 {% endif %}
 
-<b>Born in:</b>  {{ person.birthplace}}<br/>
+<b>Born in:</b> {{ person.birthplace|default_if_none:"" }}<br/>
 
 {% if person.origin_family %}
 Grew up in family:
@@ -37,7 +37,7 @@ Grew up in family:
     <li><a href="{% url 'family_detail' person.origin_family.id %}">{{ person.origin_family.display_name }}</a></li>
 </ul>
 {% endif %}
-<b>National Origin:</b> {{ person.origin }} <br/>
+<b>National Origin:</b> {{ person.origin|default_if_none:"" }} <br/>
 
 
 {% if families_made %}
@@ -49,9 +49,9 @@ Raised family:
 </ul>
 {% endif %}
 
-<b>Education: </b>{{ person.education }} <br/>
-<b>Work: </b>{{ person.work }} <br/>
-<b>Interests:</b> {{ person.interests }} <br/>
+<b>Education: </b>{{ person.education|default_if_none:"" }} <br/>
+<b>Work: </b>{{ person.work|default_if_none:"" }} <br/>
+<b>Interests:</b> {{ person.interests|default_if_none:"" }} <br/>
 {% if person.deathdate %}
     <b>Deathdate:</b> {{ person.birthdate }} <br/>
 {% elif person.deathdate_note%}
