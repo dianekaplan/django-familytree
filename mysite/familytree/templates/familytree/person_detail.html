@@ -50,7 +50,7 @@ Raised family:
 {% endif %}
 
 <b>Education: </b>{{ person.education|default_if_none:"" }} <br/>
-<b>Work: </b>{{ person.work|default_if_none:"" }} <br/>
+<b>Work: </b> {{ person.work|default_if_none:"" | safe }}   <br/>
 <b>Interests:</b> {{ person.interests|default_if_none:"" }} <br/>
 {% if person.deathdate %}
     <b>Deathdate:</b> {{ person.birthdate }} <br/>

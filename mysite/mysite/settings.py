@@ -96,13 +96,13 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default-old': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
+    # 'default-old': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # },
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "family_local",
+        "NAME": "family_local", 
         "USER": "family",
         "PASSWORD": FAMILY_LOCAL_DB_PASS,
         "HOST": "localhost",
@@ -117,6 +117,15 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+# For unit tests we'll use sqlite
+import sys
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+    }
+
 
 
 # Password validation

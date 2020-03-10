@@ -1,9 +1,9 @@
 from django.contrib import admin
+from django.db import models
+from django.forms import TextInput, Textarea
 
 from .models import Person, Family, Image, ImagePerson, Note
 
-#admin.site.register(Person)
-#admin.site.register(Family)
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
@@ -38,4 +38,9 @@ class NoteAdmin(admin.ModelAdmin):
     search_fields = ('author_name',)
     list_display = ('author_name', 'person_id', 'family_id','created_at')
     ordering = ('-created_at', 'author_name')
+
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size':'200', 'rows':2})},
+        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
+    }
     pass

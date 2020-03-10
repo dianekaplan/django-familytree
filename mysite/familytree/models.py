@@ -50,7 +50,7 @@ class Person(models.Model):
         verbose_name_plural = 'People'
         db_table = 'people'
 
-    def unreviewed_people(self):
+    def unreviewed_person(self):
         return self.reviewed == False
 
     def __str__(self):
@@ -87,7 +87,7 @@ class Family(models.Model):
         verbose_name_plural = 'Families'
         db_table = 'families'
 
-    def unreviewed_families(self):
+    def unreviewed_family(self):
         return self.reviewed == False
 
     def __str__(self):
@@ -132,7 +132,7 @@ class Note(models.Model):
     type = models.IntegerField(null=True)  # 1 for person, 2 for family
     author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='author')
     author_name = models.CharField(max_length=50, blank=True)
-    body = models.CharField(max_length=200, blank=True)
+    body = models.CharField(max_length=1000, blank=True)
     date = models.DateField(null=True, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='note_person')
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family_note')
