@@ -85,7 +85,12 @@ def family_detail(request, family_id):
 def image_detail(request, image_id):
     image = get_object_or_404(Image, pk=image_id)
 
-    return render(request, 'familytree/image_detail.html', {'image': image})
+    this_image_person, this_image_family, image_people = Image.image_subjects(image)
+
+    return render(request, 'familytree/image_detail.html', {'image': image, 'image_person': this_image_person,
+                                                            'image_family': this_image_family,
+                                                            'image_people' : image_people
+                                                            })
 
 
 def image_index(request):

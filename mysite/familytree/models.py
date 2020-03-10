@@ -109,6 +109,22 @@ class Image(models.Model):
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
 
+    def image_subjects(self):
+        # first get the queryset for ImagePerson records, then get the people from that
+        image_person_records = ImagePerson.objects.filter(image_id=self.id)
+        image_people = set()
+        for record in image_person_records:
+            person = Person.objects.filter(id = record.person_id)
+            image_people.add(person)
+
+        # get the featured person, if there is one
+        this_image_person = Person.objects.filter(id=self.person_id)
+
+        # get the featured family, if there is one
+        this_image_family = Family.objects.filter(id=self.family_id)
+
+        return this_image_person, this_image_family, image_people
+
     class Meta(object):
         verbose_name_plural = 'Images'
         db_table = 'images'

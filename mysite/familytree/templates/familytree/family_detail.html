@@ -49,7 +49,7 @@ Notes: <br/>
         {% if note.date %}
             {{ note.date }}
         {% endif %}
-        {% include "familytree/face_name_link.html" with person=note.author %} {{ note.body }}
+        {% include "familytree/face_name_link.html" with person=note.author %} {{ note.body | safe }}
     {% endfor %}
 {% endif %}
 

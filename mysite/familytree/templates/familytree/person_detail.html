@@ -10,9 +10,8 @@
 
 <br/>
 {% if featured_images %}
-Featured image:
     {% for image in featured_images %}
-        <img src="{{ image.big_name }}"/>
+        {% include "familytree/featured_image.html" with image=image %}
     {% endfor %}
 {% endif %}
 
