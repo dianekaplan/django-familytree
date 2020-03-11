@@ -79,7 +79,7 @@ def family_detail(request, family_id):
         images = None
 
     return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes,
-                                                             'featured_images': featured_images, 'images': images})
+                                                             'featured_images': featured_images, 'icons': images})
 
 
 def image_detail(request, image_id):

@@ -2,25 +2,39 @@
 {% block title %}{% endblock title %}
 {% block content %}
 
-    Welcome, user! <br/><br/>
+Welcome, user! <br/><br/>
 
+<div class="bottom">
+    <div style="float: left; width: 23%;" id="circled_section">
+    Person link
     My family history<br/>
     <a href="{% url 'image_index'  %}">Family album</a><br/>
     Home movies <br/>
     Outline View<br/>
+    My furthest ancestors here: <br/>
+    My additions to the family tree: <br/>
+    </div>
 
-    <br/><br/><br/>
+<div style="float: left; width: 30%;" id="circled_section">
     Birthdays this month:
 
     <br/><br/><br/>
     Anniversaries this month:
+    </div>
+</div>
 
-    <br/><br/><br/>
+<div class="bottom" style="float: right; width: 35%;"  >
+    <div  id="circled_section">
     Latest pics:
+    </div>
 
-    <br/><br/><br/>
+    <div   id="circled_section">
+    Latest videos:
+    </div>
 
+    <div   id="circled_section">
     Latest updates:
-
+    </div>
+ </div>
 
 {% endblock content %}
