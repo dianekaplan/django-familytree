@@ -2,99 +2,110 @@
 {% block title %} - {{ person.display_name }}{% endblock title %}
 {% block content %}
 
-{%  if person.display_name %}
-    <h3>{{ person.display_name }}</h3>
-{%  else %}
-    <h3>{{ person.first }} {{ person.last }}</h3>
-{%  endif %}
+<div style="float: left; width: 100%;">
+    {%  if person.display_name %}
+        <h3>{{ person.display_name }}</h3>
+    {%  else %}
+        <h3>{{ person.first }} {{ person.last }}</h3>
+    {%  endif %}
+</div>
 
-<br/>
-{% if featured_images %}
-    {% for image in featured_images %}
-        {% include "familytree/featured_image.html" with image=image %}
-    {% endfor %}
-{% endif %}
+<div class="bottom">
+    <div style="float: left; width: 33%;">
+        {% if person.maiden %}
+            <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.maiden }}<br/>
+        {% else %}
+            <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.last }}<br/>
+        {% endif %}
 
-<br/>
-{% if person.maiden %}
-    <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.maiden }}<br/>
-{% else %}
-    <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.last }}<br/>
-{% endif %}
+        {% if person.birthdate %}
+            <b>Birthdate:</b> {{ person.birthdate }} <br/>
+        {% else %}
+        <b> Birthdate: </b>{{ person.birthdate_note }}<br/>
+        {% endif %}
 
-{% if person.birthdate %}
-    <b>Birthdate:</b> {{ person.birthdate }} <br/>
-{% else %}
-   <b> Birthdate: </b>{{ person.birthdate_note }}<br/>
-{% endif %}
+        <b>Born in:</b> {{ person.birthplace|default_if_none:"" }}<br/>
 
-<b>Born in:</b> {{ person.birthplace|default_if_none:"" }}<br/>
-
-{% if person.origin_family %}
-Grew up in family:
-<ul>
-    <li><a href="{% url 'family_detail' person.origin_family.id %}">{{ person.origin_family.display_name }}</a></li>
-</ul>
-{% endif %}
-<b>National Origin:</b> {{ person.origin|default_if_none:"" }} <br/>
+        {% if person.origin_family %}
+            <img src="familytree/northwest.png"  />
+            <b>Grew up in family:</b>
+            <a href="{% url 'family_detail' person.origin_family.id %}">{{ person.origin_family.display_name }}</a><br/>
+        {% endif %}
+        <b>National Origin:</b> {{ person.origin|default_if_none:"" }} <br/>
+    </div>
 
 
-{% if families_made %}
-Raised family:
-<ul>
-    {% for family in families_made %}
-        <li><a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
+<div style="float: left; width: 33%;">
+    {% if featured_images %}
+        {% for image in featured_images %}
+            {% include "familytree/featured_image.html" with image=image %}
+        {% endfor %}
+    {% endif %}
+</div>
 
-<b>Education: </b>{{ person.education|default_if_none:"" }} <br/>
-<b>Work: </b> {{ person.work|default_if_none:"" | safe }}   <br/>
-<b>Interests:</b> {{ person.interests|default_if_none:"" }} <br/>
-{% if person.deathdate %}
-    <b>Deathdate:</b> {{ person.birthdate }} <br/>
-{% elif person.deathdate_note%}
-    <b>Deathdate: </b>{{ person.deathdate_note }}<br/>
-{% endif %}
+<div style="float: left; width: 33%;">
+    <b>Education: </b>{{ person.education|default_if_none:"" }} <br/>
+    <b>Work: </b> {{ person.work|default_if_none:"" | safe }}   <br/>
+    <b>Interests:</b> {{ person.interests|default_if_none:"" }} <br/>
+    <b>Location:</b> {{ person.current_location|default_if_none:"" }} <br/>
+    {% if person.deathdate %}
+        <b>Deathdate:</b> {{ person.birthdate }} <br/>
+    {% elif person.deathdate_note%}
+        <b>Deathdate: </b>{{ person.deathdate_note }}<br/>
+    {% endif %}
 
-{% if person.notes1 %} {{ person.notes1 }} <br/>{% endif %}
-{% if person.notes2 %} {{ person.notes2 }} <br/>{% endif %}
-{% if person.notes3 %} {{ person.notes3 }} <br/>{% endif %}
-
-
-{% if notes %}
-Notes: <br/>
-<ul>
-    {% for note in notes %}
-        <li>
-            {% if note.date %}
-                {{ note.date }}
+    {% if families_made %}
+        {% for family in families_made %}
+            {% if family.no_kids_bool == True %}
+                <b>Married:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a><img  src="/right_arrow.svg" height="18"/><br/>
+            {% else %}
+                <b>Raised family:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a><img  src="/southeast.png" height="25"/><br/>
             {% endif %}
-            {% include "familytree/face_name_link.html" with person=note.author %}: {{ note.body }}
+        {% endfor %}
+    {% endif %}
+ </div>
+
+<div style="float: left; width: 100%;">
+    {% if person.notes1 %} {{ person.notes1 }} <br/>{% endif %}
+    {% if person.notes2 %} {{ person.notes2 }} <br/>{% endif %}
+    {% if person.notes3 %} {{ person.notes3 }} <br/>{% endif %}
+
+    {% if notes %}
+        <ul>
+        {% for note in notes %}
+          <li>
+              {% if note.date %}
+                    {{ note.date }}
+              {% endif %}
+              {% include "familytree/face_name_link.html" with person=note.author %}: {{ note.body }}
         </li>
-    {% endfor %}
-</ul>
-{% endif %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+</div>
 
-<br/>
-{% if images %}
-Pictures of {{ person.first }}:
-<ul>
-    {% for image in images %}
-        {% include "familytree/image_link.html" with image=image %}
-    {% endfor %}
-</ul>
-{% endif %}
 
-{% if group_images %}
-Group pictures:
-<ul>
-    {% for listing in group_images %}
-        {% include "familytree/image_link.html" with image=listing.image %}
-    {% endfor %}
-</ul>
-{% endif %}
+<div style="float: left; width: 100%;">
+    {% if images %}
+        <h4>Pictures of {{ person.first }}: </h4>
+        <ul>
+        {% for image in images %}
+            {% include "familytree/image_link.html" with image=image %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+</div>
 
-<a href="{% url 'person_index' %}">Person index</a>
+<div style="float: left; width: 100%;">
+    {% if group_images %}
+        <h4>Group pictures:</h4>
+        <ul>
+        {% for listing in group_images %}
+          {% include "familytree/image_link.html" with image=listing.image %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
 
 {% endblock content %}

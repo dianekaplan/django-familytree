@@ -4,67 +4,72 @@
 
 <h3>{{ family.display_name }}</h3>
 
-<br/>
+
+
+<div style="float: left; width: 31%;">
+    {% include "familytree/face_name_link.html" with person=family.wife %}
+</div>
+
+<div style="float: left; vertical-align: bottom; width: 38%;">
 {% if featured_images %}
-Featured image:
     {% for image in featured_images %}
-        <img src="{{ image.big_name }}"/>
+        {% include "familytree/featured_image.html" with image=image %}
     {% endfor %}
 {% endif %}
-<br/>
+</div>
 
-wife:
-{% include "familytree/face_name_link.html" with person=family.wife %}
-<br/>
+<div style="float: left; width: 31%;">
+    {% include "familytree/face_name_link.html" with person=family.husband %}
+</div>
 
-husband: {% include "familytree/face_name_link.html" with person=family.husband %}
+<div style="float: left;width: 100%;">
 
-<br/>
-<br/>
+    <div style="float: left;width: 31%;">
+        {% if family.marriage_date %}
+            <b>Marriage date:</b> {{ family.marriage_date }}
+        {% elif family.marriage_date_note %}
+            <b>Marriage date:</b> {{ family.marriage_date_note }}
+        {%  endif %}
+    </div>
+
+<div style="float: left;width: 38%;">
 {% if kids %}
-List of kids:<br/>
-<ul>
+    <b>Kids:</b><br/>
+    <ul>
     {% for kid in kids %}
         {% include "familytree/face_name_link.html" with person=kid %}<br/>
     {% endfor %}
-</ul>
+    </ul>
 {% endif %}
-
- <br/>
-{% if family.marriage_date %}
-    Marriage date: {{ family.marriage_date }}
-     {% elif family.marriage_date_note %}
-    Marriage date: {{ family.marriage_date_note }}
-{%  endif %}
-<br/>
-
- <br/>
-{% if family.notes1 %} {{ family.notes1 }} <br/>{% endif %}
-{% if family.notes2 %} {{ family.notes2 }} <br/>{% endif %}
-{% if family.notes3 %} {{ family.notes3 }} <br/>{% endif %}
-
-{% if notes %}
-Notes: <br/>
-    {% for note in notes %}
-        {% if note.date %}
-            {{ note.date }}
-        {% endif %}
-        {% include "familytree/face_name_link.html" with person=note.author %} {{ note.body | safe }}
-    {% endfor %}
-{% endif %}
+</div>
 
 
-<br/>
-{% if images %}
-Family images:
-<ul>
+ <div style="float: left;width: 100%;">
+    {% if family.notes1 %} {{ family.notes1 }} <br/>{% endif %}
+    {% if family.notes2 %} {{ family.notes2 }} <br/>{% endif %}
+    {% if family.notes3 %} {{ family.notes3 }} <br/>{% endif %}
+
+    {% if notes %}
+        Notes: <br/>
+        {% for note in notes %}
+            {% if note.date %}
+                {{ note.date }}
+            {% endif %}
+            {% include "familytree/face_name_link.html" with person=note.author %} {{ note.body | safe }}
+        {% endfor %}
+    {% endif %}
+ </div>
+
+ <div style="float: left;width: 100%;">
+    {% if images %}
+    Images:
+    <ul>
     {% for image in images %}
         {% include "familytree/image_link.html" with image=image %}
     {% endfor %}
-</ul>
-{% endif %}
+    </ul>
+    {% endif %}
+ </div>
 
-<br/><br/>
-<a href="{% url 'family_index' %}">Family index</a>
 
 {% endblock content %}
