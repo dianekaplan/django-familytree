@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404
-from .models import Person, Family, Image, ImagePerson, Note, Branch
+from .models import Person, Family, Image, ImagePerson, Note , Branch
 
 today = datetime.now() # used to get birthday_people and anniversary_couples
 branch1_name = Branch.objects.filter(id=1)
@@ -42,9 +42,11 @@ def family_index(request):
     branch3_families = Family.objects.filter(branches__display_name__contains="Kemler")
     branch4_families = Family.objects.filter(branches__display_name__contains="Kobrin")
 
-    context = { 'family_list': family_list, 'branch1_families': branch1_families, 'branch2_families': branch2_families,
+    context = { 'family_list': family_list,
+                'branch1_families': branch1_families, 'branch2_families': branch2_families,
                 'branch3_families': branch3_families, 'branch4_families': branch4_families, 'branch1_name': branch1_name,
-                'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name, 'show_by_branch': show_by_branch}
+                'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
+                'show_by_branch': show_by_branch}
 
     return render(request, 'familytree/family_index.html', context)
 
@@ -58,9 +60,11 @@ def person_index(request):
     branch4_people = Person.objects.filter(branches__display_name__contains="Kobrin")
 
     person_list = Person.objects.order_by('display_name') # add this to limit list displayed: [:125]
-    context = { 'person_list': person_list, 'branch1_people': branch1_people, 'branch2_people': branch2_people,
+    context = { 'person_list': person_list,
+                'branch1_people': branch1_people, 'branch2_people': branch2_people,
                 'branch3_people': branch3_people, 'branch4_people': branch4_people, 'branch1_name': branch1_name,
-                'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name, 'show_by_branch': show_by_branch}
+                'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
+                'show_by_branch': show_by_branch}
     return render(request, 'familytree/person_index.html', context)
 
 

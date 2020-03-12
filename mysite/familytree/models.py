@@ -39,15 +39,15 @@ class Person(models.Model):
     interests = models.CharField(max_length=150, blank=True, default='')
     education = models.CharField(max_length=150, blank=True, default='')
     resting_place = models.CharField(max_length=60, blank=True, default='')
-    deathdate_note = models.CharField(max_length=40, blank=True, default='')
+    deathdate_note = models.CharField(max_length=175, blank=True, default='')
     hidden = models.BooleanField(null=True, default=False)
     adopted = models.BooleanField(null=True, default=False)
     direct_line = models.BooleanField(null=True, default=False)
     show_on_landing_page = models.BooleanField(null=False, default=False)
     sibling_seq = models.IntegerField(blank=True, null=True)  # will later update families to handle this individually
-    notes1 = models.CharField(max_length=150, blank=True, default='')
-    notes2 = models.CharField(max_length=150, blank=True, default='')
-    notes3 = models.CharField(max_length=150, blank=True, default='')
+    notes1 = models.CharField(max_length=300, blank=True, default='')
+    notes2 = models.CharField(max_length=300, blank=True, default='')
+    notes3 = models.CharField(max_length=300, blank=True, default='')
     flag1 = models.CharField(max_length=10, blank=True, default='') # will probably get rid of these anyway
     flag2 = models.CharField(max_length=10, blank=True, default='') # will probably get rid of these anyway
     flag3 = models.CharField(max_length=10, blank=True, default='') # will probably get rid of these anyway
@@ -76,12 +76,14 @@ class Family(models.Model):
     husband_indi = models.CharField(max_length=10, blank=True, default='')
     child_indi = models.CharField(max_length=10, blank=True, default='')  # temporary- still need this?
     no_kids_bool = models.BooleanField(null=True)
+    branches = models.ManyToManyField(Branch, null=True, blank=True)
+
     keem_line = models.BooleanField(null=True, default=False)
     husband_line = models.BooleanField(null=True, default=False)
     kemler_line = models.BooleanField(null=True, default=False)
     kaplan_line = models.BooleanField(null=True, default=False)
     marriage_date = models.DateField(null=True, blank=True)
-    marriage_date_note = models.CharField(max_length=30, blank=True, default='')
+    marriage_date_note = models.CharField(max_length=100, blank=True, default='')
     divorced = models.BooleanField(null=True, default=False)
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
@@ -108,6 +110,8 @@ class Image(models.Model):
     med_name = models.CharField(max_length=50, blank=True) # optional file name for different medium sized image (rather than just resized)
     little_name = models.CharField(max_length=50, blank=True) # optional file name for zoomed-in thumbnail (rather than just resized)
     caption = models.CharField(max_length=50, blank=True)
+    branches = models.ManyToManyField(Branch, null=True, blank=True)
+
     year = models.CharField(max_length=10, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person')
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family')

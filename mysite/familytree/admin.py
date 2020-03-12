@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db import models
 from django.forms import TextInput, Textarea
 
-from .models import Person, Family, Image, ImagePerson, Note, Branch
+from .models import Person, Family, Image, ImagePerson, Note , Branch
 
 
 @admin.register(Person)
