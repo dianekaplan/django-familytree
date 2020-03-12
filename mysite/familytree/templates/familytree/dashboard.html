@@ -2,7 +2,7 @@
 {% block title %}{% endblock title %}
 {% block content %}
 
-Welcome, user! <br/><br/>
+Welcome, {{ user.get_username }}! <br/><br/>
 
 <div class="bottom">
     <div style="float: left; width: 23%;" id="circled_section">
@@ -16,10 +16,24 @@ Welcome, user! <br/><br/>
     </div>
 
 <div style="float: left; width: 30%;" id="circled_section">
-    Birthdays this month:
+    <b>Birthdays this month:</b>
+    {%  if birthday_people%}
+        {% for person in birthday_people %}
+            <li> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
+        {% endfor %}
+    {% else %}
+        (none)
+    {% endif %}
+    <br/><br/>
+    <b>Anniversaries this month:</b>
+    {%  if anniversary_couples%}
+        {% for family in anniversary_couples %}
+            <li> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a> {{family.marriage_date}}</li>
+        {% endfor %}
+    {% else %}
+        (none)
+    {% endif %}
 
-    <br/><br/><br/>
-    Anniversaries this month:
     </div>
 </div>
 

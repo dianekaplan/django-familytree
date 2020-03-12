@@ -1,16 +1,37 @@
+from datetime import datetime
+
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from .models import Person, Family, Image, ImagePerson, Note
 
+today = datetime.now() # used to get birthday_people and anniversary_couples
+
 
 def index(request):
     user = request.user
-    return render(request, 'familytree/dashboard.html', {'user': user})
+
+    try:
+        birthday_people = Person.objects.filter(birthdate__month=today.month).order_by('birthdate__day')
+    except Person.DoesNotExist:
+        birthday_people = None
+
+    try:
+        anniversary_couples = Family.objects.filter(marriage_date__month=today.month).order_by('marriage_date__day')
+    except Person.DoesNotExist:
+        anniversary_couples = None
+
+    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples}
+
+    return render(request, 'familytree/dashboard.html', context )
 
 
 def family_index(request):
     family_list = Family.objects.order_by('display_name')
+
+
+
     context = { 'family_list': family_list}
+
     return render(request, 'familytree/family_index.html', context)
 
 
