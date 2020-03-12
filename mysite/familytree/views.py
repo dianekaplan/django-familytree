@@ -5,7 +5,11 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404
 from .models import Person, Family, Image, ImagePerson, Note, Branch
 
 today = datetime.now() # used to get birthday_people and anniversary_couples
-
+branch1_name = Branch.objects.filter(id=1)
+branch2_name = Branch.objects.filter(id=2)
+branch3_name = Branch.objects.filter(id=3)
+branch4_name = Branch.objects.filter(id=4)
+show_by_branch = True  # default this to False, but set to true if you've set families
 
 def index(request):
     user = request.user
@@ -32,24 +36,26 @@ def index(request):
 
 def family_index(request):
     family_list = Family.objects.order_by('display_name')
-    context = { 'family_list': family_list}
+
+    branch1_families = Family.objects.filter(branches__display_name__contains="Keem")
+    branch2_families = Family.objects.filter(branches__display_name__contains="Husband")
+    branch3_families = Family.objects.filter(branches__display_name__contains="Kemler")
+    branch4_families = Family.objects.filter(branches__display_name__contains="Kobrin")
+
+    context = { 'family_list': family_list, 'branch1_families': branch1_families, 'branch2_families': branch2_families,
+                'branch3_families': branch3_families, 'branch4_families': branch4_families, 'branch1_name': branch1_name,
+                'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name, 'show_by_branch': show_by_branch}
 
     return render(request, 'familytree/family_index.html', context)
 
 
 def person_index(request):
-
     # to start we'll assume up to 4 branches, gets ids 1-4, entering names manually
     # @TODO: make this grab them dynamically instead
     branch1_people = Person.objects.filter(branches__display_name__contains="Keem")
     branch2_people = Person.objects.filter(branches__display_name__contains="Husband")
     branch3_people = Person.objects.filter(branches__display_name__contains="Kemler")
     branch4_people = Person.objects.filter(branches__display_name__contains="Kobrin")
-    branch1_name = Branch.objects.filter(id = 1)
-    branch2_name = Branch.objects.filter(id = 2)
-    branch3_name = Branch.objects.filter(id = 3)
-    branch4_name = Branch.objects.filter(id = 4)
-    show_by_branch = True # default this to False, but set to true if you've set families
 
     person_list = Person.objects.order_by('display_name') # add this to limit list displayed: [:125]
     context = { 'person_list': person_list, 'branch1_people': branch1_people, 'branch2_people': branch2_people,

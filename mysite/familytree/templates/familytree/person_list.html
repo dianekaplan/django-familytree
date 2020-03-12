@@ -1,8 +1,0 @@
-<div style="float: left; width: 20%;" id="circled_section">
-    <h4 align="center">The {{branch_name}} Family:</h4>
-<ul>
-{% for person in person_list %}
-    <li>{% include "familytree/face_name_link.html" with person=person %} </li>
-{% endfor %}
-</ul>
-</div>
