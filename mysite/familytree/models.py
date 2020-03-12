@@ -1,7 +1,15 @@
-from datetime import timezone, datetime
-
 from django.db import models
+from django.contrib.auth.models import User
 
+class Branch(models.Model):
+    display_name = models.CharField(max_length=50, blank=True)
+
+    class Meta(object):
+        verbose_name_plural = 'Branches'
+        db_table = 'branches'
+
+    def __str__(self):
+        return self.display_name
 
 class Person(models.Model):
     gedcom_indi = models.CharField(max_length=10, blank=True, default='')
@@ -12,6 +20,8 @@ class Person(models.Model):
     maiden = models.CharField(max_length=20, blank=True, default='')
     nickname = models.CharField(max_length=20, blank=True, default='')
     display_name = models.CharField(max_length=40)
+    branches = models.ManyToManyField(Branch, null=True, blank=True)
+
     birthdate = models.DateField(null=True, blank=True)
     birthdate_note = models.CharField(max_length=55, blank=True, default='')
     birthplace = models.CharField(max_length=60, blank=True, default='')
@@ -163,3 +173,21 @@ class Note(models.Model):
 
     def __str__(self):
         return self.author_name + self.body
+
+# class Profile(models.Model): # This class holds additional info for user records
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     person = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
+#     logins = models.IntegerField(null=True)
+#     last_pestered = models.DateField(null=True, blank=True)
+#     connection_notes = models.CharField(max_length=150, blank=True)
+#     furthest_html = models.CharField(max_length=150, blank=True)
+#     shared_account = models.BooleanField(null=True, default=False)
+#
+#     class Meta(object):
+#         verbose_name_plural = 'Profiles'
+#         db_table = 'profiles'
+#
+#     def __str__(self):
+#         return self.person.display_name
+
+

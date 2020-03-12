@@ -2,15 +2,37 @@
 {% block title %} - person index{% endblock title %}
 {% block content %}
 
+{#If we've populated people's branches, show by branch#}
+{% if show_by_branch == True %}
 
-{% if person_list %}
-    <ul>
-    {% for person in person_list %}
-        {% include "familytree/face_name_link.html" with person=person %} <br/>
-    {% endfor %}
-    </ul>
+    {% if branch1_people %}
+        {% include "familytree/person_list.html" with person_list=branch1_people branch_name=branch1_name.first %}
+    {% endif %}
+
+    {% if branch2_people %}
+        {% include "familytree/person_list.html" with person_list=branch2_people branch_name=branch2_name.first %}
+    {% endif %}
+
+    {% if branch3_people %}
+        {% include "familytree/person_list.html" with person_list=branch3_people branch_name=branch3_name.first %}
+    {% endif %}
+
+    {% if branch4_people %}
+        {% include "familytree/person_list.html" with person_list=branch4_people branch_name=branch4_name.first %}
+    {% endif %}
+
+{#Otherwise, show list of everyone#}
 {% else %}
-    <p>No people are available.</p>
+    {% if person_list %}
+        <ul>
+        {% for person in person_list %}
+            {% include "familytree/face_name_link.html" with person=person %} <br/>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No people are available.</p>
+    {% endif %}
 {% endif %}
+
 
 {% endblock content %}

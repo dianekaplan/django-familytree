@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db import models
 from django.forms import TextInput, Textarea
 
-from .models import Person, Family, Image, ImagePerson, Note
+from .models import Person, Family, Image, ImagePerson, Note, Branch
 
 
 @admin.register(Person)
@@ -43,4 +43,15 @@ class NoteAdmin(admin.ModelAdmin):
         models.CharField: {'widget': TextInput(attrs={'size':'200', 'rows':2})},
         models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
     }
+    pass
+
+@admin.register(Branch)
+class BranchAdmin(admin.ModelAdmin):
+    search_fields = ('display_name',)
+    list_display = ('id', 'display_name')
+
+    # formfield_overrides = {
+    #     models.CharField: {'widget': TextInput(attrs={'size':'200', 'rows':2})},
+    #     models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
+    # }
     pass
