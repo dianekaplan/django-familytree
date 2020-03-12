@@ -17,10 +17,15 @@ def index(request):
 
     try:
         anniversary_couples = Family.objects.filter(marriage_date__month=today.month).order_by('marriage_date__day')
-    except Person.DoesNotExist:
+    except Family.DoesNotExist:
         anniversary_couples = None
 
-    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples}
+    try:
+        latest_pics = Image.objects.all().order_by('-id')[:10]
+    except Image.DoesNotExist:
+        latest_pics = None
+
+    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples, 'latest_pics': latest_pics}
 
     return render(request, 'familytree/dashboard.html', context )
 

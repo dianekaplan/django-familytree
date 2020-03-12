@@ -39,7 +39,16 @@ Welcome, {{ user.get_username }}! <br/><br/>
 
 <div class="bottom" style="float: right; width: 35%;"  >
     <div  id="circled_section">
-    Latest pics:
+        Latest pics: <br/>
+       {%  if latest_pics%}
+        {% for image in latest_pics %}
+            {% include "familytree/image_link.html" with image=image %}
+        {% endfor %}
+    {% else %}
+        (none)
+    {% endif %}
+
+
     </div>
 
     <div   id="circled_section">
