@@ -20,7 +20,7 @@ class FamilyAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(Image)
-class FamilyAdmin(admin.ModelAdmin):
+class ImageAdmin(admin.ModelAdmin):
     search_fields = ('big_name',)
     list_display = ('big_name', 'year', 'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at')
     ordering = ('-created_at', 'big_name')

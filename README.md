@@ -3,7 +3,6 @@ Just a proof of concept to start, but this will be a django family tree tool tha
 common geneology standard used on sites like ancestry.com). 
 
 **Basic family tree (import once from gedcom)**
-
 Setup/data import: 
 - For local environment, update .bash_profile with: 
 export ENV_ROLE=development
@@ -12,9 +11,18 @@ export FAMILY_LOCAL_DB_PASS=[your local password]
 - save gedcom file in expected place (to start: mysite/familytree/management/commands/gedcom_files)
 - run in directory with manage.py: python3 manage.py importgedcom your_file.ged
 
+By default, all of your person/family records will display to all users
+
+**Add family branches**
+Some relatives/users are only related to one part of the family, so I want to only show them people/images related to them.
+You can define family branches as a way of (a) sorting people for clearer display and (b) showing each user the people 
+they're related to. I define 4 branches in my instance (one for each of my grandparents), which makes things easier to find: 
+- people and family index pages show separate columns for each branch
+- the 'family history' page shows separate sections for each branch
+- the logged-in user only sees this and other content (family album, videos, etc) based on which branch(es) they're in.
+Setup: in the admin area, add up to 4 branches, then you can specify which branch(es) apply for people, families, images, and more.
 
 **To import multiple times from gedcom**
-
 Background info about IDs: 
 - In a gedcom file, the INDI values associate people and family records to each other. However, these are only internal 
 to the specific file, and THESE IDs CAN CHANGE in subsequent gedcom exports from the same tool. 
@@ -32,12 +40,5 @@ Then each user ID gets an ID with the family number they connect with with a str
 For example a third cousin may have ID: 15NathanNoahMichaelMarc. Then a spouse who married in is that ID + SP, etc.
 
 **Other usage notes**
-
 - We'll default to showing a person's given name(s) and last name, but if you'd like to use some other nickname you can 
 update "display_name" field. (We show that instead, if it's populated) 
-- Filtering content: some relatives/users are only related to one part of the family, so I want to only show them people/images
-that are related to them. I think of the family tree as having 4 sections (one for each of my 4 grandparents), and in the numbering
-scheme mentioned above that corresponds to families 4, 5, 6, and 7. You'll see these 4 fields on person/family/image/video records
-as a way to flag true/false for being in that branch. (For example my person record is true for all 4, where my mom's will only 
-be true for 4 and 5). This is one bare-bones way to reduce the scope of what different users see, but down the road we could make it 
-more granular. 
