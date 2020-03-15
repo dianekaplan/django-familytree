@@ -6,12 +6,12 @@ Welcome, {{ user.get_username }}! <br/><br/>
 
 <div class="bottom">
     <div style="float: left; width: 23%;" id="circled_section">
-    Person link
+    {% include "familytree/face_name_link.html" with person=this_user_person.first %}<br/>
     My family history<br/>
     <a href="{% url 'image_index'  %}">Family album</a><br/>
     Home movies <br/>
     Outline View<br/>
-    My furthest ancestors here: <br/>
+    My furthest ancestors here: {{ profile.first.furthest_html | safe}}<br/>
     My additions to the family tree: <br/>
     </div>
 

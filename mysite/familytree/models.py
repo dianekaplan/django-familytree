@@ -27,10 +27,10 @@ class Person(models.Model):
     birthplace = models.CharField(max_length=60, blank=True, default='')
     origin_family = models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL)
     orig_fam_indi = models.CharField(max_length=10, blank=True, default='')
-    keem_line = models.BooleanField(null=True, default=False)
-    husband_line = models.BooleanField(null=True, default=False)
-    kemler_line = models.BooleanField(null=True, default=False)
-    kaplan_line = models.BooleanField(null=True, default=False)
+    keem_line = models.BooleanField(null=True, default=False)     #@TODO: remove when all set
+    husband_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
+    kemler_line = models.BooleanField(null=True, default=False)   #@TODO: remove when all set
+    kaplan_line = models.BooleanField(null=True, default=False)   #@TODO: remove when all set
     sex = models.CharField(max_length=2, blank=True, default='')
     origin = models.CharField(max_length=100, blank=True, default='') # big description of background, probably will remove
     face = models.CharField(max_length=20, blank=True, default='')
@@ -78,10 +78,10 @@ class Family(models.Model):
     no_kids_bool = models.BooleanField(null=True)
     branches = models.ManyToManyField(Branch, null=True, blank=True)
 
-    keem_line = models.BooleanField(null=True, default=False)
-    husband_line = models.BooleanField(null=True, default=False)
-    kemler_line = models.BooleanField(null=True, default=False)
-    kaplan_line = models.BooleanField(null=True, default=False)
+    keem_line = models.BooleanField(null=True, default=False)    #@TODO: remove when all set
+    husband_line = models.BooleanField(null=True, default=False) #@TODO: remove when all set
+    kemler_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
+    kaplan_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
     marriage_date = models.DateField(null=True, blank=True)
     marriage_date_note = models.CharField(max_length=100, blank=True, default='')
     divorced = models.BooleanField(null=True, default=False)
@@ -116,10 +116,10 @@ class Image(models.Model):
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person')
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family')
     featured = models.IntegerField(null=True, default=False)
-    keem_line = models.BooleanField(null=True, default=False)
-    husband_line = models.BooleanField(null=True, default=False)
-    kemler_line = models.BooleanField(null=True, default=False)
-    kaplan_line = models.BooleanField(null=True, default=False)
+    keem_line = models.BooleanField(null=True, default=False)    #@TODO: remove when all set
+    husband_line = models.BooleanField(null=True, default=False) #@TODO: remove when all set
+    kemler_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
+    kaplan_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
 
@@ -178,20 +178,21 @@ class Note(models.Model):
     def __str__(self):
         return self.author_name + self.body
 
-# class Profile(models.Model): # This class holds additional info for user records
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     person = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
-#     logins = models.IntegerField(null=True)
-#     last_pestered = models.DateField(null=True, blank=True)
-#     connection_notes = models.CharField(max_length=150, blank=True)
-#     furthest_html = models.CharField(max_length=150, blank=True)
-#     shared_account = models.BooleanField(null=True, default=False)
-#
-#     class Meta(object):
-#         verbose_name_plural = 'Profiles'
-#         db_table = 'profiles'
-#
-#     def __str__(self):
-#         return self.person.display_name
+class Profile(models.Model): # This class holds additional info for user records
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    person = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
+    branches = models.ManyToManyField(Branch, blank=True)
+    logins = models.IntegerField(default=0)
+    last_pestered = models.DateField(null=True, blank=True)
+    connection_notes = models.CharField(max_length=150, blank=True)
+    furthest_html = models.CharField(max_length=150, blank=True)
+    shared_account = models.BooleanField(null=True, default=False)
+
+    class Meta(object):
+        verbose_name_plural = 'Profiles'
+        db_table = 'profiles'
+
+    def __str__(self):
+        return self.person.display_name
 
 

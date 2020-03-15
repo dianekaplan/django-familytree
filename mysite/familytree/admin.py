@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db import models
 from django.forms import TextInput, Textarea
 
-from .models import Person, Family, Image, ImagePerson, Note , Branch
+from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile
 
 
 @admin.register(Person)
@@ -54,4 +54,9 @@ class BranchAdmin(admin.ModelAdmin):
     #     models.CharField: {'widget': TextInput(attrs={'size':'200', 'rows':2})},
     #     models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
     # }
+    pass
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'person', 'connection_notes')
     pass

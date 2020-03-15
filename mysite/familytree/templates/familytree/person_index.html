@@ -5,19 +5,19 @@
 {#If we've populated people's branches, show by branch#}
 {% if show_by_branch == True %}
 
-    {% if branch1_people %}
+    {% if branch1_people and branch1_name.first in accessible_branches %}
         {% include "familytree/index_list.html" with person_list=branch1_people branch_name=branch1_name.first list_type="person"%}
     {% endif %}
 
-    {% if branch2_people %}
+    {% if branch2_people and branch2_name.first in accessible_branches %}
         {% include "familytree/index_list.html" with person_list=branch2_people branch_name=branch2_name.first list_type="person"%}
     {% endif %}
 
-    {% if branch3_people %}
+    {% if branch3_people and branch3_name.first in accessible_branches%}
         {% include "familytree/index_list.html" with person_list=branch3_people branch_name=branch3_name.first list_type="person" %}
     {% endif %}
 
-    {% if branch4_people %}
+    {% if branch4_people and branch4_name.first in accessible_branches%}
         {% include "familytree/index_list.html" with person_list=branch4_people branch_name=branch4_name.first list_type="person" %}
     {% endif %}
 

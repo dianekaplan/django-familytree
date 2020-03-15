@@ -2,7 +2,8 @@ from datetime import datetime
 
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404
-from .models import Person, Family, Image, ImagePerson, Note , Branch
+from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile
+from django.contrib.auth import logout
 
 today = datetime.now() # used to get birthday_people and anniversary_couples
 branch1_name = Branch.objects.filter(id=1)
@@ -13,6 +14,8 @@ show_by_branch = True  # default this to False, but set to true if you've set fa
 
 def index(request):
     user = request.user
+    profile = Profile.objects.filter(user=user)
+    accessible_branches = get_valid_branches(request)
 
     try:
         birthday_people = Person.objects.filter(birthdate__month=today.month).order_by('birthdate__day')
@@ -29,13 +32,27 @@ def index(request):
     except Image.DoesNotExist:
         latest_pics = None
 
-    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples, 'latest_pics': latest_pics}
+    try:
+        this_user_person = Person.objects.filter(profile__user_id=user)
+
+
+        # branch4_families = Family.objects.filter(branches__display_name__contains="Kobrin")
+    except Profile.DoesNotExist:
+        this_user_person = None
+
+
+
+    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples, 'latest_pics': latest_pics,
+              'this_user_person': this_user_person, 'profile': profile,
+               'accessible_branches': accessible_branches
+               }
 
     return render(request, 'familytree/dashboard.html', context )
 
 
 def family_index(request):
     family_list = Family.objects.order_by('display_name')
+    accessible_branches = get_valid_branches(request)
 
     branch1_families = Family.objects.filter(branches__display_name__contains="Keem")
     branch2_families = Family.objects.filter(branches__display_name__contains="Husband")
@@ -46,12 +63,14 @@ def family_index(request):
                 'branch1_families': branch1_families, 'branch2_families': branch2_families,
                 'branch3_families': branch3_families, 'branch4_families': branch4_families, 'branch1_name': branch1_name,
                 'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
-                'show_by_branch': show_by_branch}
+                'show_by_branch': show_by_branch, 'accessible_branches': accessible_branches}
 
     return render(request, 'familytree/family_index.html', context)
 
 
 def person_index(request):
+    accessible_branches = get_valid_branches(request)
+
     # to start we'll assume up to 4 branches, gets ids 1-4, entering names manually
     # @TODO: make this grab them dynamically instead
     branch1_people = Person.objects.filter(branches__display_name__contains="Keem")
@@ -59,12 +78,14 @@ def person_index(request):
     branch3_people = Person.objects.filter(branches__display_name__contains="Kemler")
     branch4_people = Person.objects.filter(branches__display_name__contains="Kobrin")
 
+
+
     person_list = Person.objects.order_by('display_name') # add this to limit list displayed: [:125]
     context = { 'person_list': person_list,
                 'branch1_people': branch1_people, 'branch2_people': branch2_people,
                 'branch3_people': branch3_people, 'branch4_people': branch4_people, 'branch1_name': branch1_name,
                 'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
-                'show_by_branch': show_by_branch}
+                'show_by_branch': show_by_branch, 'accessible_branches':accessible_branches}
     return render(request, 'familytree/person_index.html', context)
 
 
@@ -145,3 +166,17 @@ def image_index(request):
     image_list = Image.objects.order_by('year') # add this to limit list displayed: [:125]
     context = { 'image_list': image_list}
     return render(request, 'familytree/image_index.html', context)
+
+def landing(request):
+    context = { 'image_list': "test"}
+    return render(request, 'familytree/landing.html', context)
+
+def get_valid_branches(request):
+    user = request.user
+    profile = Profile.objects.filter(user=user)
+    accessible_branches = Branch.objects.filter(profile__in=profile)
+    return accessible_branches
+
+def logout(request):
+    logout(request)
+    return render(request, 'familytree/landing.html')
