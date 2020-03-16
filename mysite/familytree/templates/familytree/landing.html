@@ -2,8 +2,27 @@
 {% block title %} - {{ family.display_name }}{% endblock title %}
 {% block content %}
 
-<h3>landing page</h3>
+<h3>Welcome!</h3>
 
+Are you related to any of the folks below, or see yourself in this list? Welcome to our family tree website! I've spent
+    years gathering info, dates, and pictures, and here is a place to share it all. To protect our family this website
+    is password-protected, so if you're related and would like an account, please request it here.
+{#    @@TODO: add request form#}
 
+Thanks!
+Diane Kaplan (Arlington, MA USA)
+
+<br/><br/>
+    [PLACEHOLDER FOR LOGIN BOX]
+
+{% if landing_page_people %}
+    <ul>
+    {% for person in landing_page_people %}
+        {% include "familytree/face_name_link.html" with person=person %}
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No people are available.</p>
+{% endif %}
 
 {% endblock content %}
