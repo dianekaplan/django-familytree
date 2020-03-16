@@ -5,9 +5,9 @@
 
 <h1>Family Album</h1>
 
-{% if image_list %}
+{% if landing_page_people %}
     <ul>
-    {% for image in image_list %}
+    {% for person in landing_page_people %}
         {% include "familytree/image_link.html" with image=image %}
     {% endfor %}
     </ul>

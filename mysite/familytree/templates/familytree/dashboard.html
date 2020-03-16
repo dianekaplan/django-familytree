@@ -2,11 +2,15 @@
 {% block title %}{% endblock title %}
 {% block content %}
 
-Welcome, {{ user.get_username }}! <br/><br/>
+{#Welcome, {{ user.get_username }}! <br/><br/>#}
+Welcome, {{ user_person.display_name }}! <br/><br/>
 
 <div class="bottom">
     <div style="float: left; width: 23%;" id="circled_section">
-    {% include "familytree/face_name_link.html" with person=this_user_person.first %}<br/>
+
+    {% include "familytree/face_name_link.html" with person=user_person %}<br/>
+
+        <br/>
     My family history<br/>
     <a href="{% url 'image_index'  %}">Family album</a><br/>
     Home movies <br/>
