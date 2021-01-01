@@ -2,7 +2,66 @@
 {% block title %}{% endblock title %}
 {% block content %}
 
-    Dashboard placeholder
+{#Welcome, {{ user.get_username }}! <br/><br/>#}
+Welcome, {{ user_person.display_name }}! <br/><br/>
 
+<div class="bottom">
+    <div style="float: left; width: 23%;" id="circled_section">
+
+    {% include "familytree/face_name_link.html" with person=user_person %}<br/>
+
+        <br/>
+    My family history<br/>
+    <a href="{% url 'image_index'  %}">Family album</a><br/>
+    Home movies <br/>
+    Outline View<br/>
+    My furthest ancestors here: {{ profile.first.furthest_html | safe}}<br/>
+    My additions to the family tree: <br/>
+    </div>
+
+<div style="float: left; width: 30%;" id="circled_section">
+    <b>Birthdays this month:</b>
+    {%  if birthday_people%}
+        {% for person in birthday_people %}
+            <li> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
+        {% endfor %}
+    {% else %}
+        (none)
+    {% endif %}
+    <br/><br/>
+    <b>Anniversaries this month:</b>
+    {%  if anniversary_couples%}
+        {% for family in anniversary_couples %}
+            <li> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a> {{family.marriage_date}}</li>
+        {% endfor %}
+    {% else %}
+        (none)
+    {% endif %}
+
+    </div>
+</div>
+
+<div class="bottom" style="float: right; width: 35%;"  >
+    <div  id="circled_section">
+        Latest pics: <br/>
+       {%  if latest_pics%}
+        {% for image in latest_pics %}
+            {% include "familytree/image_link.html" with image=image %}
+        {% endfor %}
+    {% else %}
+        (none)
+    {% endif %}
+
+
+    </div>
+
+    <div   id="circled_section">
+    Latest videos:
+    </div>
+
+    <div   id="circled_section">
+    Latest updates:
+    </div>
+ </div>
 
 {% endblock content %}

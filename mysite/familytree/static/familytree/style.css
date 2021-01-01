@@ -25,7 +25,6 @@ em   		{font-weight: bold; }
 .thin		{ border-width: thin }
 .groove 	{ border-style: groove }
 
-
 ul      	{ font-size: 12pt; margin-left: 1em }
 
 ul ul   	{ margin-left: 2em }
@@ -36,24 +35,89 @@ p		    { font-size: 12pt;
 		    text-indent: 1em}
 
 /*h1		{font-size: 20pt;}*/
-
 /*h2		{font-size: 12pt; margin-left: 5em}*/
 
 caption 	{font-size: 14pt; color:#888888; background-color: #FFFFFF;
 		    font-family: eurostile, arial, sans-serif}
 
 /*th		{font-size: 12pt}*/
-
 /*td		{font-size: 12pt}*/
 
-
 .col-md-10 .line {
-        /*padding-left : 8vw;*/
         background-color:lightgray;
         height:0px;
         width:100%;
     }
 
-/*li a {*/
-/*    color: green;*/
-/*}*/
+#circled_section {
+    border-radius: 25px;
+    border: 5px solid #99CC66;
+    padding: 20px;
+    margin: 10px;
+}
+
+.navbar-nav {
+  margin: 7.5px -15px; }
+  .navbar-nav > li > a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 20px; }
+  @media (max-width: 767px) {
+    .navbar-nav .open .dropdown-menu {
+      position: static;
+      float: none;
+      width: auto;
+      margin-top: 0;
+      background-color: transparent;
+      border: 0;
+      box-shadow: none; }
+      .navbar-nav .open .dropdown-menu > li > a,
+      .navbar-nav .open .dropdown-menu .dropdown-header {
+        padding: 5px 15px 5px 25px; }
+      .navbar-nav .open .dropdown-menu > li > a {
+        line-height: 20px; }
+        .navbar-nav .open .dropdown-menu > li > a:hover,
+        .navbar-nav .open .dropdown-menu > li > a:focus {
+          background-image: none; } }
+  @media (min-width: 768px) {
+    .navbar-nav {
+      float: left;
+      margin: 0; }
+      .navbar-nav > li {
+        float: left; }
+        .navbar-nav > li > a {
+          padding-top: 15px;
+          padding-bottom: 15px; } }
+
+.container {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px; }
+  .container:before,
+  .container:after {
+    content: " ";
+    display: table; }
+  .container:after {
+    clear: both; }
+  @media (min-width: 768px) {
+    .container {
+      width: 750px; } }
+  @media (min-width: 992px) {
+    .container {
+      width: 970px; } }
+  @media (min-width: 1200px) {
+    .container {
+      width: 1170px; } }
+
+.container-fluid {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px; }
+  .container-fluid:before,
+  .container-fluid:after {
+    content: " ";
+    display: table; }
+  .container-fluid:after {
+    clear: both; }

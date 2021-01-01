@@ -2,15 +2,37 @@
 {% block title %} - image detail{% endblock title %}
 {% block content %}
 
+<img src="https://res.cloudinary.com/hnyiprajv/image/upload/r_20/{{ image.big_name }}" />
+<br/>
+{{ image.year }}
+<br/>
+{% if image.caption %}
+    {{ image.caption }}
+{% endif %}
+<br/>
 
-<h3>{{ image.big_name }}</h3>
+    {% if image_person %}
+        {% for person in image_person %}
+        Go to person's page:
+            {% include "familytree/face_name_link.html" with person=person %}
+        {% endfor %}
+        <br/>
+    {%  endif %}
+
+    {% if image_family %}
+        {% for family in image_family %}
+        Go to family's page: <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a>
+        {% endfor %}
+        <br/>
+    {%  endif %}
 
 <br/>
-<img src="image.big_name" />
 
-<br/><br/>
-
-
-<a href="{% url 'family_index' %}">Family index</a>
+    {% if image_people %}
+        This picture contains:<br/>
+        {% for person in image_people %}
+            {% include "familytree/face_name_link.html" with person=person.first %} <br/>
+        {% endfor %}
+    {%  endif %}
 
 {% endblock content %}

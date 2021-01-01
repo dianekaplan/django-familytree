@@ -1,0 +1,15 @@
+<div style="float: left; width: 19%;" id="circled_section">
+    <h4 align="center">The {{branch_name}} Family:</h4>
+
+{%  if list_type == "person" %}
+    {% for person in person_list %}
+        {% include "familytree/face_name_link.html" with person=person %} <br/>
+    {% endfor %}
+{% endif %}
+
+{%  if list_type == "family" %}
+    {% for family in family_list %}
+        <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a><br/>
+    {% endfor %}
+{% endif %}
+</div>

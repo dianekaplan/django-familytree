@@ -2,14 +2,36 @@
 {% block title %} - family index{% endblock title %}
 {% block content %}
 
-{% if family_list %}
-    <ul>
-    {% for family in family_list %}
-        <li><a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No families are available.</p>
-{% endif %}
+{#If we've populated people's branches, show by branch#}
+{% if show_by_branch == True %}
 
+    {% if branch1_families and branch1_name.first in accessible_branches %}
+        {% include "familytree/index_list.html" with family_list=branch1_families branch_name=branch1_name.first list_type="family"%}
+    {% endif %}
+
+    {% if branch2_families and branch2_name.first in accessible_branches  %}
+        {% include "familytree/index_list.html" with family_list=branch2_families branch_name=branch2_name.first list_type="family"%}
+    {% endif %}
+
+    {% if branch3_families and branch3_name.first in accessible_branches  %}
+        {% include "familytree/index_list.html" with family_list=branch3_families branch_name=branch3_name.first list_type="family"%}
+    {% endif %}
+
+    {% if branch4_families and branch4_name.first in accessible_branches %}
+        {% include "familytree/index_list.html" with family_list=branch4_families branch_name=branch4_name.first list_type="family"%}
+    {% endif %}
+
+{#Otherwise, show full families list#}
+{% else %}
+    {% if family_list %}
+        <ul>
+        {% for family in family_list %}
+            <li><a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No families are available.</p>
+    {% endif %}
+
+{% endif %}
 {% endblock content %}

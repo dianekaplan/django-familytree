@@ -68,7 +68,7 @@ class Command(BaseCommand):
     def handle_person(self, element):
         self.gedcom_person_records += 1
         (gedcom_first_middle, last) = element.get_name()
-        gedcom_UUID = ''
+        gedcom_uuid = ''
         skip_record = False
 
         if "INDI" in str(element):
@@ -85,10 +85,10 @@ class Command(BaseCommand):
         for child in element_children:
             # print(element.to_gedcom_string(recursive=True))
             if "ALIA" in str(child):
-                gedcom_UUID = str(child).replace("1 ALIA ", "").replace("\r\n", "")
+                gedcom_uuid = str(child).replace("1 ALIA ", "").replace("\r\n", "")
 
                 try:
-                    matching_record = Person.objects.get(gedcom_UUID=gedcom_UUID)
+                    matching_record = Person.objects.get(gedcom_uuid=gedcom_uuid)
                     if matching_record != "":
                         skip_record = self.check_matching_record(matching_record, element)
                 except:
@@ -96,11 +96,12 @@ class Command(BaseCommand):
 
         if not skip_record:
             # make the person record
-            (obj, created_bool) = Person.objects.get_or_create(gedcom_indi=gedcom_indi, gedcom_UUID=gedcom_UUID,
+            (obj, created_bool) = Person.objects.get_or_create(gedcom_indi=gedcom_indi, gedcom_uuid=gedcom_uuid,
                                                            first=gedcom_first_middle, last=last,
                                                            display_name=display_name, birthdate_note=birthdate,
                                                            birthplace=birthplace, sex=sex, work=occupation,
                                                            deathdate_note=deathdate, resting_place=deathplace,
+                                                               show_on_landing_page=True,
                                                            created_at = timezone.now(), updated_at = timezone.now(), reviewed=False)
             if created_bool:
                 self.person_added_count += 1

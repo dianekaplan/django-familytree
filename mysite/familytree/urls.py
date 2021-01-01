@@ -6,6 +6,9 @@ urlpatterns = [
     # ex: /familytree
     path('', views.index, name='dashboard'),
 
+    # ex: /landing
+    path('landing/', views.landing, name='landing'),
+
     # ex: /people/
     path('people/', views.person_index, name='person_index'),
 
@@ -24,4 +27,3 @@ urlpatterns = [
     # ex: /images/5/
     path('images/<int:image_id>/', views.image_detail, name='image_detail'),
 ]
-

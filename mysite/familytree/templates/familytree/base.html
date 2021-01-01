@@ -11,13 +11,25 @@
     </head>
 
     <body>
-
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'familytree/style.css' %}">
 
-    {% include "familytree/top_nav.html" with user=user %} <br/>
-    {% block content %}
-        <p>Placeholder text in base template- this gets replaced with page content.</p>
-    {% endblock content %}
+{#    Top nav#}
+    {% include "familytree/top_nav.html" with user_person=user_person  %} <br/>
+{#  Separator line#}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10">
+                <hr class = "line" />
+         </div>
+        </div>
+    </div>
+
+{#  Page content#}
+    <div class="container">
+        {% block content %}
+            <p>Placeholder text in base template- this gets replaced with page content.</p>
+        {% endblock content %}
+    </div>
     </body>
 </html>
