@@ -81,11 +81,12 @@ class Family(models.Model):
     original_family = models.BooleanField(null=True)
     original_family_text = models.CharField(max_length=600, null=True, blank=True, default='')
     branches = models.ManyToManyField(Branch, null=True, blank=True)
+    direct_family_number = models.CharField(max_length=5, unique=True, null=True, blank=True,default=None)
 
-    keem_line = models.BooleanField(null=True, default=False)    #@TODO: remove when all set
-    husband_line = models.BooleanField(null=True, default=False) #@TODO: remove when all set
-    kemler_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
-    kaplan_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
+    keem_line = models.BooleanField(null=True, default=False)    #@TODO: remove after migration is done
+    husband_line = models.BooleanField(null=True, default=False) #@TODO: remove after migration is done
+    kemler_line = models.BooleanField(null=True, default=False)  #@TODO: remove after migration is done
+    kaplan_line = models.BooleanField(null=True, default=False)  #@TODO: remove after migration is done
     marriage_date = models.DateField(null=True, blank=True)
     marriage_date_note = models.CharField(max_length=100, null=True, blank=True, default='')
     divorced = models.BooleanField(null=True, default=False)

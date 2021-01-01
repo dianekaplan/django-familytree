@@ -15,7 +15,7 @@ class PersonAdmin(admin.ModelAdmin):
 @admin.register(Family)
 class FamilyAdmin(admin.ModelAdmin):
     search_fields = ('display_name',)
-    list_display = ('display_name', 'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at', 'reviewed')
+    list_display = ('display_name', 'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at', 'direct_family_number','reviewed')
     ordering = ('-created_at', 'display_name')
     pass
 
