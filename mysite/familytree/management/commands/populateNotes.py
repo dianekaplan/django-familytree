@@ -9,12 +9,7 @@ from django.utils.timezone import make_aware
 class Command(BaseCommand):
     help = 'Migrates notes and image_person data from previous database(internal use)'
 
-    # naive_datetime = datetime.datetime.now()
-    # naive_datetime.tzinfo  # None
-    #
     settings.TIME_ZONE
-    # aware_datetime = make_aware(naive_datetime)
-    # aware_datetime.tzinfo  # <UTC>
 
 
     def populate_notes(self):
@@ -28,7 +23,7 @@ class Command(BaseCommand):
             print(note_row)
             row_list = list(note_row)
 
-            parameters_dict = {'author_name':row_list[3],'body': row_list[4], 'date': row_list[5], 'active': True,
+            parameters_dict = {'id':row_list[0], 'author_name':row_list[3],'body': row_list[4], 'date': row_list[5], 'active': True,
                                'for_self' : False,'created_at':make_aware(row_list[9]), 'updated_at' : make_aware(row_list[10])}
 
             if row_list[2]:
