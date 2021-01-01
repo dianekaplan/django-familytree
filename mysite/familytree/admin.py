@@ -2,13 +2,13 @@ from django.contrib import admin
 from django.db import models
 from django.forms import TextInput, Textarea
 
-from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile
+from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Story, PersonStory
 
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     search_fields = ('display_name', 'first', 'last')
-    list_display = ('display_name', 'birthdate_note', 'origin_family', 'gedcom_UUID', 'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at', 'reviewed')
+    list_display = ('display_name', 'birthdate_note', 'family_id', 'gedcom_uuid', 'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at', 'reviewed')
     ordering = ('-created_at', 'display_name')
     pass
 
@@ -32,6 +32,21 @@ class ImagePersonAdmin(admin.ModelAdmin):
     list_display = ('image_id', 'person_id', 'created_at')
     ordering = ('-created_at', 'image_id')
     pass
+
+@admin.register(Story)
+class ImageAdmin(admin.ModelAdmin):
+    search_fields = ('description',)
+    list_display = ('description', 'image', 'intro', 'slug', 'source','created_at')
+    ordering = ('-created_at', 'description')
+    pass
+
+@admin.register(PersonStory)
+class PersonStoryAdmin(admin.ModelAdmin):
+    search_fields = ('story_id',)
+    list_display = ('story_id', 'person_id', 'created_at')
+    ordering = ('-created_at', 'story_id')
+    pass
+
 
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
