@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'django_nose',
 ]
 
 MIDDLEWARE = [
@@ -89,6 +90,8 @@ TEMPLATES = [
     },
 ]
 
+# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 
@@ -96,13 +99,9 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default-old': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # },
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "family_local", 
+        "NAME": "migration_test", # family_local  # dec28_backup
         "USER": "family",
         "PASSWORD": FAMILY_LOCAL_DB_PASS,
         "HOST": "localhost",
@@ -110,7 +109,7 @@ DATABASES = {
     },
     "source": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "postgres",
+        "NAME": "dec27_backup_7",  # postgres
         "USER": "family",
         "PASSWORD": FAMILY_LOCAL_DB_PASS,
         "HOST": "localhost",
@@ -125,7 +124,6 @@ if 'test' in sys.argv:
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }
-
 
 
 # Password validation
@@ -159,6 +157,10 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+# LOGIN_REDIRECT_URL = 'dashboard'
+# LOGOUT_REDIRECT_URL = 'dashboard' # will update this to landing page
 
 
 # Static files (CSS, JavaScript, Images)

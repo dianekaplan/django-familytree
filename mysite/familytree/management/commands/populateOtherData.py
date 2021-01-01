@@ -8,10 +8,17 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **kwargs):
+        print("CALLING populateImageAssociations images_people_family.csv")
+        call_command('populateImageAssociations', 'images_people_family.csv')
+        print("CALLING populateNotes")
+        call_command('populateNotes')
+        print("CALLING populateUsers")
+        call_command('populateUsers')
+        print("CALLING populateVideos")
+        call_command('populateVideos')
+        print("CALLING populateAudioFiles")
+        call_command('populateAudioFiles')
 
-        #call_command('populateImageAssociations', 'images_people_family.csv')
-        #call_command('populateNotes')
-        #call_command('populateEasyTables')
-       # call_command('sqlsequencereset', app_label='familytree')
+        call_command('populateEasyTables')
         call_command('sqlsequencereset', 'familytree', no_color=True)
-        #call_command('django-admin', 'sqlsequencereset', app_label='familytree')
+        call_command('sqlsequencereset', 'auth', no_color=True)

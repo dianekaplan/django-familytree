@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db import models
 from django.forms import TextInput, Textarea
 
-from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Story, PersonStory
+from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Story, PersonStory, Video, Audiofile
 
 
 @admin.register(Person)
@@ -47,7 +47,6 @@ class PersonStoryAdmin(admin.ModelAdmin):
     ordering = ('-created_at', 'story_id')
     pass
 
-
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
     search_fields = ('author_name',)
@@ -73,5 +72,20 @@ class BranchAdmin(admin.ModelAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
+    # search_fields = ('user',)
     list_display = ('user', 'person', 'connection_notes')
+    pass
+
+@admin.register(Video)
+class ImageAdmin(admin.ModelAdmin):
+    search_fields = ('name',)
+    list_display = ('name', 'caption', 'year', 'created_at')
+    ordering = ('-created_at', 'name')
+    pass
+
+@admin.register(Audiofile)
+class ImageAdmin(admin.ModelAdmin):
+    search_fields = ('filename',)
+    list_display = ('filename', 'recording_date', 'summary')
+    ordering = ('-created_at', 'filename')
     pass

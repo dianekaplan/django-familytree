@@ -1,50 +1,88 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
-from ...models import Person, Note, Family
+from ...models import User, Profile, Person, Branch
+
 
 class Command(BaseCommand):
-    help = 'Migrates notes and image_person data from previous database(internal use)'
+    help = 'Migrates user info from previous database(internal use)'
 
-    def populate_notes(self):
-        # Fetch the old data
-        with connections['source'].cursor() as cursor:
-            cursor.execute('select * from notes')
-            data = cursor.fetchall()
+    def add_user(self, row_list):
+            full_name = row_list[1]
+            try:
+                first_name, last_name = full_name.split(" ", 1)
+            except:
+                print("skipping junk user")
 
-        # Write it to your new models
-        for note_row in data:
-            print(note_row)
-            row_list = list(note_row)
+            else:
+                # print("row_list[18] has: " + str(row_list[18]))
+                # print("with make_aware, it has: " + str(make_aware(row_list[18])))
+                auth_user_dict = {'id': row_list[0], 'password':row_list[3], 'last_login':row_list[6],
+                              'is_superuser':row_list[5],'username': row_list[2], 'first_name':first_name, 'last_name':last_name,
+                              'email': row_list[2],'is_active':row_list[9], 'date_joined':row_list[18]}
 
-            parameters_dict = {'author_name':row_list[3],'body': row_list[4], 'date': row_list[5], 'active': True,
-                               'for_self' : False,'created_at':row_list[9], 'updated_at' : row_list[10]}
+                # auth_user table has not null username, but I use email to log in- can just populate with that for now
+                (obj, created_bool) = User.objects.using('default').get_or_create(**auth_user_dict)
+                print("making user: " + str(full_name))
 
-            if row_list[2]:
+    def add_profile(self, row_list):
+            profiles_dict = {'logins': row_list[7],'last_pestered':row_list[8], 'connection_notes':row_list[10],
+                             'furthest_html':row_list[11],'shared_account':row_list[12]}
+            try:
+                user = User.objects.get(id=row_list[0])
+            except:
+                print(str(row_list[0]) + " DOESN'T MATCH USER_ID in our data")
+            else:
+                profiles_dict['user'] = user
+
                 try:
-                    author = Person.objects.get(id=row_list[2])
+                    person = Person.objects.get(id=row_list[4])
                 except:
-                    print(str(row_list[2]) + " author doesn't match a person_id in our data")
-                parameters_dict['author'] = author
+                    print(str(row_list[4]) + " doesn't match a person_id in our data")
+                else:
+                    profiles_dict['person'] = person
+                    print("profiles_dict has: " + str(profiles_dict))
+                    (obj, created_bool) = Profile.objects.using('default').get_or_create(**profiles_dict)
 
-            # The old schema used a 'type': value was 1 for person, 2 for family. This is the second item in the result array
-            if row_list[1] == 1:
-                try:
-                    person_to_associate = Person.objects.get(id=row_list[6])
-                    parameters_dict['person'] = person_to_associate
-                except:
-                    print(str(id=row_list[6]) + " doesn't match a person_id in our data")
+                    # Add profile branches
+                    keem_access = row_list[13]
+                    husband_access = row_list[14]
+                    kemler_access = row_list[15]
+                    kaplan_access = row_list[16]
 
-            if row_list[1] == 2:
-                try:
-                    family_to_associate = Family.objects.get(id=row_list[6])
-                    parameters_dict['family'] = family_to_associate
-                except:
-                    print(str(id=row_list[6]) + " doesn't match a family_id in our data")
+                    if keem_access:
+                        branch_to_associate = Branch.objects.get(id=1)
+                        obj.branches.add(branch_to_associate)
+                        obj.save()
+                        print("Added " + branch_to_associate.display_name + " for: " + obj.person.display_name)
 
-            # save it to the new database (using 'default')
-            (obj, created_bool) = Note.objects.using('default').get_or_create(**parameters_dict)
-            print("making note: " + row_list[4])
+                    if husband_access:
+                        branch_to_associate = Branch.objects.get(id=2)
+                        obj.branches.add(branch_to_associate)
+                        obj.save()
+                        print("Added " + branch_to_associate.display_name + " for: " + obj.person.display_name)
+
+                    if kemler_access:
+                        branch_to_associate = Branch.objects.get(id=3)
+                        obj.branches.add(branch_to_associate)
+                        obj.save()
+                        print("Added " + branch_to_associate.display_name + " for: " + obj.person.display_name)
+
+                    if kaplan_access:
+                        branch_to_associate = Branch.objects.get(id=4)
+                        obj.branches.add(branch_to_associate)
+                        obj.save()
+                        print("Added " + branch_to_associate.display_name + " for: " + obj.person.display_name)
 
 
     def handle(self, *args, **kwargs):
-        self.populate_notes()
+
+        with connections['source'].cursor() as cursor:
+            cursor.execute('select * from users')
+            data = cursor.fetchall()
+
+        # Add auth_user record
+            for user_row in data:
+                print(user_row)
+                row_list = list(user_row)
+                self.add_user(row_list)
+                self.add_profile(row_list)

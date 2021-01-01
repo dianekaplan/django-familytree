@@ -181,15 +181,15 @@ class Note(models.Model):
     def __str__(self):
         return self.author_name + self.body
 
-
 class Profile(models.Model): # This class holds additional info for user records
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     person = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
     branches = models.ManyToManyField(Branch, blank=True)
-    logins = models.IntegerField(default=0)
+    logins = models.IntegerField(null=True, default=0)
+    last_login = models.DateField(null=True, blank=True)
     last_pestered = models.DateField(null=True, blank=True)
-    connection_notes = models.CharField(max_length=150, blank=True)
-    furthest_html = models.CharField(max_length=150, blank=True)
+    connection_notes = models.CharField(null=True, max_length=250, blank=True)
+    furthest_html = models.CharField(null=True, max_length=250, blank=True)
     shared_account = models.BooleanField(null=True, default=False)
 
     class Meta(object):
@@ -198,7 +198,6 @@ class Profile(models.Model): # This class holds additional info for user records
 
     def __str__(self):
         return self.person.display_name
-
 
 class Story(models.Model):
     description = models.CharField(max_length=255, blank=True)
@@ -228,3 +227,44 @@ class PersonStory(models.Model):
 
     def __str__(self):
         return str(self.story.description)
+
+
+class Login(models.Model):
+    user = models.ManyToManyField(User)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        #managed = False
+        db_table = 'logins'
+
+    def __str__(self):
+        return str(self.created_at)
+
+
+class Video(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    caption = models.CharField(max_length=255, blank=True, null=True)
+    year = models.CharField(max_length=25, blank=True, null=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    branches = models.ManyToManyField(Branch, null=True, blank=True)
+    person = models.ManyToManyField(Person, null=True, blank=True)
+    family = models.ManyToManyField(Family, null=True, blank=True)
+
+    class Meta:
+        #managed = False
+        db_table = 'videos'
+
+class Audiofile(models.Model):
+    filename = models.CharField(max_length=150, blank=True, null=True)
+    summary = models.CharField(max_length=255, blank=True, null=True)
+    recording_date = models.DateField(blank=True, null=True)
+    person = models.ManyToManyField(Person, null=True, blank=True)
+    branches = models.ManyToManyField(Branch, null=True, blank=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        #managed = False
+        db_table = 'audiofiles'
