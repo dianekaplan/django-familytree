@@ -15,7 +15,7 @@ class Branch(models.Model):
 
 class Person(models.Model):
     gedcom_indi = models.CharField(max_length=10, null=True, blank=True, default='')
-    gedcom_uuid = models.CharField(max_length=40, null=True, blank=True, default='')
+    gedcom_uuid = models.CharField(max_length=200, null=True, blank=True, default='')
     first = models.CharField(max_length=30, blank=True, default='')
     middle = models.CharField(max_length=20, null=True, blank=True, default='')
     last = models.CharField(max_length=20, blank=True, default='')
@@ -27,7 +27,7 @@ class Person(models.Model):
     birthdate = models.DateField(null=True, blank=True)
     birthdate_note = models.CharField(max_length=55, null=True, blank=True, default='')
     birthplace = models.CharField(max_length=60, null=True, blank=True, default='')
-    family_id = models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL) # person's origin family
+    family = models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL) # person's origin family
     orig_fam_indi = models.CharField(max_length=10, null=True, blank=True, default='')
     keem_line = models.BooleanField(null=True, default=False)     #@TODO: remove when all set
     husband_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
@@ -81,7 +81,7 @@ class Family(models.Model):
     original_family = models.BooleanField(null=True)
     original_family_text = models.CharField(max_length=600, null=True, blank=True, default='')
     branches = models.ManyToManyField(Branch, null=True, blank=True)
-    direct_family_number = models.CharField(max_length=5, unique=True, null=True, blank=True,default=None)
+    direct_family_number = models.IntegerField(blank=True, null=True)
 
     keem_line = models.BooleanField(null=True, default=False)    #@TODO: remove after migration is done
     husband_line = models.BooleanField(null=True, default=False) #@TODO: remove after migration is done

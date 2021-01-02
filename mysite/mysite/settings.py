@@ -101,7 +101,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "migration_test", # family_local  # dec28_backup
+        "NAME": "migration_test2", # family_local  # dec28_backup
         "USER": "family",
         "PASSWORD": FAMILY_LOCAL_DB_PASS,
         "HOST": "localhost",
