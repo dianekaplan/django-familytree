@@ -39,7 +39,7 @@ class Command(BaseCommand):
                     self.populate_children_values(child)
 
     def populate_downward_from_families(self):
-	    # grab all family objects where gedcom_uuid is populated
+        # grab all family objects where gedcom_uuid is populated
         families = Family.objects.filter(direct_family_number__isnull=False).order_by('direct_family_number')
         for family in families:
             children = Person.objects.all().filter(family_id=family.id)

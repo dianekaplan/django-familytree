@@ -4,6 +4,9 @@ from ...models import Person, Family
 class Command(BaseCommand):
     help = 'Populates direct_family_number values for migrated database (internal use)'
 
+    def add_arguments(self, parser):
+        parser.add_argument('root family', type=int, help='root family to orient tree display')
+
     # given a family, get specified spouse
     def get_family_spouse(self, family, type):
         if type=='wife':
@@ -56,15 +59,16 @@ class Command(BaseCommand):
         self.check_and_set_family_of_parent(family, 'wife', wife_family_will_get)
         self.check_and_set_family_of_parent(family, 'husband', husband_family_will_get)
 
-    def populate_family_number_values(self):
-        current_family_value = 1
-        first_family = Family.objects.get(id=17) # start with my family and then go back
-        self.set_family_value(first_family, current_family_value)
-        self.populate_next_family(first_family, current_family_value)
+    def populate_family_number_values(self, root_family):
+        starting_family_value = 1
+        first_family = Family.objects.get(id=root_family) # start with my family and then go back
+        self.set_family_value(first_family, starting_family_value)
+        self.populate_next_family(first_family, starting_family_value)
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **kwargs):
+        root_family = kwargs['root family']
         print("CALLING populate_family_number_values")
-        self.populate_family_number_values()
+        self.populate_family_number_values(root_family)
 
 
 

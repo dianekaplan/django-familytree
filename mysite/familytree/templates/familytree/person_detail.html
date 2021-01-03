@@ -26,10 +26,10 @@
 
         <b>Born in:</b> {{ person.birthplace|default_if_none:"" }}<br/>
 
-        {% if person.origin_family %}
+        {% if origin_family %}
             <img src="familytree/northwest.png"  />
             <b>Grew up in family:</b>
-            <a href="{% url 'family_detail' person.origin_family.id %}">{{ person.origin_family.display_name }}</a><br/>
+            <a href="{% url 'family_detail' origin_family.id %}">{{ origin_family.display_name }}</a><br/>
         {% endif %}
         <b>National Origin:</b> {{ person.origin|default_if_none:"" }} <br/>
     </div>
@@ -49,7 +49,7 @@
     <b>Interests:</b> {{ person.interests|default_if_none:"" }} <br/>
     <b>Location:</b> {{ person.current_location|default_if_none:"" }} <br/>
     {% if person.deathdate %}
-        <b>Deathdate:</b> {{ person.birthdate }} <br/>
+        <b>Deathdate:</b> {{ person.deathdate }} <br/>
     {% elif person.deathdate_note%}
         <b>Deathdate: </b>{{ person.deathdate_note }}<br/>
     {% endif %}
@@ -71,19 +71,28 @@
     {% if person.notes3 %} {{ person.notes3 }} <br/>{% endif %}
 
     {% if notes %}
-        <ul>
+
         {% for note in notes %}
-          <li>
               {% if note.date %}
                     {{ note.date }}
               {% endif %}
               {% include "familytree/face_name_link.html" with person=note.author %}: {{ note.body }}
-        </li>
+            <br/>
+        {% endfor %}
+
+    {% endif %}
+</div>
+
+<div style="float: left; width: 100%;">
+    {% if videos %}
+        <h4>Videos: </h4>
+        <ul>
+        {% for video in videos %}
+            {% include "familytree/video_link.html" with video=video %}
         {% endfor %}
         </ul>
     {% endif %}
 </div>
-
 
 <div style="float: left; width: 100%;">
     {% if images %}

@@ -23,9 +23,9 @@
 <div style="float: left;width: 100%;">
 
     <div style="float: left;width: 31%;">
-        {% if family.marriage_date %}
+        {% if family.marriage_date and not family.divorced %}
             <b>Marriage date:</b> {{ family.marriage_date }}
-        {% elif family.marriage_date_note %}
+        {% elif family.marriage_date_note and not family.divorced %}
             <b>Marriage date:</b> {{ family.marriage_date_note }}
         {%  endif %}
     </div>

@@ -1,0 +1,13 @@
+{%  if video.id %}  {#  shouldn't need this, but just in case #}
+
+    <td>
+    <a href="{% url 'video_detail' video.id  %}">
+            <img src="https://res.cloudinary.com/hnyiprajv/image/upload/h_100,r_20/{{ video.name }}" />
+        {%  if video.caption %}
+          {{ video.caption }}
+        {%  endif %}
+        ({{ video.year }})
+
+    </a>
+    </td>
+{%  endif %}

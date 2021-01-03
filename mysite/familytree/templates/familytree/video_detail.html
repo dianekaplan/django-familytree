@@ -1,0 +1,27 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - video detail{% endblock title %}
+{% block content %}
+
+<img src="https://res.cloudinary.com/hnyiprajv/video/upload/r_20/{{ video.name }}" />
+
+{#    Actual urls have another number included:#}
+{#https://res.cloudinary.com/hnyiprajv/video/upload/v1454262368/1989_pre_thanksgiving2.mp4#}
+{#https://res.cloudinary.com/hnyiprajv/video/upload/v1454674557/1989_thanksgiving_after.mp4#}
+{#https://res.cloudinary.com/hnyiprajv/video/upload/v1453954195/1989_thanksgiving_before.mp4#}
+
+<br/>
+{{ video.year }}
+<br/>
+{% if video.caption %}
+    {{ video.caption }}
+{% endif %}
+<br/>
+
+    {% if video_people %}
+        This video includes:<br/>
+        {% for person in video_people %}
+            {% include "familytree/face_name_link.html" with person=person.first %} <br/>
+        {% endfor %}
+    {%  endif %}
+
+{% endblock content %}

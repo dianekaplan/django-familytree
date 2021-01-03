@@ -253,6 +253,16 @@ class Video(models.Model):
     person = models.ManyToManyField(Person, null=True, blank=True)
     family = models.ManyToManyField(Family, null=True, blank=True)
 
+    def video_subjects(self):
+        # first get the queryset for VideoPerson records, then get the people from that
+        video_person_records = ImagePerson.objects.filter(image_id=self.id)
+        video_people = set()
+        for record in video_person_records:
+            person = Person.objects.filter(id = record.person_id).order_by('person_id__image__person_id')
+            video_people.add(person)
+
+        return video_people
+
     class Meta:
         #managed = False
         db_table = 'videos'
