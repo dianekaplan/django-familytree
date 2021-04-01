@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.shortcuts import render, get_object_or_404, get_list_or_404
-from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile
+from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video
 from django.contrib.auth import logout
 
 today = datetime.now() # used to get birthday_people and anniversary_couples
@@ -26,7 +26,7 @@ def index(request):  #dashboard page
         birthday_people = None
 
     try:
-        anniversary_couples = Family.objects.filter(marriage_date__month=today.month).order_by('marriage_date__day')
+        anniversary_couples = Family.objects.filter(marriage_date__month=today.month, divorced=False).order_by('marriage_date__day')
     except Family.DoesNotExist:
         anniversary_couples = None
 
@@ -70,10 +70,10 @@ def person_index(request):
 
     # to start we'll assume up to 4 branches, gets ids 1-4, entering names manually
     # @@TODO: update so we can use branch1_name variables instead (tried but it's not working yet)
-    branch1_people = Person.objects.filter(branches__display_name__contains="Keem")
-    branch2_people = Person.objects.filter(branches__display_name__contains="Husband")
-    branch3_people = Person.objects.filter(branches__display_name__contains="Kemler")
-    branch4_people = Person.objects.filter(branches__display_name__contains="Kobrin")
+    branch1_people = Person.objects.filter(branches__display_name__contains="Keem", hidden=False).order_by('last', 'first')
+    branch2_people = Person.objects.filter(branches__display_name__contains="Husband", hidden=False).order_by('last', 'first')
+    branch3_people = Person.objects.filter(branches__display_name__contains="Kemler", hidden=False).order_by('last', 'first')
+    branch4_people = Person.objects.filter(branches__display_name__contains="Kobrin", hidden=False).order_by('last', 'first')
 
     person_list = Person.objects.order_by('display_name') # add this to limit list displayed: [:125]
     context = { 'person_list': person_list,
@@ -99,9 +99,19 @@ def person_detail(request, person_id):
         families_made = None
 
     try:
-        images = Image.objects.filter(person_id=person_id)
+        origin_family = person.family
+    except Family.DoesNotExist:
+        origin_family = None
+
+    try:
+        images = Image.objects.filter(person_id=person_id).order_by('year')
     except Image.DoesNotExist:
         images = None
+
+    try:
+        videos = Video.objects.filter(person=person)
+    except Video.DoesNotExist:
+        videos = None
 
     try:
         group_images = ImagePerson.objects.filter(person_id=person_id)
@@ -118,9 +128,9 @@ def person_detail(request, person_id):
     except Image.DoesNotExist:
         featured_images = None
 
-    return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made,
-                                                             'images': images, 'group_images': group_images, 'notes': notes,
-                                                             'featured_images': featured_images, 'user_person': user_person})
+    return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made, 'origin_family': origin_family,
+                                                        'images': images, 'group_images': group_images, 'notes': notes, 'videos': videos,
+                                                        'featured_images': featured_images, 'user_person': user_person})
 
 
 def family_detail(request, family_id):
@@ -128,13 +138,13 @@ def family_detail(request, family_id):
     user_person = get_user_person(request.user).first()
 
     try:
-        kids = Person.objects.filter(origin_family=family_id)
+        kids = Person.objects.filter(family_id=family_id).order_by('sibling_seq','id')
     except Person.DoesNotExist:
         kids = None
 
     try:
         notes = Note.objects.filter(family_id=family_id)
-    except ImagePerson.DoesNotExist:
+    except Note.DoesNotExist:
         notes = None
 
     try:
@@ -189,6 +199,16 @@ def image_index(request):
     context = { 'image_list': image_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
                 'user_person': user_person}
     return render(request, 'familytree/image_index.html', context)
+
+def video_detail(request, video_id):
+    user_person = get_user_person(request.user).first()
+    video = get_object_or_404(Image, pk=video_id)
+
+    video_people = Video.video_subjects(video)
+
+    return render(request, 'familytree/image_detail.html', {'video': video, 'video_people' : video_people,
+                                                            'user_person': user_person})
+
 
 def landing(request):
     landing_page_people = Person.objects.filter(show_on_landing_page=True)

@@ -8,14 +8,15 @@ from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, S
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     search_fields = ('display_name', 'first', 'last')
-    list_display = ('display_name', 'birthdate_note', 'family_id', 'gedcom_uuid', 'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at', 'reviewed')
+    list_display = ('display_name', 'birthdate_note', 'family_id', 'gedcom_uuid', 'keem_line', 'husband_line', 'kemler_line',
+                    'kaplan_line','created_at', 'reviewed', 'show_on_landing_page')
     ordering = ('-created_at', 'display_name')
     pass
 
 @admin.register(Family)
 class FamilyAdmin(admin.ModelAdmin):
     search_fields = ('display_name',)
-    list_display = ('display_name', 'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at', 'reviewed')
+    list_display = ('display_name', 'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at', 'direct_family_number','reviewed')
     ordering = ('-created_at', 'display_name')
     pass
 

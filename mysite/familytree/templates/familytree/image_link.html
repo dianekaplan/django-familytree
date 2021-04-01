@@ -2,9 +2,11 @@
 
     <td>
     <a href="{% url 'image_detail' image.id  %}">
-
-        <img src="https://res.cloudinary.com/hnyiprajv/image/upload/h_100,r_20/{{ image.big_name }}" />
-
+        {%  if image.little_name %}
+            <img src="https://res.cloudinary.com/hnyiprajv/image/upload/h_100,r_20/{{ image.little_name }}" />
+        {%  else %}
+            <img src="https://res.cloudinary.com/hnyiprajv/image/upload/h_100,r_20/{{ image.big_name }}" />
+        {%  endif %}
         {%  if image.caption %}
           {{ image.caption }}
         {%  endif %}
