@@ -57,7 +57,7 @@ class Person(models.Model):
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
     reviewed = models.BooleanField(null=True, default=False)
-    # group_images = models.ManyToManyField(models.Image)
+    living = models.BooleanField(null=True, default=False)
 
     class Meta(object):
         verbose_name_plural = 'People'
