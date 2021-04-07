@@ -100,7 +100,7 @@ class Command(BaseCommand):
                                                            first=gedcom_first_middle, last=last,
                                                            display_name=display_name, birthdate_note=birthdate,
                                                            birthplace=birthplace, sex=sex, work=occupation,
-                                                           deathdate_note=deathdate, resting_place=deathplace,
+                                                           deathdate_note=deathdate, death_place=deathplace,
                                                                show_on_landing_page=True,
                                                            created_at = timezone.now(), updated_at = timezone.now(), reviewed=False)
             if created_bool:

@@ -40,7 +40,7 @@ class Person(models.Model):
     work = models.CharField(max_length=300, null=True, blank=True, default='')
     interests = models.CharField(max_length=300, null=True, blank=True, default='')
     education = models.CharField(max_length=300, null=True, blank=True, default='')
-    resting_place = models.CharField(max_length=100, null=True, blank=True, default='')
+    death_place = models.CharField(max_length=100, null=True, blank=True, default='')
     deathdate = models.DateField(null=True, blank=True)
     deathdate_note = models.CharField(max_length=175, null=True, blank=True, default='')
     hidden = models.BooleanField(null=True, default=False)
