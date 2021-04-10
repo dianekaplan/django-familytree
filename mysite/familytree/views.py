@@ -50,10 +50,10 @@ def family_index(request):
 
 # @@TODO: update so we can use branch1_name variables instead (tried but it's not working yet)
 
-    branch1_families = Family.objects.filter(branches__display_name__contains="Keem")
-    branch2_families = Family.objects.filter(branches__display_name__contains="Husband")
-    branch3_families = Family.objects.filter(branches__display_name__contains="Kemler")
-    branch4_families = Family.objects.filter(branches__display_name__contains="Kobrin")
+    branch1_families = Family.objects.filter(branches__display_name__contains="Keem").order_by('branch_seq', 'marriage_date')
+    branch2_families = Family.objects.filter(branches__display_name__contains="Husband").order_by('branch_seq', 'marriage_date')
+    branch3_families = Family.objects.filter(branches__display_name__contains="Kemler").order_by('branch_seq', 'marriage_date')
+    branch4_families = Family.objects.filter(branches__display_name__contains="Kobrin").order_by('branch_seq', 'marriage_date')
 
     context = { 'family_list': family_list,
                 'branch1_families': branch1_families, 'branch2_families': branch2_families,
