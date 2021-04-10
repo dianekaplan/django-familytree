@@ -32,7 +32,7 @@ class Command(BaseCommand):
             children = Person.objects.all().filter(family_id=family.id)
             for child in children:
                 if not child.gedcom_uuid:
-                    gedcom_uuid = person.gedcom_uuid + child.first.replace(" ", "_")
+                    gedcom_uuid = person.gedcom_uuid + child.first.replace(" ", "_").replace("/", "_")
                     child.gedcom_uuid = gedcom_uuid
                     child.save()
                     print("set value for " + child.display_name + ": " +gedcom_uuid)

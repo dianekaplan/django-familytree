@@ -180,7 +180,7 @@ class Command(BaseCommand):
                 print("We have a family person whose record didn't get saved with gedcom_indi: " + entry)
 
     def check_matching_record(self, matching_record, element):
-        print("This record with ALIA tag exists already: " + matching_record.first + " " +  matching_record.last)
+        print("A record with this ALIA tag exists already: " + matching_record.first + " " +  matching_record.last)
         # @TODO: come back and look into whether there are fields we'd want to update (ex: add birthdate, etc)
         # If gedcom entry has values for fields we have blank, can fill them in
 
