@@ -14,7 +14,8 @@ class Command(BaseCommand):
     person_added_count = 0;
     family_added_count = 0;
     person_skipped_count = 0;
-    child_family_dict = {}
+    child_family_dict = {}  # map of gedcom child/family associations (eg. P7: F1)
+
 
     def add_arguments(self, parser):
         parser.add_argument('file name', type=Path, help='Name of GEDCOM file to import from')
@@ -35,17 +36,18 @@ class Command(BaseCommand):
             gedcom_parser.parse_file(path_plus_file)
             root_child_elements = gedcom_parser.get_root_child_elements()
 
+            # Find/add person records
             for element in root_child_elements:
-                # find/add people records
                 if isinstance(element, IndividualElement):
                     self.handle_person(element)
 
-                # find/add family records (person records exist already, so we can look up parent references)
-                # also save intermediate dictionary: CHIL INDI - family INDI
+            # Find/add family records (after person records exist, so we can look up parents)
+            # also save intermediate dictionary: CHIL INDI - family INDI
+            for element in root_child_elements:
                 if isinstance(element, FamilyElement):
                     self.handle_family(element)
 
-            #now that we've saved all the people and families, populate orig_family on people records
+            # now that we've saved all the people and families, populate orig_family on people records
             self.add_orig_family_values(self.child_family_dict)
 
         else:
@@ -66,6 +68,7 @@ class Command(BaseCommand):
         f.closed
 
     def handle_person(self, element):
+        matching_record = None
         self.gedcom_person_records += 1
         (gedcom_first_middle, last) = element.get_name()
         gedcom_uuid = ''
@@ -89,12 +92,12 @@ class Command(BaseCommand):
 
                 try:
                     matching_record = Person.objects.get(gedcom_uuid=gedcom_uuid)
-                    if matching_record != "":
-                        skip_record = self.check_matching_record(matching_record, element)
+                    if matching_record:
+                        person_already_exists = self.check_matching_person_record(matching_record, element)
                 except:
-                    print(gedcom_first_middle + " " + last + " gedcom record with ALIA tag had no matching value in our data")
+                    print("REVIEW: " + gedcom_first_middle + " " + last + " gedcom record with ALIA tag had no matching person record")
 
-        if not skip_record:
+        if not matching_record:
             # make the person record
             (obj, created_bool) = Person.objects.get_or_create(gedcom_indi=gedcom_indi, gedcom_uuid=gedcom_uuid,
                                                            first=gedcom_first_middle, last=last,
@@ -106,6 +109,9 @@ class Command(BaseCommand):
             if created_bool:
                 self.person_added_count += 1
         else:
+            # we do have a match, so just update their gedcom_indi value(for family matching)
+            matching_record.gedcom_indi = gedcom_indi
+            matching_record.save()
             self.person_skipped_count += 1
 
     def handle_family(self, element):
@@ -152,39 +158,69 @@ class Command(BaseCommand):
         display_name = (wife.display_name + " & " if wife != "" else "(unknown name) & ")
         display_name += (husband.display_name if husband != "" else "(unknown name)")
 
-        (obj, created_bool) = Family.objects.get_or_create(gedcom_indi=gedcom_indi, display_name=display_name,
-                                                           wife_indi=wife_indi, husband_indi=husband_indi,
-                                                           marriage_date_note=marriage_date, no_kids_bool=no_kids_bool,
-                                                           created_at = timezone.now(), updated_at = timezone.now(), reviewed=False)
+        existing_record = self.find_existing_family_record(wife, husband)
+        if not existing_record:
+            (obj, created_bool) = Family.objects.get_or_create(gedcom_indi=gedcom_indi, display_name=display_name,
+                                                               wife_indi=wife_indi, husband_indi=husband_indi,
+                                                               marriage_date_note=marriage_date, no_kids_bool=no_kids_bool,
+                                                               created_at = timezone.now(), updated_at = timezone.now(), reviewed=False)
 
-        # then link the parents that are known
-        if wife != "":
-            obj.wife = wife
-            obj.save()
-        if husband != "":
-            obj.husband = husband
-            obj.save()
+            # link the parents that are known
+            if wife != "":
+                obj.wife = wife
+                obj.save()
+            if husband != "":
+                obj.husband = husband
+                obj.save()
 
-        if created_bool:
-            self.family_added_count += 1
+            if created_bool:
+                self.family_added_count += 1
+        else:
+            existing_record.gedcom_indi = gedcom_indi
+            existing_record.save()
 
+    # loop through dictionary
     def add_orig_family_values(self, child_family_dict):
-        # loop through dictionary
         for entry in self.child_family_dict:
             try:
                 this_person = Person.objects.get(gedcom_indi=entry)
+            except:
+                print("Gedcom file had child/family association where we didn't find person: " + entry + " " + child_family_dict.get(entry))
+            try:
                 orig_family = Family.objects.get(gedcom_indi=self.child_family_dict.get(entry))
+            except:
+                print("REVIEW: check original family for " + this_person.display_name)
+                # print("For family " + gedcom_indi + ", couldn't find person matching wife_indi " + wife_indi)
+
+                print("Gedcom file had child/family association where we didn't find family: " + self.child_family_dict.get(entry))
+            else:
                 this_person.origin_family = orig_family
                 this_person.save()
-            except:
-                print("We have a family person whose record didn't get saved with gedcom_indi: " + entry)
 
-    def check_matching_record(self, matching_record, element):
-        print("A record with this ALIA tag exists already: " + matching_record.first + " " +  matching_record.last)
-        # @TODO: come back and look into whether there are fields we'd want to update (ex: add birthdate, etc)
-        # If gedcom entry has values for fields we have blank, can fill them in
+    def check_matching_person_record(self, matching_record, element):
+        print("(Existing person, nothing to create: " + matching_record.first + " " +  matching_record.last + ")")
+        # @TODO: come back and look into whether there are fields we'd want to populate if blank (ex: add birthdate, etc)
 
-        # matching_record.reviewed = False
-        # matching_record.save()
         skip_record = True
         return skip_record
+
+    def find_existing_family_record(self, wife, husband):
+        existing_family_record = None
+        if wife and husband:
+            try:
+                existing_family_record = Family.objects.filter(wife=wife, husband=husband)
+            except:
+                return None
+
+            if existing_family_record.count() > 1:
+                print("REVIEW: Multiple family records found for : " + husband.first + " " + wife.first)
+                for family in existing_family_record:
+                    print (family.display_name)
+                    return existing_family_record
+            else:
+                try:
+                    existing_family_record = Family.objects.get(wife=wife, husband=husband)
+                except:
+                    pass
+                else:
+                    return existing_family_record
