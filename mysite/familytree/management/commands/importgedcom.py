@@ -1,3 +1,4 @@
+import dateutil.parser
 from django.core.management.base import BaseCommand, CommandError
 from gedcom.element.individual import IndividualElement
 from gedcom.element.family import FamilyElement
@@ -106,6 +107,8 @@ class Command(BaseCommand):
                                                            deathdate_note=deathdate, death_place=deathplace,
                                                                show_on_landing_page=True,
                                                            created_at = timezone.now(), updated_at = timezone.now(), reviewed=False)
+            self.update_date_fields(obj)
+
             if created_bool:
                 self.person_added_count += 1
         else:
@@ -179,7 +182,7 @@ class Command(BaseCommand):
             existing_record.gedcom_indi = gedcom_indi
             existing_record.save()
 
-    # loop through dictionary
+    # Loop through dictionary
     def add_orig_family_values(self, child_family_dict):
         for entry in self.child_family_dict:
             try:
@@ -190,8 +193,6 @@ class Command(BaseCommand):
                 orig_family = Family.objects.get(gedcom_indi=self.child_family_dict.get(entry))
             except:
                 print("REVIEW: check original family for " + this_person.display_name)
-                # print("For family " + gedcom_indi + ", couldn't find person matching wife_indi " + wife_indi)
-
                 print("Gedcom file had child/family association where we didn't find family: " + self.child_family_dict.get(entry))
             else:
                 this_person.origin_family = orig_family
@@ -204,6 +205,8 @@ class Command(BaseCommand):
         skip_record = True
         return skip_record
 
+
+    # gedcom files only need one parent and one child @TODO: add support for one parent/child
     def find_existing_family_record(self, wife, husband):
         existing_family_record = None
         if wife and husband:
@@ -224,3 +227,30 @@ class Command(BaseCommand):
                     pass
                 else:
                     return existing_family_record
+
+    # If 'note' date string is long enough and has all three parts, parse it
+    def make_string_from_date(self, date_string):
+        array = date_string.split(" ")
+        if len(array) < 3:
+            return None
+
+        if len(date_string) < 10:
+            return None
+
+        else:
+            result = ''
+            try:
+                result = dateutil.parser.parse(date_string)
+            finally:
+                return result
+
+    def update_date_fields(self, obj):
+        birthdate_result = self.make_string_from_date(obj.birthdate_note)
+        deathdate_result = self.make_string_from_date(obj.deathdate_note)
+
+        if birthdate_result:
+            obj.birthdate = birthdate_result
+
+        if deathdate_result:
+            obj.deathdate = deathdate_result
+        obj.save()

@@ -25,7 +25,6 @@ class Command(BaseCommand):
                 current_year_as_int = int(today.year)
 
                 if person.birthdate_note:
-
                     if len(person.birthdate_note) == 4:
                         birthyear_as_int = int(person.birthdate_note)
 
