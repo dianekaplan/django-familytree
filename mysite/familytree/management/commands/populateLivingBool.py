@@ -22,13 +22,20 @@ class Command(BaseCommand):
 
             if not(person.deathdate_note) and not(person.deathdate):
                 birthdate_info = ''
+                current_year_as_int = int(today.year)
+
                 if person.birthdate_note:
                     if len(person.birthdate_note) == 4:
                         birthyear_as_int = int(person.birthdate_note)
-                        current_year_as_int = int(today.year)
 
-                        if current_year_as_int - birthyear_as_int < 100:
-                            birthdate_info += person.birthdate_note
+                    if len(person.birthdate_note) > 4:
+                        this_value = person.birthdate_note
+                        this_value = this_value.replace("abt ", "").replace("Abt. ", "")
+                        if len(this_value) == 4:
+                            birthyear_as_int = int(this_value)
+
+                    if current_year_as_int - birthyear_as_int < 100:
+                        birthdate_info += person.birthdate_note
 
 
                 if person.birthdate:
