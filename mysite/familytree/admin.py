@@ -8,22 +8,22 @@ from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, S
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     search_fields = ('display_name', 'first', 'last')
-    list_display = ('display_name', 'birthdate', 'birthdate_note', 'family_id', 'gedcom_uuid', 'reviewed', 'living',
-                    'show_on_landing_page',  'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at')
+    list_display = ('display_name', 'birthdate', 'birthdate_note', 'gedcom_uuid', 'family_id', 'direct_line', 'living',
+                    'show_on_landing_page', 'created_at', 'reviewed')
     ordering = ('-created_at', 'display_name')
     pass
 
 @admin.register(Family)
 class FamilyAdmin(admin.ModelAdmin):
     search_fields = ('display_name',)
-    list_display = ('display_name', 'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at', 'direct_family_number','reviewed')
+    list_display = ('display_name', 'direct_family_number','show_on_branch_view', 'branch_seq', 'created_at', 'reviewed')
     ordering = ('-created_at', 'display_name')
     pass
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     search_fields = ('big_name',)
-    list_display = ('big_name', 'year', 'keem_line', 'husband_line', 'kemler_line', 'kaplan_line','created_at')
+    list_display = ('big_name', 'year','created_at')
     ordering = ('-created_at', 'big_name')
     pass
 
