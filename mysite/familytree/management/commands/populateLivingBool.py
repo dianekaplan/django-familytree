@@ -23,6 +23,7 @@ class Command(BaseCommand):
             if not(person.deathdate_note) and not(person.deathdate):
                 birthdate_info = ''
                 current_year_as_int = int(today.year)
+                birthyear_as_int=0
 
                 if person.birthdate_note:
                     if len(person.birthdate_note) == 4:
