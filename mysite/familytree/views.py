@@ -138,7 +138,7 @@ def family_detail(request, family_id):
     user_person = get_user_person(request.user).first()
 
     try:
-        kids = Person.objects.filter(family_id=family_id).order_by('sibling_seq','id')
+        kids = Person.objects.filter(family_id=family_id).order_by('birthyear', 'sibling_seq','id')
     except Person.DoesNotExist:
         kids = None
 
