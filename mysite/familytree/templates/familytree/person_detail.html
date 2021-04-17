@@ -1,4 +1,5 @@
 {% extends 'familytree/base.html' %}
+{% load static %}
 {% block title %} - {{ person.display_name }}{% endblock title %}
 {% block content %}
 
@@ -27,7 +28,7 @@
         <b>Born in:</b> {{ person.birthplace|default_if_none:"" }}<br/>
 
         {% if origin_family %}
-            <img src="familytree/northwest.png"  />
+            <img src="{% static 'familytree/northwest.png' %}" height="25" />
             <b>Grew up in family:</b>
             <a href="{% url 'family_detail' origin_family.id %}">{{ origin_family.display_name }}</a><br/>
         {% endif %}
@@ -57,14 +58,13 @@
     {% if families_made %}
         {% for family in families_made %}
             {% if family.no_kids_bool == True %}
-                <b>Married:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a><img src="/right_arrow.svg" height="18"/><br/>
+                <b>Married:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a><img src="{% static 'familytree/right_arrow.svg' %}" height="25"/><br/>
             {% else %}
-                <b>Raised family:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a><img src="/southeast.png" height="25"/><br/>
+                <b>Raised family:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a><img src="{% static 'familytree/southeast.png' %}" height="25"/><br/>
             {% endif %}
         {% endfor %}
     {% endif %}
  </div>
-
 <div style="float: left; width: 100%;">
     {% if person.notes1 %} {{ person.notes1 }} <br/>{% endif %}
     {% if person.notes2 %} {{ person.notes2 }} <br/>{% endif %}
