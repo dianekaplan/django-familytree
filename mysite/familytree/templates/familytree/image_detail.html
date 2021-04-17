@@ -1,8 +1,10 @@
 {% extends 'familytree/base.html' %}
+
 {% block title %} - image detail{% endblock title %}
 {% block content %}
 
-<img src="https://res.cloudinary.com/hnyiprajv/image/upload/r_20/{{ image.big_name }}" />
+<img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}" />
+
 <br/>
 {{ image.year }}
 <br/>

@@ -41,6 +41,8 @@ SECRET_KEY = '15bn5^27+n*h!^e&3ezqv4jsgoelm@+i8kx1zbb2o%hw1z*xf1'
 # SECURITY WARNING: don't run with debug turned on in production!
 FAMILY_LOCAL_DB_PASS = False
 
+MEDIA_SERVER = 'https://res.cloudinary.com/hnyiprajv/'
+
 if ENV_ROLE == 'development':
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG

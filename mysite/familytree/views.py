@@ -3,7 +3,9 @@ from datetime import datetime
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video
 from django.contrib.auth import logout
+from django.conf import settings
 
+media_server = settings.MEDIA_SERVER
 today = datetime.now()  # used to get birthday_people and anniversary_couples
 
 branch1_name = Branch.objects.filter(id=1)
@@ -84,7 +86,7 @@ def person_index(request):
                 'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
                 'show_by_branch': show_by_branch, 'accessible_branches':accessible_branches,
                 'request_user': request.user,
-                'user_person': this_person
+                'user_person': this_person, 'media_server': media_server
                 }
     return render(request, 'familytree/person_index.html', context)
 
@@ -132,7 +134,8 @@ def person_detail(request, person_id):
 
     return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made, 'origin_family': origin_family,
                                                         'images': images, 'group_images': group_images, 'notes': notes, 'videos': videos,
-                                                        'featured_images': featured_images, 'user_person': user_person})
+                                                        'featured_images': featured_images, 'user_person': user_person,
+                                                        'media_server': media_server })
 
 
 def family_detail(request, family_id):
@@ -161,7 +164,7 @@ def family_detail(request, family_id):
 
     return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes,
                                                              'featured_images': featured_images, 'icons': images,
-                                                             'user_person': user_person})
+                                                             'user_person': user_person, 'media_server': media_server})
 
 
 def image_detail(request, image_id):
@@ -169,10 +172,12 @@ def image_detail(request, image_id):
     image = get_object_or_404(Image, pk=image_id)
 
     this_image_person, this_image_family, image_people = Image.image_subjects(image)
+    image_full_path = media_server + "/image/upload/r_20/" + image.big_name
 
     return render(request, 'familytree/image_detail.html', {'image': image, 'image_person': this_image_person,
                                                             'image_family': this_image_family,
-                                                            'image_people' : image_people, 'user_person': user_person
+                                                            'image_people' : image_people, 'user_person': user_person,
+                                                            'image_full_path' : image_full_path, 'media_server' : media_server
                                                             })
 
 
