@@ -30,10 +30,10 @@ class Person(models.Model):
     birthplace = models.CharField(max_length=60, null=True, blank=True, default='')
     family = models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL) # person's origin family
     orig_fam_indi = models.CharField(max_length=10, null=True, blank=True, default='')
-    keem_line = models.BooleanField(null=True, default=False)     #@TODO: remove when all set
-    husband_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
-    kemler_line = models.BooleanField(null=True, default=False)   #@TODO: remove when all set
-    kaplan_line = models.BooleanField(null=True, default=False)   #@TODO: remove when all set
+    # keem_line = models.BooleanField(null=True, default=False)     #@TODO: remove when all set
+    # husband_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
+    # kemler_line = models.BooleanField(null=True, default=False)   #@TODO: remove when all set
+    # kaplan_line = models.BooleanField(null=True, default=False)   #@TODO: remove when all set
     sex = models.CharField(max_length=2, null=True, blank=True, default='')
     origin = models.CharField(max_length=100, null=True, blank=True, default='') # big description of background, probably will remove
     face = models.CharField(max_length=25, null=True, blank=True, default='')
@@ -83,11 +83,10 @@ class Family(models.Model):
     original_family_text = models.CharField(max_length=600, null=True, blank=True, default='')
     branches = models.ManyToManyField(Branch, null=True, blank=True)
     direct_family_number = models.IntegerField(blank=True, null=True)
-
-    keem_line = models.BooleanField(null=True, default=False)    #@TODO: remove after migration is done
-    husband_line = models.BooleanField(null=True, default=False) #@TODO: remove after migration is done
-    kemler_line = models.BooleanField(null=True, default=False)  #@TODO: remove after migration is done
-    kaplan_line = models.BooleanField(null=True, default=False)  #@TODO: remove after migration is done
+    # keem_line = models.BooleanField(null=True, default=False)    #@TODO: remove after migration is done
+    # husband_line = models.BooleanField(null=True, default=False) #@TODO: remove after migration is done
+    # kemler_line = models.BooleanField(null=True, default=False)  #@TODO: remove after migration is done
+    # kaplan_line = models.BooleanField(null=True, default=False)  #@TODO: remove after migration is done
     marriage_date = models.DateField(null=True, blank=True)
     marriage_date_note = models.CharField(max_length=100, null=True, blank=True, default='')
     divorced = models.BooleanField(null=True, default=False)
@@ -122,10 +121,10 @@ class Image(models.Model):
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person')
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family')
     featured = models.IntegerField(null=True, default=False)
-    keem_line = models.BooleanField(null=True, default=False)    #@TODO: remove when all set
-    husband_line = models.BooleanField(null=True, default=False) #@TODO: remove when all set
-    kemler_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
-    kaplan_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
+    # keem_line = models.BooleanField(null=True, default=False)    #@TODO: remove when all set
+    # husband_line = models.BooleanField(null=True, default=False) #@TODO: remove when all set
+    # kemler_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
+    # kaplan_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
 
