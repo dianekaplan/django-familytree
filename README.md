@@ -15,12 +15,14 @@ By default, all of your person/family records will display to all users
 
 **Add family branches**
 Some relatives/users are only related to one part of the family, so I want to only show them people/images related to them.
-You can define family branches as a way of (a) sorting people for clearer display and (b) showing each user the people 
+Define family branches in the admin UI as a way of (a) sorting people for clearer display and (b) showing each user the people 
 they're related to. I define 4 branches in my instance (one for each of my grandparents), which makes things easier to find: 
 - people and family index pages show separate columns for each branch
 - the 'family history' page shows separate sections for each branch
 - the logged-in user only sees this and other content (family album, videos, etc) based on which branch(es) they're in.
-Setup: in the admin area, add up to 4 branches, then you can specify which branch(es) apply for people, families, images, and more.
+Setup: in the admin area, add up to 4 branches, then specify which branch(es) apply for all the various records: 
+people, family, images, and more. 
+
 
 **To import multiple times from gedcom**
 Background info about IDs: 

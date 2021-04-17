@@ -2,9 +2,8 @@
 {% block title %} - family index{% endblock title %}
 {% block content %}
 
-{#If we've populated people's branches, show by branch#}
-{% if show_by_branch == True %}
-
+{# If we've populated people's branches, show by branch #}
+{% if show_by_branch %}
     {% if branch1_families and branch1_name.first in accessible_branches %}
         {% include "familytree/index_list.html" with family_list=branch1_families branch_name=branch1_name.first list_type="family"%}
     {% endif %}
@@ -21,6 +20,8 @@
         {% include "familytree/index_list.html" with family_list=branch4_families branch_name=branch4_name.first list_type="family"%}
     {% endif %}
 
+    {% include "familytree/generation_key.html"%}
+
 {#Otherwise, show full families list#}
 {% else %}
     {% if family_list %}
@@ -30,7 +31,7 @@
         {% endfor %}
         </ul>
     {% else %}
-        <p>No families are available.</p>
+        <p>No family records are available.</p>
     {% endif %}
 
 {% endif %}
