@@ -4,14 +4,13 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404
 from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video
 from django.contrib.auth import logout
 
-today = datetime.now() # used to get birthday_people and anniversary_couples
+today = datetime.now()  # used to get birthday_people and anniversary_couples
 
-show_by_branch = True  # default this to False, but set to true if you've set families
 branch1_name = Branch.objects.filter(id=1)
 branch2_name = Branch.objects.filter(id=2)
 branch3_name = Branch.objects.filter(id=3)
 branch4_name = Branch.objects.filter(id=4)
-
+show_by_branch = True if branch1_name else False
 
 def index(request):  #dashboard page
     user = request.user
@@ -48,12 +47,15 @@ def family_index(request):
     family_list = Family.objects.order_by('display_name')
     accessible_branches = get_valid_branches(request)
 
-# @@TODO: update so we can use branch1_name variables instead (tried but it's not working yet)
-
-    branch1_families = Family.objects.filter(branches__display_name__contains="Keem").order_by('branch_seq', 'marriage_date')
-    branch2_families = Family.objects.filter(branches__display_name__contains="Husband").order_by('branch_seq', 'marriage_date')
-    branch3_families = Family.objects.filter(branches__display_name__contains="Kemler").order_by('branch_seq', 'marriage_date')
-    branch4_families = Family.objects.filter(branches__display_name__contains="Kobrin").order_by('branch_seq', 'marriage_date')
+    # @@TODO: update so we can use branch1_name variables instead (tried but it's not working yet)
+    branch1_families = Family.objects.filter(branches__display_name__contains="Keem",
+                                             show_on_branch_view=True).order_by('branch_seq', 'marriage_date')
+    branch2_families = Family.objects.filter(branches__display_name__contains="Husband",
+                                             show_on_branch_view=True).order_by('branch_seq', 'marriage_date')
+    branch3_families = Family.objects.filter(branches__display_name__contains="Kemler",
+                                             show_on_branch_view=True).order_by('branch_seq', 'marriage_date')
+    branch4_families = Family.objects.filter(branches__display_name__contains="Kobrin",
+                                             show_on_branch_view=True).order_by('branch_seq', 'marriage_date')
 
     context = { 'family_list': family_list,
                 'branch1_families': branch1_families, 'branch2_families': branch2_families,
