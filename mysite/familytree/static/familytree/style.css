@@ -109,6 +109,9 @@ caption 	{font-size: 14pt; color:#888888; background-color: #FFFFFF;
   @media (min-width: 1200px) {
     .container {
       width: 1170px; } }
+  @media (min-width: 1400px) {
+    .container {
+      width: 1370px; } }
 
 .container-fluid {
   margin-right: auto;
@@ -121,3 +124,19 @@ caption 	{font-size: 14pt; color:#888888; background-color: #FFFFFF;
     display: table; }
   .container-fluid:after {
     clear: both; }
+
+/* family generation display colors */
+.g3 { font-size: 12pt; text-decoration: underline;  color: #8b8378; background-color: #FFFFFF}
+.g4 { font-size: 12pt; text-decoration: underline;  color: #FFCC66; background-color: #FFFFFF}
+.g5 { font-size: 12pt; text-decoration: underline;  color: #FF66CC; background-color: #FFFFFF}
+.g6 { font-size: 12pt; text-decoration: underline;  color: #99CC66; background-color: #FFFFFF}
+.g7 { font-size: 12pt; text-decoration: underline;  color: #000066; background-color: #FFFFFF}
+.g8 { font-size: 12pt; text-decoration: underline;  color: #663300; background-color: #FFFFFF}
+.g9 { font-size: 12pt; text-decoration: underline;  color: #8A5C8A; background-color: #FFFFFF}
+.g10 { font-size: 12pt; text-decoration: underline;  color: #75A3A3; background-color: #FFFFFF}
+.g11 { font-size: 12pt; text-decoration: underline;  color: #000000; background-color: #FFFFFF}
+.g12 { font-size: 12pt; text-decoration: underline;  color: #8A5C5C; background-color: #FFFFFF}
+.g13 { font-size: 12pt; text-decoration: underline;  color: #006699; background-color: #FFFFFF}
+.g14 { font-size: 12pt; text-decoration: underline;  color: #CC9933; background-color: #FFFFFF}
+.g15 { font-size: 12pt; text-decoration: underline;  color: #5C8A73; background-color: #FFFFFF}
+.g16 { font-size: 12pt; text-decoration: underline;  color: #CC99B3; background-color: #FFFFFF}

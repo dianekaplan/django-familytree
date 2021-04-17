@@ -1,3 +1,5 @@
+{% load familytree_extras %}
+
 <div style="float: left; width: 19%;" id="circled_section">
     <h4 align="center">The {{branch_name}} Family:</h4>
 
@@ -7,9 +9,11 @@
     {% endfor %}
 {% endif %}
 
+
 {%  if list_type == "family" %}
     {% for family in family_list %}
-        <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a><br/>
+        {% generation_class family.branch_seq as classname %}
+        <a href="{% url 'family_detail' family.id %}" class="{{ classname }}">{{ family.display_name }}</a><br/>
     {% endfor %}
 {% endif %}
 </div>
