@@ -16,7 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+admin.site.enable_nav_sidebar = False
+
 urlpatterns = [
     path('familytree/', include('familytree.urls')),
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
 ]

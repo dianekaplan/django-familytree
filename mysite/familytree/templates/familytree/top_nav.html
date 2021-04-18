@@ -10,11 +10,19 @@
         {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right">
-        Admin
-        My Account
-        FAQs
-        Log out
-{#        <a href="{% url 'logout' %}">Log out</a>#}
+
+        {% if user.is_superuser %}
+            <a href="{% url 'admin:index' %}">Admin</a>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            My Account
+            Log out
+            {#  <a href="{% url 'logout' %}">Log out</a>#}
+        {% endif %}
+
+         FAQs
+
     </ul>
     </div>
 </div>

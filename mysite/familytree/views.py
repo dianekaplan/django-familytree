@@ -38,7 +38,7 @@ def index(request):  #dashboard page
 
     context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples,
                'latest_pics': latest_pics, 'user_person': this_person, 'profile': profile,
-               'accessible_branches': accessible_branches
+               'accessible_branches': accessible_branches,  'media_server': media_server
                }
 
     return render(request, 'familytree/dashboard.html', context )
