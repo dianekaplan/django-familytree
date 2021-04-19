@@ -204,7 +204,7 @@ def video_detail(request, video_id):
     video_people = Video.video_subjects(video)
 
     return render(request, 'familytree/image_detail.html', {'video': video, 'video_people' : video_people,
-                                                            'user_person': user_person})
+                            'user_person': user_person, 'media_server': media_server})
 
 def landing(request):
     landing_page_people = Person.objects.filter(show_on_landing_page=True)

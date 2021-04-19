@@ -2,13 +2,9 @@
 {% block title %} - video detail{% endblock title %}
 {% block content %}
 
-<img src="https://res.cloudinary.com/hnyiprajv/video/upload/r_20/{{ video.name }}" />
+Show some text
 
-{#    Actual urls have another number included:#}
-{#https://res.cloudinary.com/hnyiprajv/video/upload/v1454262368/1989_pre_thanksgiving2.mp4#}
-{#https://res.cloudinary.com/hnyiprajv/video/upload/v1454674557/1989_thanksgiving_after.mp4#}
-{#https://res.cloudinary.com/hnyiprajv/video/upload/v1453954195/1989_thanksgiving_before.mp4#}
-
+<img src="{{ media_server }}/video/upload/r_20/{{ video.name }}" />
 <br/>
 {{ video.year }}
 <br/>
