@@ -221,7 +221,7 @@ def video_detail(request, video_id):
 def landing(request):
     landing_page_people = Person.objects.filter(show_on_landing_page=True)
 
-    context = { 'landing_page_people': landing_page_people}
+    context = { 'landing_page_people': landing_page_people, 'media_server': media_server}
     return render(request, 'familytree/landing.html', context)
 
 
