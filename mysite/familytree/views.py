@@ -181,30 +181,19 @@ def image_detail(request, image_id):
                                                             'image_full_path' : image_full_path, 'media_server' : media_server
                                                             })
 
-
 def image_index(request):
     user_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
-
-    # @@TODO: update so we can use branch1_name variables instead (tried but it's not working yet)
-    branch1_images = Image.objects.filter(branches__display_name__contains="Keem").order_by('year')
-    branch2_images = Image.objects.filter(branches__display_name__contains="Husband").order_by('year')
-    branch3_images = Image.objects.filter(branches__display_name__contains="Kemler").order_by('year')
-    branch4_images = Image.objects.filter(branches__display_name__contains="Kobrin").order_by('year')
-
+    existing_branches = Branch.objects.all()
     image_list = Image.objects.none()
 
-    if branch1_name.first in accessible_branches:
-        image_list = image_list.union(branch1_images)
-    if branch2_name.first in accessible_branches:
-        image_list = image_list.union(branch2_images)
-    if branch3_name.first in accessible_branches:
-        image_list = image_list.union(branch3_images)
-    if branch4_name.first in accessible_branches:
-        image_list = image_list.union(branch4_images)
+    for branch in existing_branches:
+        if branch in accessible_branches:
+            name = branch.display_name
+            image_list = image_list.union(Image.objects.filter(branches__display_name__contains=name).order_by('year'))
+    sorted_list = image_list.order_by('year')
 
-    image_list = image_list.union( Image.objects.order_by('year')) # add this to limit list displayed: [:125]
-    context = { 'image_list': image_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
+    context = { 'image_list': sorted_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
                 'user_person': user_person, 'media_server' : media_server}
     return render(request, 'familytree/image_index.html', context)
 
@@ -222,7 +211,6 @@ def landing(request):
 
     context = { 'landing_page_people': landing_page_people, 'media_server': media_server}
     return render(request, 'familytree/landing.html', context)
-
 
 def get_valid_branches(request):
     user = request.user
