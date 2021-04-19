@@ -63,7 +63,8 @@ def family_index(request):
                 'branch1_families': branch1_families, 'branch2_families': branch2_families,
                 'branch3_families': branch3_families, 'branch4_families': branch4_families, 'branch1_name': branch1_name,
                 'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
-                'show_by_branch': show_by_branch, 'accessible_branches': accessible_branches, 'user_person': this_person}
+                'show_by_branch': show_by_branch, 'accessible_branches': accessible_branches, 'user_person': this_person,
+                'media_server': media_server}
 
     return render(request, 'familytree/family_index.html', context)
 

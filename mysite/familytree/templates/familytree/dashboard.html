@@ -6,7 +6,7 @@
 Welcome, {{ user_person.display_name }}! <br/><br/>
 
 <div class="bottom">
-    <div style="float: left; width: 23%;" id="circled_section">
+    <div style="float: left; width: 23%;" class="circled_section">
 
     {% include "familytree/face_name_link.html" with person=user_person %}<br/>
         <h3>My family history</h3>
@@ -16,7 +16,7 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
     My furthest ancestors here: <br/>{{ profile.first.furthest_html | safe}}<br/>
     </div>
 
-<div style="float: left; width: 30%;" id="circled_section">
+<div style="float: left; width: 30%;" class="circled_section">
     <b>Birthdays this month:</b>
     {%  if birthday_people%}
         {% for person in birthday_people %}
@@ -52,11 +52,11 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
 
     </div>
 
-    <div id="circled_section">
+    <div class="circled_section">
     Latest videos:
     </div>
 
-    <div id="circled_section">
+    <div class="circled_section">
     Latest updates:
     </div>
  </div>
