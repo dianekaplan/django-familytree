@@ -5,14 +5,19 @@
 
 <h1>Family Album</h1>
 
-{% if landing_page_people %}
-    <ul>
-    {% for person in landing_page_people %}
+{% if image_list %}
+    {% for image in image_list %}
         {% include "familytree/image_link.html" with image=image %}
     {% endfor %}
-    </ul>
+
 {% else %}
     <p>No images are available.</p>
 {% endif %}
 
 {% endblock content %}
+
+
+
+
+
+

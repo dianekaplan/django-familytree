@@ -28,4 +28,5 @@ urlpatterns = [
     path('images/<int:image_id>/', views.image_detail, name='image_detail'),
 
     path('videos/<int:video_id>/', views.video_detail, name='video_detail'),
+
 ]

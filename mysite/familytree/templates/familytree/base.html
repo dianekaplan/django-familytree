@@ -14,9 +14,10 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'familytree/style.css' %}">
 
-{#    Top nav#}
+{# Top nav#}
     {% include "familytree/top_nav.html" with user_person=user_person  %} <br/>
-{#  Separator line#}
+
+{# Separator line#}
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-10">
@@ -25,7 +26,7 @@
         </div>
     </div>
 
-{#  Page content#}
+{# Page content#}
     <div class="container">
         {% block content %}
             <p>Placeholder text in base template- this gets replaced with page content.</p>

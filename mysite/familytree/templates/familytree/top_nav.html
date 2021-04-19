@@ -17,8 +17,7 @@
 
         {% if user.is_authenticated %}
             My Account
-            Log out
-            {#  <a href="{% url 'logout' %}">Log out</a>#}
+            <a href="{% url 'logout' %}">Log out</a>
         {% endif %}
 
          FAQs

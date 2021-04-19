@@ -205,7 +205,7 @@ def image_index(request):
 
     image_list = image_list.union( Image.objects.order_by('year')) # add this to limit list displayed: [:125]
     context = { 'image_list': image_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
-                'user_person': user_person}
+                'user_person': user_person, 'media_server' : media_server}
     return render(request, 'familytree/image_index.html', context)
 
 def video_detail(request, video_id):
@@ -216,7 +216,6 @@ def video_detail(request, video_id):
 
     return render(request, 'familytree/image_detail.html', {'video': video, 'video_people' : video_people,
                                                             'user_person': user_person})
-
 
 def landing(request):
     landing_page_people = Person.objects.filter(show_on_landing_page=True)
