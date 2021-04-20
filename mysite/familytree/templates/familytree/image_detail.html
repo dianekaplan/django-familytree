@@ -3,16 +3,20 @@
 {% block title %} - image detail{% endblock title %}
 {% block content %}
 
-<img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}" />
+<div style="float: left; width: 65%;">
+    <div style="margin-bottom: 20px">
+        <img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}"/>
+    </div>
+    <div>
+        {{ image.year }}
+        <br/>
+        {% if image.caption %}
+            {{ image.caption }}
+        {% endif %}
+    </div>
+ </div>
 
-<br/>
-{{ image.year }}
-<br/>
-{% if image.caption %}
-    {{ image.caption }}
-{% endif %}
-<br/>
-
+ <div style="float: right; width: 35%;">
     {% if image_person %}
         {% for person in image_person %}
         Go to person's page:
@@ -31,10 +35,11 @@
 <br/>
 
     {% if image_people %}
-        This picture contains:<br/>
+     <h2>This picture contains:</h2>
         {% for person in image_people %}
             {% include "familytree/face_name_link.html" with person=person.first %} <br/>
         {% endfor %}
     {%  endif %}
+ </div>
 
 {% endblock content %}

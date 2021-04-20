@@ -2,21 +2,28 @@
 {% block title %} - video detail{% endblock title %}
 {% block content %}
 
-<img src="{{ media_server }}/video/upload/r_20/{{ video.name }}" />
-<br/>
-{{ video.year }}
+<div style="float: left; width: 65%;">
+    <div style="margin-bottom: 20px">
+        <img src="{{ media_server }}/video/upload/r_20/{{ video.name }}" />
+    </div>
+    <div>
+        {{ video.year }}
+        <br/>
+        {% if video.caption %}
+          {{ video.caption }}
+        {% endif %}
+    </div>
+ </div>
 
-<br/>
-{% if video.caption %}
-    {{ video.caption }}
-{% endif %}
-<br/>
 
+ <div style="float: right; width: 35%;">
     {% if video_people %}
         This video includes:<br/>
         {% for person in video_people %}
             {% include "familytree/face_name_link.html" with person=person.first %} <br/>
         {% endfor %}
     {%  endif %}
+
+ </div>
 
 {% endblock content %}
