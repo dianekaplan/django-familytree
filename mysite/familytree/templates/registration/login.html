@@ -17,7 +17,7 @@
     {% csrf_token %}
     <table>
       <tr>
-        <td>{{ login_form.username.label_tag }}</td>
+        <td>Email address: </td>
         <td>{{ login_form.username }}</td>
       </tr>
       <tr>
@@ -25,11 +25,12 @@
         <td>{{ login_form.password }}</td>
       </tr>
     </table>
-    <input type="submit" value="login" />
+    <input type="submit" value="Log in" />
     <input type="hidden" name="next" value="{{ next }}" />
   </form>
 
-  {# Assumes you setup the password_reset view in your URLconf #}
-  <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-
+<br/>
+{# Assumes you setup the password_reset view in your URLconf #}
+<a href="{% url 'password_reset' %}">Forgot password?</a>
+<br/>
 {% endblock %}
