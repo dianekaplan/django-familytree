@@ -255,10 +255,10 @@ class Video(models.Model):
 
     def video_subjects(self):
         # first get the queryset for VideoPerson records, then get the people from that
-        video_person_records = ImagePerson.objects.filter(image_id=self.id)
+        video_person_records = VideoPerson.objects.filter(video_id=self.id)
         video_people = set()
         for record in video_person_records:
-            person = Person.objects.filter(id = record.person_id).order_by('person_id__image__person_id')
+            person = Person.objects.filter(id = record.person_id)
             video_people.add(person)
 
         return video_people
@@ -266,6 +266,21 @@ class Video(models.Model):
     class Meta:
         #managed = False
         db_table = 'videos'
+
+    def __str__(self):
+        return self.name
+
+class VideoPerson(models.Model):
+    video = models.ForeignKey(Video, null=True, blank=True, on_delete=models.SET_NULL, related_name='video_id')
+    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='vid_person_id')
+    created_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta(object):
+        verbose_name_plural = 'VideoPerson records'
+        db_table = 'video_person'
+
+    def __str__(self):
+        return str(self.video_id)
 
 class Audiofile(models.Model):
     filename = models.CharField(max_length=150, blank=True, null=True)

@@ -2,11 +2,10 @@
 {% block title %} - video detail{% endblock title %}
 {% block content %}
 
-Show some text
-
 <img src="{{ media_server }}/video/upload/r_20/{{ video.name }}" />
 <br/>
 {{ video.year }}
+
 <br/>
 {% if video.caption %}
     {{ video.caption }}

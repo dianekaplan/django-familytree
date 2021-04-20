@@ -199,11 +199,11 @@ def image_index(request):
 
 def video_detail(request, video_id):
     user_person = get_user_person(request.user).first()
-    video = get_object_or_404(Image, pk=video_id)
+    video = get_object_or_404(Video, pk=video_id)
 
     video_people = Video.video_subjects(video)
 
-    return render(request, 'familytree/image_detail.html', {'video': video, 'video_people' : video_people,
+    return render(request, 'familytree/video_detail.html', {'video': video,'video_people': video_people,
                             'user_person': user_person, 'media_server': media_server})
 
 def landing(request):

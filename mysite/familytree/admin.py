@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.db import models
 from django.forms import TextInput, Textarea
 
-from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Story, PersonStory, Video, Audiofile
+from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Story, PersonStory, Video, Audiofile, \
+    VideoPerson
 
 
 @admin.register(Person)
@@ -82,6 +83,13 @@ class ImageAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_display = ('name', 'caption', 'year', 'created_at')
     ordering = ('-created_at', 'name')
+    pass
+
+@admin.register(VideoPerson)
+class VideoPersonAdmin(admin.ModelAdmin):
+    search_fields = ('video_id', 'name',)
+    list_display = ('video_id', 'person_id', 'created_at')
+    ordering = ('-created_at', 'video_id')
     pass
 
 @admin.register(Audiofile)
