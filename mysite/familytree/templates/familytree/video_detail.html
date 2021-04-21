@@ -4,7 +4,15 @@
 
 <div style="float: left; width: 65%;">
     <div style="margin-bottom: 20px">
-        <img src="{{ media_server }}/video/upload/r_20/{{ video.name }}" />
+        <iframe
+            src= {{video_url}}
+            width="800"
+            height="500"
+            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+            allowfullscreen
+            frameborder="0"
+        ></iframe>
+
     </div>
     <div>
         {{ video.year }}

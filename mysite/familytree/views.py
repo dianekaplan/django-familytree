@@ -202,8 +202,13 @@ def video_detail(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
     video_people = Video.video_subjects(video)
 
+    cloud_name = media_server.split("/")[3]
+    public_id = video.name
+    params = "cloud_name=" + cloud_name + "&public_id=" + public_id + "&vpv=1.4.0";
+    video_url = "https://player.cloudinary.com/embed/?" + params;
+
     return render(request, 'familytree/video_detail.html', {'video': video,'video_people': video_people,
-                            'user_person': user_person, 'media_server': media_server})
+                            'user_person': user_person, 'media_server': media_server, 'video_url': video_url})
 
 def landing(request):
     landing_page_people = Person.objects.filter(show_on_landing_page=True)
