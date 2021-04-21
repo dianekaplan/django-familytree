@@ -51,10 +51,10 @@ class Person(models.Model):
     flag1 = models.CharField(max_length=10, null=True, blank=True, default='') # will probably get rid of these anyway
     flag2 = models.CharField(max_length=10, null=True, blank=True, default='') # will probably get rid of these anyway
     flag3 = models.CharField(max_length=10, null=True, blank=True, default='') # will probably get rid of these anyway
-    created_at = models.DateTimeField(null=True, blank=True)
-    updated_at = models.DateTimeField(null=True, blank=True)
     reviewed = models.BooleanField(null=True, default=False)
     living = models.BooleanField(null=True, default=False)
+    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     class Meta(object):
         verbose_name_plural = 'People'
@@ -82,8 +82,6 @@ class Family(models.Model):
     marriage_date = models.DateField(null=True, blank=True)
     marriage_date_note = models.CharField(max_length=100, null=True, blank=True, default='')
     divorced = models.BooleanField(null=True, default=False)
-    created_at = models.DateTimeField(null=True, blank=True)
-    updated_at = models.DateTimeField(null=True, blank=True)
     show_on_branch_view = models.BooleanField(null=True, default=False)
     sequence = models.IntegerField(blank=True, null=True)
     notes1 = models.CharField(max_length=600, null=True, blank=True, default='')
@@ -91,6 +89,8 @@ class Family(models.Model):
     # branch = models.IntegerField(blank=True, null=True)
     branch_seq = models.IntegerField(blank=True, null=True)
     reviewed = models.BooleanField(null=True, default=False)
+    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     class Meta(object):
         verbose_name_plural = 'Families'
@@ -113,8 +113,8 @@ class Image(models.Model):
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person')
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family')
     featured = models.IntegerField(null=True, default=False)
-    created_at = models.DateTimeField(null=True, blank=True)
-    updated_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     def image_subjects(self):
         # Get the queryset for ImagePerson records, then get the people from that
@@ -142,7 +142,7 @@ class Image(models.Model):
 class ImagePerson(models.Model):
     image = models.ForeignKey(Image, null=True, blank=True, on_delete=models.SET_NULL, related_name='image_id')
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_id')
-    created_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
 
     class Meta(object):
         verbose_name_plural = 'ImagePerson records'
@@ -160,8 +160,8 @@ class Note(models.Model):
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family_note')
     active = models.BooleanField(null=True, default=True)
     for_self = models.BooleanField(null=True, default=False)
-    created_at = models.DateTimeField(null=True, blank=True)
-    updated_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     class Meta(object):
         verbose_name_plural = 'Notes'
@@ -194,8 +194,8 @@ class Story(models.Model):
     intro = models.CharField(max_length=2000, null=True, blank=True)
     slug = models.CharField(max_length=255, null=True, blank=True)
     source = models.CharField(max_length=255, null=True, blank=True)
-    created_at = models.DateTimeField(null=True, blank=True)
-    updated_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     class Meta(object):
         verbose_name_plural = 'Stories'
@@ -207,8 +207,8 @@ class Story(models.Model):
 class PersonStory(models.Model):
     story = models.ForeignKey(Story, null=True, blank=True, on_delete=models.SET_NULL)
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(null=True, blank=True)
-    updated_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     class Meta(object):
         verbose_name_plural = 'PersonStory records'
@@ -220,8 +220,8 @@ class PersonStory(models.Model):
 class FamilyStory(models.Model):
     story = models.ForeignKey(Story, null=True, blank=True, on_delete=models.SET_NULL)
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(null=True, blank=True)
-    updated_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     class Meta(object):
         verbose_name_plural = 'FamilyStory records'
@@ -232,8 +232,8 @@ class FamilyStory(models.Model):
 
 class Login(models.Model):
     user = models.ManyToManyField(User)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         #managed = False
@@ -247,8 +247,8 @@ class Video(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     caption = models.CharField(max_length=255, blank=True, null=True)
     year = models.CharField(max_length=25, blank=True, null=True)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     branches = models.ManyToManyField(Branch, null=True, blank=True)
     person = models.ManyToManyField(Person, null=True, blank=True)
     family = models.ManyToManyField(Family, null=True, blank=True)
@@ -257,12 +257,9 @@ class Video(models.Model):
         # Get the queryset for VideoPerson records, then get the people from that
         video_person_records = VideoPerson.objects.filter(video_id=self.id)
         video_people = set()
-        print("VIDEO SUBJECTS METHOD")
-        # print("video is associated with: " + str(video_person_records))
         for record in video_person_records:
             person = Person.objects.filter(id = record.person_id)
             video_people.add(person)
-            # print("added " + person.display_name)
         return video_people
 
     class Meta:
@@ -275,7 +272,7 @@ class Video(models.Model):
 class VideoPerson(models.Model):
     video = models.ForeignKey(Video, null=True, blank=True, on_delete=models.SET_NULL, related_name='video_id')
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='vid_person_id')
-    created_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     description = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta(object):
@@ -291,8 +288,8 @@ class Audiofile(models.Model):
     recording_date = models.DateField(blank=True, null=True)
     person = models.ManyToManyField(Person, null=True, blank=True)
     branches = models.ManyToManyField(Branch, null=True, blank=True)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         #managed = False
