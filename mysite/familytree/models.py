@@ -30,10 +30,6 @@ class Person(models.Model):
     birthplace = models.CharField(max_length=60, null=True, blank=True, default='')
     family = models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL) # person's origin family
     orig_fam_indi = models.CharField(max_length=10, null=True, blank=True, default='')
-    # keem_line = models.BooleanField(null=True, default=False)     #@TODO: remove when all set
-    # husband_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
-    # kemler_line = models.BooleanField(null=True, default=False)   #@TODO: remove when all set
-    # kaplan_line = models.BooleanField(null=True, default=False)   #@TODO: remove when all set
     sex = models.CharField(max_length=2, null=True, blank=True, default='')
     origin = models.CharField(max_length=100, null=True, blank=True, default='') # big description of background, probably will remove
     face = models.CharField(max_length=25, null=True, blank=True, default='')
@@ -83,10 +79,6 @@ class Family(models.Model):
     original_family_text = models.CharField(max_length=600, null=True, blank=True, default='')
     branches = models.ManyToManyField(Branch, null=True, blank=True)
     direct_family_number = models.IntegerField(blank=True, null=True)
-    # keem_line = models.BooleanField(null=True, default=False)    #@TODO: remove after migration is done
-    # husband_line = models.BooleanField(null=True, default=False) #@TODO: remove after migration is done
-    # kemler_line = models.BooleanField(null=True, default=False)  #@TODO: remove after migration is done
-    # kaplan_line = models.BooleanField(null=True, default=False)  #@TODO: remove after migration is done
     marriage_date = models.DateField(null=True, blank=True)
     marriage_date_note = models.CharField(max_length=100, null=True, blank=True, default='')
     divorced = models.BooleanField(null=True, default=False)
@@ -121,15 +113,11 @@ class Image(models.Model):
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person')
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family')
     featured = models.IntegerField(null=True, default=False)
-    # keem_line = models.BooleanField(null=True, default=False)    #@TODO: remove when all set
-    # husband_line = models.BooleanField(null=True, default=False) #@TODO: remove when all set
-    # kemler_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
-    # kaplan_line = models.BooleanField(null=True, default=False)  #@TODO: remove when all set
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
 
     def image_subjects(self):
-        # first get the queryset for ImagePerson records, then get the people from that
+        # Get the queryset for ImagePerson records, then get the people from that
         image_person_records = ImagePerson.objects.filter(image_id=self.id)
         image_people = set()
         for record in image_person_records:
@@ -229,6 +217,18 @@ class PersonStory(models.Model):
     def __str__(self):
         return str(self.story.description)
 
+class FamilyStory(models.Model):
+    story = models.ForeignKey(Story, null=True, blank=True, on_delete=models.SET_NULL)
+    family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta(object):
+        verbose_name_plural = 'FamilyStory records'
+        db_table = 'family_story'
+
+    def __str__(self):
+        return str(self.story.description)
 
 class Login(models.Model):
     user = models.ManyToManyField(User)
@@ -254,13 +254,15 @@ class Video(models.Model):
     family = models.ManyToManyField(Family, null=True, blank=True)
 
     def video_subjects(self):
-        # first get the queryset for VideoPerson records, then get the people from that
+        # Get the queryset for VideoPerson records, then get the people from that
         video_person_records = VideoPerson.objects.filter(video_id=self.id)
         video_people = set()
+        print("VIDEO SUBJECTS METHOD")
+        # print("video is associated with: " + str(video_person_records))
         for record in video_person_records:
             person = Person.objects.filter(id = record.person_id)
             video_people.add(person)
-
+            # print("added " + person.display_name)
         return video_people
 
     class Meta:
@@ -274,10 +276,11 @@ class VideoPerson(models.Model):
     video = models.ForeignKey(Video, null=True, blank=True, on_delete=models.SET_NULL, related_name='video_id')
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='vid_person_id')
     created_at = models.DateTimeField(null=True, blank=True)
+    description = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta(object):
         verbose_name_plural = 'VideoPerson records'
-        db_table = 'video_person'
+        db_table = 'person_video'
 
     def __str__(self):
         return str(self.video_id)

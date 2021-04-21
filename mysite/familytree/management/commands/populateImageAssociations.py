@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from ...models import Person, Branch, Family, Image
+from ...models import VideoPerson, Person, Branch, Family, Image
 from pathlib import Path
 import csv
 
