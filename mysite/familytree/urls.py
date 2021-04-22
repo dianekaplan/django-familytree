@@ -30,4 +30,7 @@ urlpatterns = [
     # ex: /videos/18/
     path('videos/<int:video_id>/', views.video_detail, name='video_detail'),
 
+    # ex: /outline/
+    path('outline/', views.outline, name='outline'),
+
 ]

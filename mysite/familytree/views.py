@@ -49,7 +49,7 @@ def family_index(request):
     family_list = Family.objects.order_by('display_name')
     accessible_branches = get_valid_branches(request)
 
-    # @@TODO: update so we can use branch1_name variables instead (tried but it's not working yet)
+    # @@TODO: update so we can use branch1_name variables like outline view has
     branch1_families = Family.objects.filter(branches__display_name__contains="Keem",
                                              show_on_branch_view=True).order_by('branch_seq', 'marriage_date')
     branch2_families = Family.objects.filter(branches__display_name__contains="Husband",
@@ -74,7 +74,7 @@ def person_index(request):
     this_person = get_user_person(request.user).first()
 
     # to start we'll assume up to 4 branches, gets ids 1-4, entering names manually
-    # @@TODO: update so we can use branch1_name variables instead (tried but it's not working yet)
+    # @@TODO: update so we can use branch1_name variables like outline view has
     branch1_people = Person.objects.filter(branches__display_name__contains="Keem", hidden=False).order_by('last', 'first')
     branch2_people = Person.objects.filter(branches__display_name__contains="Husband", hidden=False).order_by('last', 'first')
     branch3_people = Person.objects.filter(branches__display_name__contains="Kemler", hidden=False).order_by('last', 'first')
@@ -133,11 +133,10 @@ def person_detail(request, person_id):
     except Image.DoesNotExist:
         featured_images = None
 
-    return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made, 'origin_family': origin_family,
-                                                        'images': images, 'group_images': group_images, 'notes': notes, 'videos': videos,
-                                                        'featured_images': featured_images, 'user_person': user_person,
-                                                        'media_server': media_server })
-
+    return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made,
+                            'origin_family': origin_family, 'images': images, 'group_images': group_images,
+                            'notes': notes, 'videos': videos, 'featured_images': featured_images,
+                            'user_person': user_person, 'media_server': media_server })
 
 def family_detail(request, family_id):
     family = get_object_or_404(Family, pk=family_id)
@@ -209,6 +208,24 @@ def video_detail(request, video_id):
 
     return render(request, 'familytree/video_detail.html', {'video': video,'video_people': video_people,
                             'user_person': user_person, 'media_server': media_server, 'video_url': video_url})
+
+def outline(request):
+    this_person = get_user_person(request.user).first()
+    accessible_branches = get_valid_branches(request)
+    existing_branches = Branch.objects.all()
+
+    family_dict = {}
+    for branch in existing_branches:
+        if branch in accessible_branches:
+            orig_family_list = None
+            name = branch.display_name
+            orig_family_list = Family.objects.filter(branches__display_name__contains=name, original_family=True)
+            family_dict[name]= orig_family_list
+
+    context = {'accessible_branches': accessible_branches, 'user_person': this_person, 'family_dict': family_dict,
+                'media_server': media_server}
+
+    return render(request, 'familytree/outline.html', context)
 
 def landing(request):
     landing_page_people = Person.objects.filter(show_on_landing_page=True)

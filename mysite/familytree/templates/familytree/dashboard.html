@@ -12,7 +12,7 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
         <h3>My family history</h3>
     <h3><a href="{% url 'image_index'  %}">Family album</a></h3>
     <h3>Home movies</h3>
-    <h3>Outline View</h3>
+    <h3><a href="{% url 'outline'  %}">Outline View</a></h3>
     My furthest ancestors here: <br/>{{ profile.first.furthest_html | safe}}<br/>
     </div>
 

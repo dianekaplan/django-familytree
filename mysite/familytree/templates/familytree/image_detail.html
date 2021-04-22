@@ -16,10 +16,10 @@
     </div>
  </div>
 
- <div style="float: right; width: 35%;">
+ <div style="float: right; width: 35%; margin-top: 20px">
     {% if image_person %}
         {% for person in image_person %}
-        Go to person's page:
+     Go to person's page: <br/><br/>
             {% include "familytree/face_name_link.html" with person=person %}
         {% endfor %}
         <br/>
