@@ -138,6 +138,7 @@ def person_detail(request, person_id):
                             'notes': notes, 'videos': videos, 'featured_images': featured_images,
                             'user_person': user_person, 'media_server': media_server })
 
+
 def family_detail(request, family_id):
     family = get_object_or_404(Family, pk=family_id)
     user_person = get_user_person(request.user).first()
@@ -180,6 +181,7 @@ def image_detail(request, image_id):
                                                             'image_full_path' : image_full_path, 'media_server' : media_server
                                                             })
 
+
 def image_index(request):
     user_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
@@ -196,6 +198,7 @@ def image_index(request):
                 'user_person': user_person, 'media_server' : media_server}
     return render(request, 'familytree/image_index.html', context)
 
+
 def video_detail(request, video_id):
     user_person = get_user_person(request.user).first()
     video = get_object_or_404(Video, pk=video_id)
@@ -209,23 +212,32 @@ def video_detail(request, video_id):
     return render(request, 'familytree/video_detail.html', {'video': video,'video_people': video_people,
                             'user_person': user_person, 'media_server': media_server, 'video_url': video_url})
 
+
 def outline(request):
     this_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
     existing_branches = Branch.objects.all()
 
-    family_dict = {}
+    users_original_families = {} # Dictionary with entries [branch name]: [original families in that branch]
+    total_results = []  # giant results for all descendants
+
     for branch in existing_branches:
         if branch in accessible_branches:
             orig_family_list = None
             name = branch.display_name
             orig_family_list = Family.objects.filter(branches__display_name__contains=name, original_family=True)
-            family_dict[name]= orig_family_list
+            users_original_families[name]= orig_family_list
 
-    context = {'accessible_branches': accessible_branches, 'user_person': this_person, 'family_dict': family_dict,
+            for family in orig_family_list:
+                total_results.append(get_descendants(family))
+
+    print(total_results)
+
+    context = {'accessible_branches': accessible_branches, 'user_person': this_person, 'family_dict': users_original_families,
                 'media_server': media_server}
 
     return render(request, 'familytree/outline.html', context)
+
 
 def landing(request):
     landing_page_people = Person.objects.filter(show_on_landing_page=True)
@@ -233,11 +245,18 @@ def landing(request):
     context = { 'landing_page_people': landing_page_people, 'media_server': media_server}
     return render(request, 'familytree/landing.html', context)
 
+
+def logout(request):
+    logout(request)
+    return render(request, 'familytree/landing.html')
+
+
 def get_valid_branches(request):
     user = request.user
     profile = Profile.objects.filter(user=user)
     accessible_branches = Branch.objects.filter(profile__in=profile)
     return accessible_branches
+
 
 def get_user_person(user):
     try:
@@ -246,6 +265,25 @@ def get_user_person(user):
         this_user_person = None
     return this_user_person
 
-def logout(request):
-    logout(request)
-    return render(request, 'familytree/landing.html')
+
+def get_descendants(family, results=[]):
+    these_results = [family]
+    cumulative_results = results
+
+    try:
+        kids = Person.objects.filter(family=family)
+    except:
+        pass
+    else:
+        for kid in kids:
+            these_results.append(kid)
+            if kid.sex == 'F':
+                families_made = Family.objects.filter(wife=kid)
+                for family in families_made:
+                    these_results.append(get_descendants(family, cumulative_results))
+            if kid.sex == 'M':
+                families_made = Family.objects.filter(husband=kid)
+                for family in families_made:
+                    these_results.append(get_descendants(family, cumulative_results))
+    cumulative_results.append(these_results)
+    return cumulative_results
