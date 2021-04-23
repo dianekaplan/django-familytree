@@ -3,29 +3,25 @@
 {% block title %} - family outline{% endblock title %}
 {% block content %}
 
-<h2>The original families for your branch(es) are: </h2>
-<ul>
-{% for branch, families in family_dict.items %}
-    {% for family in families %}
-    {% generation_class family.branch_seq as classname %}
-    <li>
-        <b>{{ family.display_name }}</b>:
-        {{ family.original_family_text }}
-    </li>
-    {% endfor %}
-{% endfor %}
-</ul>
-
-
-{% for branch, families in family_dict.items %}
-    <div class="circled_section">
-        <h3>The {{ branch }} family: </h3>
+    <h2>The original families for your branch(es) are: </h2>
+    <ul>
+    {% for branch, families in family_dict.items %}
         {% for family in families %}
-            {% generation_class family.branch_seq as classname %}
-            <a href="{% url 'family_detail' family.id %}" class="{{ classname }}">{{ family.display_name }}</a><br/>
+        {% generation_class family.branch_seq as classname %}
+        <li>
+            <b>{{ family.display_name }}</b>:
+            {{ family.original_family_text }}
+        </li>
         {% endfor %}
-    </div>
-{% endfor %}
+    {% endfor %}
+    </ul>
+
+    {% for branch, results in total_results.items %}
+        <div class="circled_section">
+            <h3>The {{ branch }} family: </h3>
+            {% include "familytree/_outline_whole.html" %}
+        </div>
+    {% endfor %}
 
 
 

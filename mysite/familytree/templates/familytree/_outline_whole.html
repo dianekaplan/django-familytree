@@ -1,0 +1,13 @@
+{% load familytree_extras %}
+
+{% for item in results %}
+    {% get_class item as object_type %}
+    {% if object_type == 'Person' %}
+        {% include "familytree/face_name_link.html" with person=item %}
+    {% elif object_type == 'Family' %}
+        <li><a href="{% url 'family_detail' item.id %}">{{ item.display_name }}</a></li>
+    {% elif object_type == 'list' %}
+        {% include "familytree/_outline_family_chunk.html" %}
+    {% endif %}}
+    <br/>
+{% endfor %}
