@@ -210,7 +210,8 @@ def video_detail(request, video_id):
     video_url = "https://player.cloudinary.com/embed/?" + params;
 
     return render(request, 'familytree/video_detail.html', {'video': video,'video_people': video_people,
-                            'user_person': user_person, 'media_server': media_server, 'video_url': video_url})
+                                                            'user_person': user_person, 'media_server': media_server,
+                                                            'video_url': video_url})
 
 
 def outline(request):
@@ -218,23 +219,30 @@ def outline(request):
     accessible_branches = get_valid_branches(request)
     existing_branches = Branch.objects.all()
 
-    users_original_families = {} # Dictionary with entries [branch name]: [original families in that branch]
-    total_results = []  # giant results for all descendants
+    users_original_families = {}  # Dictionary with entries [branch name]: [original families in that branch]
+    total_results = {}  # giant dictionary for all descendants
 
     for branch in existing_branches:
+        # For each branch this user has access for, we'll loop through the original families and:
+        # 1) make the dictionary of original families by branch
+        # 2) make the dictionary of descendants by branch
+
         if branch in accessible_branches:
-            orig_family_list = None
             name = branch.display_name
+            this_branch_results = []
+
+            # make the dictionary of original families by branch
             orig_family_list = Family.objects.filter(branches__display_name__contains=name, original_family=True)
-            users_original_families[name]= orig_family_list
+            users_original_families[name] = orig_family_list
 
+            # make the dictionary of descendants by branch
             for family in orig_family_list:
-                total_results.append(get_descendants(family))
+                this_family_results = get_descendants(family)
+                this_branch_results.append(this_family_results)
+        total_results[name] = this_branch_results
 
-    print(total_results)
-
-    context = {'accessible_branches': accessible_branches, 'user_person': this_person, 'family_dict': users_original_families,
-                'media_server': media_server}
+    context = {'accessible_branches': accessible_branches, 'user_person': this_person,
+               'family_dict': users_original_families, 'total_results': total_results, 'media_server': media_server}
 
     return render(request, 'familytree/outline.html', context)
 
@@ -266,9 +274,10 @@ def get_user_person(user):
     return this_user_person
 
 
-def get_descendants(family, results=[]):
-    these_results = [family]
+def get_descendants(family, results=None):
+    results = results or []
     cumulative_results = results
+    these_results = [family]
 
     try:
         kids = Person.objects.filter(family=family)
@@ -277,13 +286,13 @@ def get_descendants(family, results=[]):
     else:
         for kid in kids:
             these_results.append(kid)
+            families_made = None
             if kid.sex == 'F':
                 families_made = Family.objects.filter(wife=kid)
-                for family in families_made:
-                    these_results.append(get_descendants(family, cumulative_results))
             if kid.sex == 'M':
                 families_made = Family.objects.filter(husband=kid)
-                for family in families_made:
-                    these_results.append(get_descendants(family, cumulative_results))
-    cumulative_results.append(these_results)
+            if families_made:
+                for new_family in families_made:
+                    these_results.append(get_descendants(new_family, these_results))
+    cumulative_results.extend([these_results])
     return cumulative_results
