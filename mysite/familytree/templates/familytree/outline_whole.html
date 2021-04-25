@@ -1,8 +1,8 @@
 {% load familytree_extras %}
 
 {% for item in results %}
-FAMILY SECTION:<br/>
     {% for entry in item %}
-        {% include "familytree/_outline_family_chunk.html" %}
+        {% include chunk_view %}
     {% endfor %}
+<br/>
 {% endfor %}
