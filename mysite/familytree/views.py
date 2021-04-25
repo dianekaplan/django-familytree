@@ -282,6 +282,35 @@ def outline(request):
     return render(request, 'familytree/outline.html', context)
 
 
+def get_descendants(family, results=None):
+    cumulative_results = results or []
+    these_results = [family]
+
+    try:
+        kids = Person.objects.filter(family=family)
+    except:
+        pass
+    else:
+        if kids:
+            for kid in kids:
+                these_results.append(kid)
+                families_made = None
+                if kid.sex == 'F':
+                    families_made = Family.objects.filter(wife=kid)
+                if kid.sex == 'M':
+                    families_made = Family.objects.filter(husband=kid)
+                if families_made:
+                    for new_family in families_made:
+                        # @FIXME: added check for branch_seq <4 to reduce the size; recursion error happens one higher than this
+                        if new_family.branch_seq and new_family.branch_seq < 4:
+                            these_results.extend([get_descendants(new_family, these_results)])
+    if kids:
+        cumulative_results.extend([these_results])
+        return cumulative_results
+    else:
+        return these_results
+
+
 # def make_html_for_branch_outline(list):
 #     html_step_one =  list.replace("[<Family", "<ul>Family").replace(", [...]", "").replace("]", "</ul>")
 #     html_step_two = html_step_one.replace("<Person:", "<li>Person: ").replace(">,", "</li>").replace(">", "</li>")
@@ -323,31 +352,3 @@ def get_user_person(user):
     except Profile.DoesNotExist:
         this_user_person = None
     return this_user_person
-
-
-def get_descendants(family, results=None):
-    cumulative_results = results or []
-    these_results = [family]
-
-    try:
-        kids = Person.objects.filter(family=family)
-    except:
-        pass
-    else:
-        if kids:
-            for kid in kids:
-                these_results.append(kid)
-                families_made = None
-                if kid.sex == 'F':
-                    families_made = Family.objects.filter(wife=kid)
-                if kid.sex == 'M':
-                    families_made = Family.objects.filter(husband=kid)
-                if families_made:
-                    for new_family in families_made:
-                        if new_family.branch_seq and new_family.branch_seq < 4: # recursion error is one higher than this
-                            these_results.extend([get_descendants(new_family, these_results)])
-    if kids:
-        cumulative_results.extend([these_results])
-        return cumulative_results
-    else:
-        return these_results

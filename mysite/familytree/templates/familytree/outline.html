@@ -3,6 +3,10 @@
 {% block title %} - family outline{% endblock title %}
 {% block content %}
 
+{% autoescape off %}
+{{html_string}}
+{% endautoescape %}
+
     <h2>The original families for your branch(es) are: </h2>
     <ul>
     {% for branch, families in family_dict.items %}
@@ -19,7 +23,7 @@
     {% for branch, results in total_results.items %}
         <div class="circled_section">
             <h3>The {{ branch }} family: </h3>
-            {% include "familytree/_outline_whole.html" %}
+            {% include "familytree/outline_whole.html" %}
         </div>
     {% endfor %}
 
