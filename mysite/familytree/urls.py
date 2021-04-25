@@ -33,4 +33,7 @@ urlpatterns = [
     # ex: /outline/
     path('outline/', views.outline, name='outline'),
 
+    # ex: /history/
+    path('history/', views.history, name='history'),
+
 ]

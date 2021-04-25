@@ -27,8 +27,6 @@ em   		{font-weight: bold; }
 
 ul      	{ font-size: 12pt; margin-left: 1em;}
 
-li          {list-style-type:none;}
-
 ul ul   	{ margin-left: 2em }
 
 p		    { font-size: 12pt;
@@ -36,8 +34,8 @@ p		    { font-size: 12pt;
 		    margin-left: 6em; margin-right: 6em;
 		    text-indent: 1em}
 
-h1		{font-size: 1em;}
-h2		{font-size: .75em; margin-left: 5em}
+h1		{font-size: 1.75em;}
+h2		{font-size: 1.5em;}
 
 caption 	{font-size: 14pt; color:#888888; background-color: #FFFFFF;
 		    font-family: eurostile, arial, sans-serif}

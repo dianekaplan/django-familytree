@@ -35,3 +35,7 @@ in ancestry.com as an "also known as" fact, which maps to ALIA tag in gedcom fil
 **Other usage notes**
 - We'll default to showing a person's given name(s) and last name, but if you'd like to use some other nickname you can 
 update "display_name" field. (We show that instead, if it's populated) 
+- One common challenge is how to draw the user to the *good* stuff, and how to give an overall picture of all the data. 
+For this we have the 'Family History' branch, where you provide an html file for the big picture: important migrations
+and connections down to the present day, etc. The family history page will pull for each branch (only showing to users 
+with access to that branch) their file located in familytree/family_history, saved with the convention "smith.html"

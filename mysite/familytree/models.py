@@ -13,6 +13,7 @@ class Branch(models.Model):
     def __str__(self):
         return self.display_name
 
+
 class Person(models.Model):
     gedcom_indi = models.CharField(max_length=10, null=True, blank=True, default='')
     gedcom_uuid = models.CharField(max_length=200, null=True, blank=True, default='')
@@ -66,6 +67,7 @@ class Person(models.Model):
     def __str__(self):
         return self.first + " " + self.last
 
+
 class Family(models.Model):
     gedcom_indi = models.CharField(max_length=10, null=True, blank=True, default='')
     display_name = models.CharField(max_length=50, blank=True)
@@ -101,6 +103,7 @@ class Family(models.Model):
 
     def __str__(self):
         return self.display_name
+
 
 class Image(models.Model):
     big_name = models.CharField(max_length=50, null=True, blank=True) # this field will always be there
@@ -139,6 +142,7 @@ class Image(models.Model):
     def __str__(self):
         return self.big_name
 
+
 class ImagePerson(models.Model):
     image = models.ForeignKey(Image, null=True, blank=True, on_delete=models.SET_NULL, related_name='image_id')
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_id')
@@ -150,6 +154,7 @@ class ImagePerson(models.Model):
 
     def __str__(self):
         return str(self.image_id)
+
 
 class Note(models.Model):
     author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='author')
@@ -170,6 +175,7 @@ class Note(models.Model):
     def __str__(self):
         return self.author_name + self.body
 
+
 class Profile(models.Model): # This class holds additional info for user records
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     person = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
@@ -188,6 +194,7 @@ class Profile(models.Model): # This class holds additional info for user records
     def __str__(self):
         return self.person.display_name
 
+
 class Story(models.Model):
     description = models.CharField(max_length=255, blank=True)
     image = models.CharField(max_length=255, null=True, blank=True) # note- this is NOT an Image object
@@ -204,6 +211,7 @@ class Story(models.Model):
     def __str__(self):
         return self.description
 
+
 class PersonStory(models.Model):
     story = models.ForeignKey(Story, null=True, blank=True, on_delete=models.SET_NULL)
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL)
@@ -217,6 +225,7 @@ class PersonStory(models.Model):
     def __str__(self):
         return str(self.story.description)
 
+
 class FamilyStory(models.Model):
     story = models.ForeignKey(Story, null=True, blank=True, on_delete=models.SET_NULL)
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL)
@@ -229,6 +238,7 @@ class FamilyStory(models.Model):
 
     def __str__(self):
         return str(self.story.description)
+
 
 class Login(models.Model):
     user = models.ManyToManyField(User)
@@ -269,6 +279,7 @@ class Video(models.Model):
     def __str__(self):
         return self.name
 
+
 class VideoPerson(models.Model):
     video = models.ForeignKey(Video, null=True, blank=True, on_delete=models.SET_NULL, related_name='video_id')
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='vid_person_id')
@@ -281,6 +292,7 @@ class VideoPerson(models.Model):
 
     def __str__(self):
         return str(self.video_id)
+
 
 class Audiofile(models.Model):
     filename = models.CharField(max_length=150, blank=True, null=True)

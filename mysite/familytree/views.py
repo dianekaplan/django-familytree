@@ -276,6 +276,15 @@ def landing(request):
     context = { 'landing_page_people': landing_page_people, 'media_server': media_server}
     return render(request, 'familytree/landing.html', context)
 
+def history(request):
+    this_person = get_user_person(request.user).first()
+    accessible_branches = get_valid_branches(request)
+
+    context = {'accessible_branches': accessible_branches, 'user_person': this_person,
+                'media_server': media_server,}
+
+    return render(request, 'familytree/history.html', context)
+
 
 def logout(request):
     logout(request)

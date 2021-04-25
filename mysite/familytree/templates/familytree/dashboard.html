@@ -9,10 +9,10 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
     <div style="float: left; width: 23%;" class="circled_section">
 
     {% include "familytree/face_name_link.html" with person=user_person %}<br/>
-        <h3>My family history</h3>
-    <h3><a href="{% url 'image_index'  %}">Family album</a></h3>
-    <h3>Home movies</h3>
-    <h3><a href="{% url 'outline'  %}">Outline View</a></h3>
+    <h2><a href="{% url 'history'  %}">My family history</a></h2>
+    <h2><a href="{% url 'image_index'  %}">Family album</a></h2>
+    <h2>Home movies</h2>
+    <h2><a href="{% url 'outline'  %}">Outline View</a></h2>
     My furthest ancestors here: <br/>{{ profile.first.furthest_html | safe}}<br/>
     </div>
 
@@ -29,7 +29,7 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
     <b>Anniversaries this month:</b>
     {%  if anniversary_couples%}
         {% for family in anniversary_couples %}
-            <li> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a> {{family.marriage_date}}</li>
+            <li style="list-style-type:none;"> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a> {{family.marriage_date}}</li>
         {% endfor %}
     {% else %}
         (none)
@@ -38,7 +38,7 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
     <b>Birthdays this month:</b>
     {%  if birthday_people%}
         {% for person in birthday_people %}
-            <li> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
+            <li style="list-style-type:none;"> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
         {% endfor %}
     {% else %}
         (none)
