@@ -53,7 +53,14 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
     </div>
 
     <div class="circled_section">
-    Latest videos:
+        Latest videos: <br/>
+       {%  if latest_videos %}
+        {% for video in latest_videos %}
+            {% include "familytree/video_link.html" with video=video %}
+        {% endfor %}
+    {% else %}
+        (none)
+    {% endif %}
     </div>
 
     <div class="circled_section">

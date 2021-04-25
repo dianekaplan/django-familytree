@@ -86,11 +86,12 @@
 <div style="float: left; width: 100%;">
     {% if videos %}
         <h4>Videos: </h4>
-        <ul>
-        {% for video in videos %}
-            {% include "familytree/video_link.html" with video=video %}
-        {% endfor %}
-        </ul>
+        <div style="width:100%;">
+            {% for video in videos %}
+                {% include "familytree/video_link.html" with video=video %}
+            {% endfor %}
+        </div>
+
     {% endif %}
 </div>
 

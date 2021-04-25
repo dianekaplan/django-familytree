@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.template.defaultfilters import unordered_list
+
 from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video
 from django.contrib.auth import logout
 from django.conf import settings
@@ -14,7 +16,7 @@ branch3_name = Branch.objects.filter(id=3)
 branch4_name = Branch.objects.filter(id=4)
 show_by_branch = True if branch1_name else False
 
-def index(request):  #dashboard page
+def index(request):  # dashboard page
     user = request.user
     this_person = get_user_person(request.user).first()
 
@@ -36,8 +38,13 @@ def index(request):  #dashboard page
     except Image.DoesNotExist:
         latest_pics = None
 
+    try:
+        latest_videos = Video.objects.all().order_by('-id')[:3]
+    except Video.DoesNotExist:
+        latest_videos = None
+
     context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples,
-               'latest_pics': latest_pics, 'user_person': this_person, 'profile': profile,
+               'latest_pics': latest_pics, 'latest_videos': latest_videos, 'user_person': this_person, 'profile': profile,
                'accessible_branches': accessible_branches,  'media_server': media_server
                }
 
@@ -237,14 +244,25 @@ def outline(request):
 
             # make the dictionary of descendants by branch
             for family in orig_family_list:
-                this_family_results = get_descendants(family)
+                this_family_results = get_descendants(family)[0]
                 this_branch_results.append(this_family_results)
         total_results[name] = this_branch_results
+    #
+    #     print("THIS BRANCH RESULTS: " + str(this_branch_results[0]))
+    # make_html_for_branch_outline(this_branch_results[0])
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
-               'family_dict': users_original_families, 'total_results': total_results, 'media_server': media_server}
+               'family_dict': users_original_families, 'media_server': media_server,
+               'chunk_view': "familytree/outline_family_chunk.html", 'total_results': total_results}
 
     return render(request, 'familytree/outline.html', context)
+
+
+# def make_html_for_branch_outline(list):
+#     html_step_one =  list.replace("[<Family", "<ul>Family").replace(", [...]", "").replace("]", "</ul>")
+#     html_step_two = html_step_one.replace("<Person:", "<li>Person: ").replace(">,", "</li>").replace(">", "</li>")
+#
+#     return html_step_two
 
 
 def landing(request):
@@ -275,8 +293,7 @@ def get_user_person(user):
 
 
 def get_descendants(family, results=None):
-    results = results or []
-    cumulative_results = results
+    cumulative_results = results or []
     these_results = [family]
 
     try:
@@ -284,15 +301,20 @@ def get_descendants(family, results=None):
     except:
         pass
     else:
-        for kid in kids:
-            these_results.append(kid)
-            families_made = None
-            if kid.sex == 'F':
-                families_made = Family.objects.filter(wife=kid)
-            if kid.sex == 'M':
-                families_made = Family.objects.filter(husband=kid)
-            if families_made:
-                for new_family in families_made:
-                    these_results.append(get_descendants(new_family, these_results))
-    cumulative_results.extend([these_results])
-    return cumulative_results
+        if kids:
+            for kid in kids:
+                these_results.append(kid)
+                families_made = None
+                if kid.sex == 'F':
+                    families_made = Family.objects.filter(wife=kid)
+                if kid.sex == 'M':
+                    families_made = Family.objects.filter(husband=kid)
+                if families_made:
+                    for new_family in families_made:
+                        if new_family.branch_seq and new_family.branch_seq < 4: # recursion error is one higher than this
+                            these_results.extend([get_descendants(new_family, these_results)])
+    if kids:
+        cumulative_results.extend([these_results])
+        return cumulative_results
+    else:
+        return these_results
