@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from ...models import Person, Image, ImagePerson, Family, Story, PersonStory, Login, User
+from ...models import Person, Image, ImagePerson, Family, Story, PersonStory, Login, User, FamilyStory, Video, VideoPerson
 from django.db import connections
 from pathlib import Path
 import csv
@@ -73,6 +73,44 @@ class Command(BaseCommand):
                 obj.user.add(user_to_associate)
                 obj.save()
 
+    def populate_family_story_rows(self):
+        ported_data = FamilyStory.objects.using('source').all()
+
+        for row in ported_data:
+            try:
+                family_to_associate = Family.objects.get(id=row.family_id)
+            except:
+                print(str(row.family_id) + " doesn't match a family_id in our data")
+            try:
+                story_to_associate = Story.objects.get(id=row.story_id)
+            except:
+                print(str(row.story_id) + " doesn't match a story_id in our data")
+
+            # save it to the new database (using 'default')
+            (obj, created_bool) = FamilyStory.objects.using('default').get_or_create(story=story_to_associate,
+                                                family=family_to_associate, created_at = make_aware(row.created_at))
+            print("making family_story row for story: " + str(row.story_id) + ", family: " + str(row.family_id))
+
+
+    def populate_person_video_rows(self):
+        ported_data = VideoPerson.objects.using('source').all()
+
+        for row in ported_data:
+            description = row.description
+            try:
+                person_to_associate = Person.objects.get(id=row.person_id)
+            except:
+                print(str(row.person_id) + " doesn't match a person_id in our data")
+            try:
+                video_to_associate = Video.objects.get(id=row.video_id)
+            except:
+                print(str(row.video_id) + " doesn't match a video_id in our data")
+
+            # save it to the new database (using 'default')
+            (obj, created_bool) = VideoPerson.objects.using('default').get_or_create(video=video_to_associate,
+                                    person=person_to_associate, description = description, created_at = make_aware(row.created_at))
+            print("making video_person row for video: " + str(row.video_id) + ", person: " + str(row.person_id))
+
 
     def handle(self, *args, **kwargs):
         print("CALLING populate_image_person_rows")
@@ -83,4 +121,7 @@ class Command(BaseCommand):
         self.populate_person_story_rows()
         print("CALLING populate_logins")
         self.populate_logins()
-
+        print("CALLING populate_family_story_rows")
+        self.populate_family_story_rows()
+        print("CALLING populate_person_video_rows")
+        self.populate_person_video_rows()

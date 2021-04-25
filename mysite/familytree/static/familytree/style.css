@@ -14,7 +14,7 @@ a           { font-size: 1em;
             background-color: #FFFFFF}
 
 a:hover     { text-decoration: underline;
-         	 color: #888888; background-color: #FFFFFF }
+         	 color: #23527c; background-color: #FFFFFF }
 
 em   		{font-weight: bold; }
 
@@ -25,7 +25,7 @@ em   		{font-weight: bold; }
 .thin		{ border-width: thin }
 .groove 	{ border-style: groove }
 
-ul      	{ font-size: 12pt; margin-left: 1em }
+ul      	{ font-size: 12pt; margin-left: 1em;}
 
 ul ul   	{ margin-left: 2em }
 
@@ -34,8 +34,8 @@ p		    { font-size: 12pt;
 		    margin-left: 6em; margin-right: 6em;
 		    text-indent: 1em}
 
-/*h1		{font-size: 20pt;}*/
-/*h2		{font-size: 12pt; margin-left: 5em}*/
+h1		{font-size: 1.75em;}
+h2		{font-size: 1.5em;}
 
 caption 	{font-size: 14pt; color:#888888; background-color: #FFFFFF;
 		    font-family: eurostile, arial, sans-serif}
@@ -49,7 +49,7 @@ caption 	{font-size: 14pt; color:#888888; background-color: #FFFFFF;
         width:100%;
     }
 
-#circled_section {
+.circled_section {
     border-radius: 25px;
     border: 5px solid #99CC66;
     padding: 20px;

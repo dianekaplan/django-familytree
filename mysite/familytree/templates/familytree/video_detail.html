@@ -2,26 +2,36 @@
 {% block title %} - video detail{% endblock title %}
 {% block content %}
 
-<img src="https://res.cloudinary.com/hnyiprajv/video/upload/r_20/{{ video.name }}" />
+<div style="float: left; width: 65%;">
+    <div style="margin-bottom: 20px">
+        <iframe
+            src= {{video_url}}
+            width="800"
+            height="500"
+            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+            allowfullscreen
+            frameborder="0"
+        ></iframe>
 
-{#    Actual urls have another number included:#}
-{#https://res.cloudinary.com/hnyiprajv/video/upload/v1454262368/1989_pre_thanksgiving2.mp4#}
-{#https://res.cloudinary.com/hnyiprajv/video/upload/v1454674557/1989_thanksgiving_after.mp4#}
-{#https://res.cloudinary.com/hnyiprajv/video/upload/v1453954195/1989_thanksgiving_before.mp4#}
+    </div>
+    <div>
+        {{ video.year }}
+        <br/>
+        {% if video.caption %}
+          {{ video.caption }}
+        {% endif %}
+    </div>
+ </div>
 
-<br/>
-{{ video.year }}
-<br/>
-{% if video.caption %}
-    {{ video.caption }}
-{% endif %}
-<br/>
 
+ <div style="float: right; width: 35%;">
     {% if video_people %}
         This video includes:<br/>
         {% for person in video_people %}
             {% include "familytree/face_name_link.html" with person=person.first %} <br/>
         {% endfor %}
     {%  endif %}
+
+ </div>
 
 {% endblock content %}

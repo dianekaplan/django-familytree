@@ -1,0 +1,17 @@
+{% load familytree_extras %}
+
+{% get_class entry as object_type %}
+<ul>
+{% if object_type == 'Family' %}
+    <a href="{% url 'family_detail' entry.id %}">{{ entry.display_name }}</a>
+{% elif object_type == 'Person' %}
+    <li>{% include "familytree/person_name_link.html" with person=entry %}</li>
+{% elif object_type == 'list' %}
+    <ul>
+    {% for item in entry %}
+        {% get_class item as new_object_type %}
+            {% include _outline_family_chunk with entry=item %}
+    {% endfor %}
+    </ul>
+{% endif %}
+</ul>
