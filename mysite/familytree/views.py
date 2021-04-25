@@ -3,7 +3,7 @@ from datetime import datetime
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.template.defaultfilters import unordered_list
 
-from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video
+from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory
 from django.contrib.auth import logout
 from django.conf import settings
 
@@ -126,6 +126,19 @@ def person_detail(request, person_id):
         images = None
 
     try:
+        person_story_records = PersonStory.objects.filter(person_id=person_id)
+    except PersonStory.DoesNotExist:
+        person_story_records = None
+
+    if person_story_records:
+        stories = set()
+        for record in person_story_records:
+            this_story = Story.objects.get(id=record.story_id)
+            stories.add(this_story)
+    else:
+        stories = None
+
+    try:
         videos = Video.objects.filter(person=person)
     except Video.DoesNotExist:
         videos = None
@@ -148,7 +161,7 @@ def person_detail(request, person_id):
     return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made,
                             'origin_family': origin_family, 'images': images, 'group_images': group_images,
                             'notes': notes, 'videos': videos, 'featured_images': featured_images,
-                            'user_person': user_person, 'media_server': media_server })
+                            'user_person': user_person, 'stories': stories, 'media_server': media_server })
 
 
 def family_detail(request, family_id):
@@ -224,6 +237,12 @@ def video_detail(request, video_id):
     return render(request, 'familytree/video_detail.html', {'video': video,'video_people': video_people,
                                                             'user_person': user_person, 'media_server': media_server,
                                                             'video_url': video_url})
+
+
+def story(request, story_id):
+    story = get_object_or_404(Story, pk=story_id)
+
+    return render(request, 'familytree/story.html', {'story': story,'media_server': media_server})
 
 
 def outline(request):

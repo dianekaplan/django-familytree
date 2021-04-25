@@ -1,0 +1,22 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - story{% endblock title %}
+{% block content %}
+{% load familytree_extras %}
+
+{% get_story_filepath story as filepath %}
+
+<h1>{{ story.description }}</h1>
+
+
+    {% if story.image %}
+        <img src="{{ media_server }}/image/upload/r_20/{{ story.image }}" />
+    {%  endif %}
+
+{% include filepath %}
+
+{% if story.source %}
+    <p>source: {{ story.source }}</p>
+{% endif %}
+
+
+{% endblock content %}

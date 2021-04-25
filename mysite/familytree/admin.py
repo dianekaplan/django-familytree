@@ -42,6 +42,7 @@ class PersonStoryAdmin(admin.ModelAdmin):
     search_fields = ('story_id',)
     list_display = ('story_id', 'person_id', 'created_at')
     ordering = ('-created_at', 'story_id')
+    raw_id_fields = ('person',)
     pass
 
 @admin.register(FamilyStory)

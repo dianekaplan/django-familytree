@@ -57,9 +57,11 @@
     {% if families_made %}
         {% for family in families_made %}
             {% if family.no_kids_bool == True %}
-                <b>Married:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a><img src="{% static 'familytree/right_arrow.svg' %}" height="25"/><br/>
+                <b>Married:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a>
+    <img src="{% static 'familytree/right_arrow.svg' %}" height="25"/><br/>
             {% else %}
-                <b>Raised family:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a><img src="{% static 'familytree/southeast.png' %}" height="25"/><br/>
+                <b>Raised family:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a>
+    <img src="{% static 'familytree/southeast.png' %}" height="25"/><br/>
             {% endif %}
         {% endfor %}
     {% endif %}
@@ -79,6 +81,16 @@
             <br/>
         {% endfor %}
 
+    {% endif %}
+</div>
+
+<div style="float: left; width: 100%;">
+    {% if stories %}
+        {% for story in stories %}
+            <img src="{% static 'familytree/book.png' %}" height="50"/> <a href="{% url 'story' story.id %}">{{ story.description }}</a>: {{ story.intro }}...
+            <a href="{% url 'story' story.id %}">Read More</a>
+            <br/><br/>
+        {% endfor %}
     {% endif %}
 </div>
 
