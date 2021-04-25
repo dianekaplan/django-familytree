@@ -43,9 +43,14 @@ def index(request):  # dashboard page
     except Video.DoesNotExist:
         latest_videos = None
 
+    try:
+        today_birthday = Person.objects.filter(birthdate__month=today.month).filter(birthdate__day=today.day).order_by('birthdate__year')
+    except Person.DoesNotExist:
+        today_birthday = None
+
     context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples,
                'latest_pics': latest_pics, 'latest_videos': latest_videos, 'user_person': this_person, 'profile': profile,
-               'accessible_branches': accessible_branches,  'media_server': media_server
+               'accessible_branches': accessible_branches, 'today_birthday': today_birthday, 'media_server': media_server
                }
 
     return render(request, 'familytree/dashboard.html', context )

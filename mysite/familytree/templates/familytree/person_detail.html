@@ -11,8 +11,7 @@
     {%  endif %}
 </div>
 
-<div class="bottom">
-    <div style="float: left; width: 33%;">
+<div style="float: left; width: 33%;">
         {% if person.maiden %}
             <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.maiden }}<br/>
         {% else %}
@@ -33,7 +32,7 @@
             <a href="{% url 'family_detail' origin_family.id %}">{{ origin_family.display_name }}</a><br/>
         {% endif %}
         <b>National Origin:</b> {{ person.origin|default_if_none:"" }} <br/>
-    </div>
+</div>
 
 
 <div style="float: left; width: 33%;">
@@ -98,24 +97,19 @@
 <div style="float: left; width: 100%;">
     {% if images %}
         <h4>Pictures of {{ person.first }}: </h4>
-        <ul>
         {% for image in images %}
             {% include "familytree/image_link.html" with image=image %}
         {% endfor %}
-        </ul>
     {% endif %}
 </div>
 
 <div style="float: left; width: 100%;">
     {% if group_images %}
         <h4>Group pictures:</h4>
-        <ul>
         {% for listing in group_images %}
           {% include "familytree/image_link.html" with image=listing.image %}
         {% endfor %}
-        </ul>
     {% endif %}
 </div>
-
 
 {% endblock content %}

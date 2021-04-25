@@ -1,17 +1,19 @@
 {%  if image.id %}  {#  shouldn't need this, but there were some records coming through without ID! #}
 
-    <td>
+
+<div style="display: inline-block;" >
     <a href="{% url 'image_detail' image.id  %}">
         {%  if image.little_name %}
             <img src="{{ media_server }}/image/upload/h_100,r_20/{{ image.little_name }}" />
         {%  else %}
             <img src="{{ media_server }}/image/upload/h_100,r_20/{{ image.big_name }}" />
         {%  endif %}
+        <br/>
         {%  if image.caption %}
           {{ image.caption }}
         {%  endif %}
         ({{ image.year }})
+        </a>
+</div>
 
-    </a>
-    </td>
 {%  endif %}

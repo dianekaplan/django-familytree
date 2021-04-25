@@ -1,14 +1,13 @@
 
-
 {%  if video.id %}  {# shouldn't need this, but just in case #}
         <div style="display: inline-block;" >
-            <p><a href="{% url 'video_detail' video.id  %}"><img src="{{ media_server }}video/upload/h_100,r_20/{{ video.name }}" /></p>
-            <p>
+            <a href="{% url 'video_detail' video.id  %}"><img src="{{ media_server }}video/upload/h_100,r_20/{{ video.name }}" />
+            <br/>
                 {%  if video.caption %}
                 {{ video.caption }}
             {%  endif %}
             ({{ video.year }})
-            </a></p>
+            </a>
         </div>
 
 {%  endif %}

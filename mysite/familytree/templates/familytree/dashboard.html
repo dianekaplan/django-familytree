@@ -17,15 +17,15 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
     </div>
 
 <div style="float: left; width: 30%;" class="circled_section">
-    <b>Birthdays this month:</b>
-    {%  if birthday_people%}
-        {% for person in birthday_people %}
-            <li> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
+
+    {%  if today_birthday%}
+        <b>Today's birthdays:</b>
+        {% for person in today_birthday %}
+            <li style="list-style-type:none;"> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
         {% endfor %}
-    {% else %}
-        (none)
+        <br/><br/>
     {% endif %}
-    <br/><br/>
+
     <b>Anniversaries this month:</b>
     {%  if anniversary_couples%}
         {% for family in anniversary_couples %}
@@ -34,13 +34,24 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
     {% else %}
         (none)
     {% endif %}
+    <br/><br/>
+    <b>Birthdays this month:</b>
+    {%  if birthday_people%}
+        {% for person in birthday_people %}
+            <li> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
+        {% endfor %}
+    {% else %}
+        (none)
+    {% endif %}
+
+
 
     </div>
 </div>
 
 <div class="bottom" style="float: right; width: 35%;"  >
     <div  class="circled_section">
-        Latest pics: <br/>
+        <b>Latest pics:</b> <br/>
        {%  if latest_pics%}
         {% for image in latest_pics %}
             {% include "familytree/image_link.html" with image=image %}
@@ -53,7 +64,7 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
     </div>
 
     <div class="circled_section">
-        Latest videos: <br/>
+       <b>Latest videos:</b> <br/>
        {%  if latest_videos %}
         {% for video in latest_videos %}
             {% include "familytree/video_link.html" with video=video %}
@@ -64,7 +75,7 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
     </div>
 
     <div class="circled_section">
-    Latest updates:
+    <b>Latest updates:</b>
     </div>
  </div>
 
