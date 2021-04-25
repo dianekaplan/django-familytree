@@ -3,10 +3,6 @@
 {% block title %} - family outline{% endblock title %}
 {% block content %}
 
-{% autoescape off %}
-{{html_string}}
-{% endautoescape %}
-
     <h2>The original families for your branch(es) are: </h2>
     <ul>
     {% for branch, families in family_dict.items %}
