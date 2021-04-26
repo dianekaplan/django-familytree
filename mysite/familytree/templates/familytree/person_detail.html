@@ -87,14 +87,19 @@
 <div style="float: left; width: 100%;">
     {% if stories %}
         {% for story in stories %}
-            <img src="{% static 'familytree/book.png' %}" height="50"/> <a href="{% url 'story' story.id %}">{{ story.description }}</a>: {{ story.intro }}...
-            <a href="{% url 'story' story.id %}">Read More</a>
-            <br/><br/>
+            <div style="display: inline-block;" >
+                <img src="{% static 'familytree/book.png' %}" height="50"/>
+            </div>
+            <div style="display: inline-block; width: 80%">
+                    <a href="{% url 'story' story.id %}">{{ story.description }}</a>: {{ story.intro }}...
+                    <a href="{% url 'story' story.id %}">Read More</a>
+            </div>
+            <br/>
         {% endfor %}
     {% endif %}
 </div>
 
-<div style="float: left; width: 100%;">
+<div>
     {% if videos %}
         <h4>Videos: </h4>
         <div style="width:100%;">
@@ -106,7 +111,7 @@
     {% endif %}
 </div>
 
-<div style="float: left; width: 100%;">
+<div>
     {% if images %}
         <h4>Pictures of {{ person.first }}: </h4>
         {% for image in images %}
@@ -115,7 +120,7 @@
     {% endif %}
 </div>
 
-<div style="float: left; width: 100%;">
+<div>
     {% if group_images %}
         <h4>Group pictures:</h4>
         {% for listing in group_images %}
