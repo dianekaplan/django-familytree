@@ -347,3 +347,4 @@ def get_descendants(family, results=None):
                         next_results = get_descendants(new_family, these_results)
                         these_results.extend([next_results])
     return these_results
+
