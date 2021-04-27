@@ -10,7 +10,7 @@
     <ul>
     {% for item in entry %}
         {% get_class item as new_object_type %}
-            {% include _outline_family_chunk with entry=item %}
+            {% include "familytree/outline_family_chunk.html" %}
     {% endfor %}
     </ul>
 {% endif %}

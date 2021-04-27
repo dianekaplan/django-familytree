@@ -268,11 +268,11 @@ def outline(request):
 
             # make the dictionary of descendants by branch
             for family in orig_family_list:
-                this_family_results = get_descendants(family)[0]
+                this_family_results = get_descendants(family)
+                print("OUTLINE HAS: " + str(this_family_results))
                 this_branch_results.append(this_family_results)
         total_results[name] = this_branch_results
-    #
-    #     print("THIS BRANCH RESULTS: " + str(this_branch_results[0]))
+
     # make_html_for_branch_outline(this_branch_results[0])
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
@@ -326,8 +326,8 @@ def get_user_person(user):
 
 
 def get_descendants(family, results=None):
-    cumulative_results = results or []
     these_results = [family]
+    kids = None
 
     try:
         kids = Person.objects.filter(family=family)
@@ -344,10 +344,6 @@ def get_descendants(family, results=None):
                     families_made = Family.objects.filter(husband=kid)
                 if families_made:
                     for new_family in families_made:
-                        if new_family.branch_seq and new_family.branch_seq < 4: # recursion error is one higher than this
-                            these_results.extend([get_descendants(new_family, these_results)])
-    if kids:
-        cumulative_results.extend([these_results])
-        return cumulative_results
-    else:
-        return these_results
+                        next_results = get_descendants(new_family, these_results)
+                        these_results.extend([next_results])
+    return these_results
