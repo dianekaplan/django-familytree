@@ -17,9 +17,11 @@
     </ul>
 
     {% for branch, results in total_results.items %}
+        {% get_outline_filepath branch as outline_path %}
+
         <div class="circled_section">
             <h3>The {{ branch }} family: </h3>
-            {% include "familytree/outline_whole.html" %}
+                {% include outline_path %}
         </div>
     {% endfor %}
 

@@ -61,7 +61,7 @@ def family_index(request):
     family_list = Family.objects.order_by('display_name')
     accessible_branches = get_valid_branches(request)
 
-    # @@TODO: update so we can use branch1_name variables like outline view has
+    # @@TODO: update so we can use branch1_name variables like outline_branch_partials view has
     branch1_families = Family.objects.filter(branches__display_name__contains="Keem",
                                              show_on_branch_view=True).order_by('branch_seq', 'marriage_date')
     branch2_families = Family.objects.filter(branches__display_name__contains="Husband",
@@ -86,7 +86,7 @@ def person_index(request):
     this_person = get_user_person(request.user).first()
 
     # to start we'll assume up to 4 branches, gets ids 1-4, entering names manually
-    # @@TODO: update so we can use branch1_name variables like outline view has
+    # @@TODO: update so we can use branch1_name variables like outline_branch_partials view has
     branch1_people = Person.objects.filter(branches__display_name__contains="Keem", hidden=False).order_by('last', 'first')
     branch2_people = Person.objects.filter(branches__display_name__contains="Husband", hidden=False).order_by('last', 'first')
     branch3_people = Person.objects.filter(branches__display_name__contains="Kemler", hidden=False).order_by('last', 'first')
@@ -269,9 +269,9 @@ def outline(request):
             # make the dictionary of descendants by branch
             for family in orig_family_list:
                 this_family_results = get_descendants(family)
-                print("OUTLINE HAS: " + str(this_family_results))
+                # print("OUTLINE HAS: " + str(this_family_results))
                 this_branch_results.append(this_family_results)
-        total_results[name] = this_branch_results
+            total_results[name] = this_branch_results
 
     # make_html_for_branch_outline(this_branch_results[0])
 
@@ -347,4 +347,3 @@ def get_descendants(family, results=None):
                         next_results = get_descendants(new_family, these_results)
                         these_results.extend([next_results])
     return these_results
-

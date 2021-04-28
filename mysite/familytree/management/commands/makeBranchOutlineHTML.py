@@ -1,14 +1,13 @@
 from django.core.management.base import BaseCommand, CommandError
 from ...models import Person, Family, Branch
-
+from pathlib import Path
 
 def get_descendants(family, results=None):
-    cumulative_results = results or []
     these_results = [family]
     kids = None
 
     try:
-        kids = Person.objects.filter(family=family)
+        kids = Person.objects.filter(family=family).order_by('id')
     except:
         pass
     else:
@@ -24,26 +23,9 @@ def get_descendants(family, results=None):
                     for new_family in families_made:
                         next_results = get_descendants(new_family, these_results)
                         these_results.extend([next_results])
-    # if kids:
-    #     # breakpoint()
-    #     # cumulative_results.extend([these_results])
-    #     # return cumulative_results
-    #     return these_results
-    # else:
-    #     return these_results
 
-    if kids:
-        # breakpoint()
-        # cumulative_results.extend([these_results])
-        return these_results
-    else:
-        return these_results
+    return these_results
 
-    # if kids:
-    #     return these_results
-    # # else:
-    # #     cumulative_results.extend([these_results])
-    # #     return cumulative_results
 
 def make_branch_list(branch):
     name = branch.display_name
@@ -53,13 +35,12 @@ def make_branch_list(branch):
     for family in orig_family_list:
         this_family_results = get_descendants(family)
         this_branch_results.append(this_family_results)
-
     results = this_branch_results[0]
     return results
 
+
 def make_list_into_html(list):
     result = ''
-
 
     for item in list:
         if type(item) == Person:
@@ -75,31 +56,26 @@ def make_list_into_html(list):
         else:
             html = make_list_into_html(item)
             result += html
+            result += '</ul>'
 
     return result
+
 
 class Command(BaseCommand):
     help = 'Generate outline view html for each branch'
 
-    person_skipped_count = 0;
-    child_family_dict = {}  # map of gedcom child/family associations (eg. P7: F1)
-
-
     def handle(self, *args, **kwargs):
-
+        path = Path("familytree/templates/familytree/outline_branch_partials")
         branches = Branch.objects.all()
 
         for branch in branches:
             name = branch.display_name
             results = make_branch_list(branch)
-            # print( name + " branch results: ")
-            print(results)
-
             html = make_list_into_html(results)
-            print(html)
-            # print("HTML results:" + html)
 
-            # filename = name + "_outline.html"
-            # f = open(filename, 'w')
-            # f.write(results)
-            # f.closed
+            filename = name + "_outline.html"
+            path_plus_file = path.joinpath(filename)
+            f = open(path_plus_file, 'w')
+            f.write(str(html))
+            f.closed
+            print("Wrote file: " + filename)
