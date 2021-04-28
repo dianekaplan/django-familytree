@@ -1,12 +1,13 @@
 from django.core.management.base import BaseCommand, CommandError
 from ...models import Person, Family, Branch
+from pathlib import Path
 
 def get_descendants(family, results=None):
     these_results = [family]
     kids = None
 
     try:
-        kids = Person.objects.filter(family=family)
+        kids = Person.objects.filter(family=family).order_by('id')
     except:
         pass
     else:
@@ -64,7 +65,7 @@ class Command(BaseCommand):
     help = 'Generate outline view html for each branch'
 
     def handle(self, *args, **kwargs):
-
+        path = Path("familytree/templates/familytree/outline_branch_partials")
         branches = Branch.objects.all()
 
         for branch in branches:
@@ -73,7 +74,8 @@ class Command(BaseCommand):
             html = make_list_into_html(results)
 
             filename = name + "_outline.html"
-            f = open(filename, 'w')
+            path_plus_file = path.joinpath(filename)
+            f = open(path_plus_file, 'w')
             f.write(str(html))
             f.closed
             print("Wrote file: " + filename)
