@@ -3,6 +3,6 @@
 {% for item in results %}
 FAMILY SECTION:<br/>
     {% for entry in item %}
-        {% include "familytree/outline_family_chunk.html" %}
+        {% include chunk_view %}
     {% endfor %}
 {% endfor %}

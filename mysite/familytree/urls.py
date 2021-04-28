@@ -39,5 +39,4 @@ urlpatterns = [
     # ex: /stories/4/
     path('stories/<int:story_id>/', views.story, name='story'),
 
-
 ]
