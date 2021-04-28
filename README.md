@@ -39,3 +39,6 @@ update "display_name" field. (We show that instead, if it's populated)
 For this we have the 'Family History' branch, where you provide an html file for the big picture: important migrations
 and connections down to the present day, etc. The family history page will pull for each branch (only showing to users 
 with access to that branch) their file located in familytree/family_history, saved with the convention "smith.html"
+- Another way to give context to your branches is the Outline View page. After your branches/families/people are in place, 
+run the following management command to populate each branch's outline view: python3 manage.py makeBranchOutlineHTML
+(This generates html files into the templates/familytree/outline_branch_partials directory)

@@ -5,9 +5,9 @@
 
 <div style="float: left; width: 100%;">
     {%  if person.display_name %}
-        <h3>{{ person.display_name }}</h3>
+        <h1>{{ person.display_name }}</h1>
     {%  else %}
-        <h3>{{ person.first }} {{ person.last }}</h3>
+        <h1>{{ person.first }} {{ person.last }}</h1>
     {%  endif %}
 </div>
 
@@ -83,7 +83,6 @@
 
     {% endif %}
 </div>
-
 <div style="float: left; width: 100%;">
     {% if stories %}
         {% for story in stories %}
@@ -111,18 +110,18 @@
     {% endif %}
 </div>
 
-<div>
+<div style="float: left; width: 100%;">
     {% if images %}
-        <h4>Pictures of {{ person.first }}: </h4>
+        <h2>Pictures of {{ person.first }}: </h2>
         {% for image in images %}
             {% include "familytree/image_link.html" with image=image %}
         {% endfor %}
     {% endif %}
 </div>
-
-<div>
+<br/><br/><br/>
+<div style="float: left; width: 100%;">
     {% if group_images %}
-        <h4>Group pictures:</h4>
+        <h2>Group pictures:</h2>
         {% for listing in group_images %}
           {% include "familytree/image_link.html" with image=listing.image %}
         {% endfor %}

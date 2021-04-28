@@ -48,7 +48,7 @@ def index(request):  # dashboard page
     except Person.DoesNotExist:
         today_birthday = None
 
-    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples,
+    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples, 'show_book': False,
                'latest_pics': latest_pics, 'latest_videos': latest_videos, 'user_person': this_person, 'profile': profile,
                'accessible_branches': accessible_branches, 'today_birthday': today_birthday, 'media_server': media_server
                }
@@ -98,7 +98,7 @@ def person_index(request):
                 'branch3_people': branch3_people, 'branch4_people': branch4_people, 'branch1_name': branch1_name,
                 'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
                 'show_by_branch': show_by_branch, 'accessible_branches':accessible_branches,
-                'request_user': request.user,
+                'request_user': request.user, 'show_book': True,
                 'user_person': this_person, 'media_server': media_server
                 }
     return render(request, 'familytree/person_index.html', context)
@@ -188,7 +188,7 @@ def family_detail(request, family_id):
     except Image.DoesNotExist:
         images = None
 
-    return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes,
+    return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes,'show_book': True,
                                                              'featured_images': featured_images, 'icons': images,
                                                              'user_person': user_person, 'media_server': media_server})
 
@@ -201,7 +201,7 @@ def image_detail(request, image_id):
     image_full_path = media_server + "/image/upload/r_20/" + image.big_name
 
     return render(request, 'familytree/image_detail.html', {'image': image, 'image_person': this_image_person,
-                                                            'image_family': this_image_family,
+                                                            'image_family': this_image_family, 'show_book': False,
                                                             'image_people' : image_people, 'user_person': user_person,
                                                             'image_full_path' : image_full_path, 'media_server' : media_server
                                                             })
@@ -236,7 +236,7 @@ def video_detail(request, video_id):
 
     return render(request, 'familytree/video_detail.html', {'video': video,'video_people': video_people,
                                                             'user_person': user_person, 'media_server': media_server,
-                                                            'video_url': video_url})
+                                                            'video_url': video_url, 'show_book': True})
 
 
 def story(request, story_id):
@@ -276,7 +276,7 @@ def outline(request):
     # make_html_for_branch_outline(this_branch_results[0])
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
-               'family_dict': users_original_families, 'media_server': media_server,
+               'family_dict': users_original_families, 'media_server': media_server,'show_book': True,
                'chunk_view': "familytree/outline_family_chunk.html", 'total_results': total_results}
 
     return render(request, 'familytree/outline.html', context)

@@ -57,6 +57,14 @@ class Person(models.Model):
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
+    def has_stories(self):
+        try:
+            person_story_records = PersonStory.objects.filter(person_id=self.id)
+        except PersonStory.DoesNotExist:
+            person_story_records = None
+        if person_story_records:
+            return True
+
     class Meta(object):
         verbose_name_plural = 'People'
         db_table = 'people'
