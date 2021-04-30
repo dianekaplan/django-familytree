@@ -144,7 +144,7 @@ def person_detail(request, person_id):
         videos = None
 
     try:
-        group_images = ImagePerson.objects.filter(person_id=person_id)
+        group_images = ImagePerson.objects.filter(person_id=person_id).order_by('image__year')
     except ImagePerson.DoesNotExist:
         group_images = None
 
