@@ -110,4 +110,5 @@ class AudioAdmin(admin.ModelAdmin):
     search_fields = ('filename',)
     list_display = ('filename', 'recording_date', 'summary')
     ordering = ('-created_at', 'filename')
+    raw_id_fields = ('person',)
     pass

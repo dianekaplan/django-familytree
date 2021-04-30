@@ -163,27 +163,6 @@ class ImagePerson(models.Model):
     def __str__(self):
         return str(self.image_id)
 
-
-class Note(models.Model):
-    author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='author')
-    author_name = models.CharField(max_length=50, null=True, blank=True)
-    body = models.CharField(max_length=3000, blank=True)
-    date = models.DateField(null=True, blank=True)
-    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='note_person')
-    family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family_note')
-    active = models.BooleanField(null=True, default=True)
-    for_self = models.BooleanField(null=True, default=False)
-    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
-    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
-
-    class Meta(object):
-        verbose_name_plural = 'Notes'
-        db_table = 'notes'
-
-    def __str__(self):
-        return self.author_name + self.body
-
-
 class Profile(models.Model): # This class holds additional info for user records
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     person = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
@@ -300,6 +279,25 @@ class VideoPerson(models.Model):
 
     def __str__(self):
         return str(self.video_id)
+
+class Note(models.Model):
+    author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='author')
+    author_name = models.CharField(max_length=50, null=True, blank=True)
+    body = models.CharField(max_length=3000, blank=True)
+    date = models.DateField(null=True, blank=True)
+    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='note_person')
+    family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family_note')
+    active = models.BooleanField(null=True, default=True)
+    for_self = models.BooleanField(null=True, default=False)
+    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
+
+    class Meta(object):
+        verbose_name_plural = 'Notes'
+        db_table = 'notes'
+
+    def __str__(self):
+        return self.author_name + self.body
 
 
 class Audiofile(models.Model):

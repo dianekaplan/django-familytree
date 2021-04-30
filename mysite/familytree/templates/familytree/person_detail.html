@@ -98,26 +98,39 @@
     {% endif %}
 </div>
 
-<div>
-    {% if videos %}
-        <h4>Videos: </h4>
-        <div style="width:100%;">
+
+{% if videos %}
+    <div style="float: left; width: 100%;">
+        <h2>Videos: </h2>
+        <div>
             {% for video in videos %}
                 {% include "familytree/video_link.html" with video=video %}
             {% endfor %}
         </div>
+    </div>
+{% endif %}
 
-    {% endif %}
-</div>
 
-<div style="float: left; width: 100%;">
-    {% if images %}
+{% if audio_files %}
+    <div style="float: left; width: 100%;">
+        <h2>Audio links: </h2>
+        <div>
+            {% for file in audio_files %}
+                {{ file.summary}}
+                <a href="{{ media_server }}/video/upload/{{ file.filename }}">click here</a><br/>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+{% if images %}
+    <div style="float: left; width: 100%;">
         <h2>Pictures of {{ person.first }}: </h2>
         {% for image in images %}
             {% include "familytree/image_link.html" with image=image %}
         {% endfor %}
-    {% endif %}
-</div>
+    </div>
+{% endif %}
 <br/><br/><br/>
 <div style="float: left; width: 100%;">
     {% if group_images %}

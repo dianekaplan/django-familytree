@@ -3,7 +3,7 @@ from datetime import datetime
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.template.defaultfilters import unordered_list
 
-from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory
+from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
 from django.contrib.auth import logout
 from django.conf import settings
 
@@ -139,7 +139,7 @@ def person_detail(request, person_id):
         stories = None
 
     try:
-        videos = Video.objects.filter(person=person)
+        videos = Video.objects.filter(person=person).order_by('year')
     except Video.DoesNotExist:
         videos = None
 
@@ -158,9 +158,14 @@ def person_detail(request, person_id):
     except Image.DoesNotExist:
         featured_images = None
 
+    try:
+        audio_files = Audiofile.objects.filter(person=person)
+    except Audiofile.DoesNotExist:
+        audio_files = None
+
     return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made,
                             'origin_family': origin_family, 'images': images, 'group_images': group_images,
-                            'notes': notes, 'videos': videos, 'featured_images': featured_images,
+                            'notes': notes, 'videos': videos, 'featured_images': featured_images,'audio_files': audio_files,
                             'user_person': user_person, 'stories': stories, 'media_server': media_server })
 
 
