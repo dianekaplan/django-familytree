@@ -1,0 +1,7 @@
+{% load familytree_extras %}
+{% load humanize %}
+
+<div>
+        {% include "familytree/face_name_link.html"%} {{update}} {{ update.action_time|naturaltime }}
+</div>
+

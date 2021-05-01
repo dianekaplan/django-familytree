@@ -18,11 +18,13 @@
             <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.last }}<br/>
         {% endif %}
 
+        <b>Birthdate:</b>
         {% if person.birthdate %}
-            <b>Birthdate:</b> {{ person.birthdate }} <br/>
-        {% else %}
-        <b> Birthdate: </b>{{ person.birthdate_note }}<br/>
+            {{ person.birthdate }}
+        {% elif person.birthdate_note %}
+           {{ person.birthdate_note }}
         {% endif %}
+        <br/>
 
         <b>Born in:</b> {{ person.birthplace|default_if_none:"" }}<br/>
 
@@ -67,20 +69,23 @@
     {% endif %}
  </div>
 <div style="float: left; width: 100%;">
-    {% if person.notes1 %} {{ person.notes1 }} <br/>{% endif %}
-    {% if person.notes2 %} {{ person.notes2 }} <br/>{% endif %}
-    {% if person.notes3 %} {{ person.notes3 }} <br/>{% endif %}
+    {% if person.notes1 %} <div style="margin: 10px">{{ person.notes1 | safe}} </div>{% endif %}
+    {% if person.notes2 %} <div style="margin: 10px">{{ person.notes2 | safe}} </div>{% endif %}
+    {% if person.notes3 %} <div style="margin: 10px">{{ person.notes3 | safe}} </div>{% endif %}
 
     {% if notes %}
-
         {% for note in notes %}
+            <div style="display: inline-block; margin: 10px;" >
+                {% include "familytree/face_name_link.html" with person=note.author %}:
               {% if note.date %}
-                    {{ note.date }}
+                    <br/>({{ note.date }})
               {% endif %}
-              {% include "familytree/face_name_link.html" with person=note.author %}: {{ note.body }}
+            </div>
+            <div style="display: inline-block; width: 75%; margin: 5px;">
+                {{ note.body | safe }}
+            </div>
             <br/>
         {% endfor %}
-
     {% endif %}
 </div>
 <div style="float: left; width: 100%;">

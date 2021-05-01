@@ -1,9 +1,17 @@
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
 from django.db import models
 from django.forms import TextInput, Textarea
 
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Story, PersonStory, Video, Audiofile, \
     VideoPerson, FamilyStory
+
+admin.site.register(LogEntry)
+# class LogAdmin(admin.ModelAdmin):
+#     list_display = ('action_time','user','content_type','change_message','is_addition','is_change','is_deletion')
+#     list_filter = ['action_time','user','content_type']
+#     ordering = ('-action_time',)
+
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
@@ -14,6 +22,7 @@ class PersonAdmin(admin.ModelAdmin):
     raw_id_fields = ('family',)
     pass
 
+
 @admin.register(Family)
 class FamilyAdmin(admin.ModelAdmin):
     search_fields = ('display_name',)
@@ -21,6 +30,7 @@ class FamilyAdmin(admin.ModelAdmin):
     raw_id_fields = ('wife','husband',)
     ordering = ('-created_at', 'display_name')
     pass
+
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
@@ -30,12 +40,14 @@ class ImageAdmin(admin.ModelAdmin):
     raw_id_fields = ('person',)
     pass
 
+
 @admin.register(Story)
 class ImageAdmin(admin.ModelAdmin):
     search_fields = ('description',)
     list_display = ('description', 'image', 'intro', 'slug', 'source','created_at')
     ordering = ('-created_at', 'description')
     pass
+
 
 @admin.register(PersonStory)
 class PersonStoryAdmin(admin.ModelAdmin):
@@ -45,12 +57,14 @@ class PersonStoryAdmin(admin.ModelAdmin):
     raw_id_fields = ('person',)
     pass
 
+
 @admin.register(FamilyStory)
 class FamilyStoryAdmin(admin.ModelAdmin):
     search_fields = ('story_id',)
     list_display = ('story_id', 'family_id', 'created_at')
     ordering = ('-created_at', 'story_id')
     pass
+
 
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
@@ -64,6 +78,7 @@ class NoteAdmin(admin.ModelAdmin):
     }
     pass
 
+
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):
     search_fields = ('display_name',)
@@ -75,11 +90,13 @@ class BranchAdmin(admin.ModelAdmin):
     # }
     pass
 
+
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     # search_fields = ('user',)
     list_display = ('user', 'person', 'connection_notes')
     pass
+
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
@@ -89,6 +106,7 @@ class VideoAdmin(admin.ModelAdmin):
     raw_id_fields = ('person',)
     pass
 
+
 @admin.register(VideoPerson)
 class VideoPersonAdmin(admin.ModelAdmin):
     search_fields = ('video_id',)
@@ -96,6 +114,7 @@ class VideoPersonAdmin(admin.ModelAdmin):
     ordering = ('-created_at', 'video_id')
     raw_id_fields = ('person',)
     pass
+
 
 @admin.register(ImagePerson)
 class ImagePersonAdmin(admin.ModelAdmin):

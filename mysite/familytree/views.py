@@ -1,9 +1,10 @@
 from datetime import datetime
 
 from django.shortcuts import render, get_object_or_404, get_list_or_404
-from django.template.defaultfilters import unordered_list
+from django.contrib.admin.models import LogEntry
 
 from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
+from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
 
@@ -22,6 +23,21 @@ def index(request):  # dashboard page
 
     profile = Profile.objects.filter(user=user)
     accessible_branches = get_valid_branches(request)
+
+    recent_logentries = LogEntry.objects.all().order_by('-id')[:10]
+
+    # make something with logentry, user-person, and target if possible
+    recent_updates = []
+
+    # make the dictionary of descendants by branch
+    for update in recent_logentries:
+        update_author = User.objects.get(username=update.user)
+        user_profile = Profile.objects.get(user=update_author)
+        user_person = Person.objects.get(id=user_profile.person_id)  # @TODO: see how to consolidate these steps
+
+        combination = [update, user_person]
+        recent_updates.append(combination)
+
 
     try:
         birthday_people = Person.objects.filter(birthdate__month=today.month).order_by('birthdate__day')
@@ -50,8 +66,8 @@ def index(request):  # dashboard page
 
     context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples, 'show_book': False,
                'latest_pics': latest_pics, 'latest_videos': latest_videos, 'user_person': this_person, 'profile': profile,
-               'accessible_branches': accessible_branches, 'today_birthday': today_birthday, 'media_server': media_server
-               }
+               'accessible_branches': accessible_branches, 'today_birthday': today_birthday, 'media_server': media_server,
+               'recent_logentries': recent_logentries, 'recent_updates':recent_updates}
 
     return render(request, 'familytree/dashboard.html', context )
 

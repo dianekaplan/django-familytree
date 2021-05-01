@@ -73,7 +73,16 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
     </div>
 
     <div class="circled_section">
-    <b>Latest updates:</b>
+    <b>Latest updates:</b><br/>
+        {% for update, person in recent_updates %}
+           {% include "familytree/update_partial.html"%}
+        {% endfor %}
+
+
+
+
+
+
     </div>
  </div>
 
