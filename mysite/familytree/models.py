@@ -128,18 +128,33 @@ class Image(models.Model):
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     def image_subjects(self):
-        # Get the queryset for ImagePerson records, then get the people from that
-        image_person_records = ImagePerson.objects.filter(image_id=self.id)
         image_people = set()
-        for record in image_person_records:
-            person = Person.objects.filter(id = record.person_id)
-            image_people.add(person)
 
         # get the featured person, if there is one
-        this_image_person = Person.objects.filter(id=self.person_id)
+        if self.person:
+            this_image_person = Person.objects.get(id=self.person_id)
+        else:
+            this_image_person = None
 
         # get the featured family, if there is one
-        this_image_family = Family.objects.filter(id=self.family_id)
+        if self.family:
+            this_image_family = Family.objects.get(id=self.family_id)
+            if this_image_family.wife:
+                image_people.add(this_image_family.wife)
+            if this_image_family.husband:
+                image_people.add(this_image_family.husband)
+            kids = Person.objects.filter(family=self.family)
+            if kids:
+                for kid in kids:
+                    image_people.add(kid)
+        else:
+            this_image_family = None
+
+        # Get the queryset for ImagePerson records, then get the people from that
+        image_person_records = ImagePerson.objects.filter(image_id=self.id)
+        for record in image_person_records:
+            person = Person.objects.get(id = record.person_id)
+            image_people.add(person)
 
         return this_image_person, this_image_family, image_people
 
