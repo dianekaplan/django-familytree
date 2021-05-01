@@ -2,12 +2,10 @@
 {% block title %}{% endblock title %}
 {% block content %}
 
-{#Welcome, {{ user.get_username }}! <br/><br/>#}
 Welcome, {{ user_person.display_name }}! <br/><br/>
 
-<div class="bottom">
+<div>
     <div style="float: left; width: 23%;" class="circled_section">
-
     {% include "familytree/face_name_link.html" with person=user_person %}<br/>
     <h2><a href="{% url 'history'  %}">My family history</a></h2>
     <h2><a href="{% url 'image_index'  %}">Family album</a></h2>
@@ -49,7 +47,7 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
     </div>
 </div>
 
-<div class="bottom" style="float: right; width: 35%;"  >
+<div style="float: right; width: 35%;"  >
     <div  class="circled_section">
         <b>Latest pics:</b> <br/>
        {%  if latest_pics%}
@@ -71,19 +69,14 @@ Welcome, {{ user_person.display_name }}! <br/><br/>
         (none)
     {% endif %}
     </div>
-
     <div class="circled_section">
-    <b>Latest updates:</b><br/>
-        {% for update, person in recent_updates %}
+        <b>Latest updates:</b><br/>
+        {% for update, person, content_type, change_type, updated_person in recent_updates %}
            {% include "familytree/update_partial.html"%}
         {% endfor %}
-
-
-
-
-
-
     </div>
+
+
  </div>
 
 {% endblock content %}

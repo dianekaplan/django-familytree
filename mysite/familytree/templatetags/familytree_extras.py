@@ -1,4 +1,5 @@
 from django import template
+from django.utils.timesince import timesince
 
 register = template.Library()
 
@@ -29,3 +30,10 @@ def get_story_filepath(story):
 def get_outline_filepath(branch):
     result = "familytree/outline_branch_partials/" + str(branch) + "_outline.html"
     return result
+
+@register.simple_tag
+def get_time_ago(datetime):
+    time = str(timesince(datetime)).split(",")
+    result = time[0] + " ago"
+    return result
+

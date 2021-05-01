@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.shortcuts import render, get_object_or_404, get_list_or_404
-from django.contrib.admin.models import LogEntry
+from django.contrib.admin.models import LogEntry, ContentType
 
 from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
 from django.contrib.auth.models import User
@@ -20,24 +20,29 @@ show_by_branch = True if branch1_name else False
 def index(request):  # dashboard page
     user = request.user
     this_person = get_user_person(request.user).first()
-
     profile = Profile.objects.filter(user=user)
     accessible_branches = get_valid_branches(request)
 
-    recent_logentries = LogEntry.objects.all().order_by('-id')[:10]
+    # only include additions or updates, for family, person, story
+    display_update_types = [2, 4, 5]
+    display_action_types = [1, 2]
+    recent_logentries = LogEntry.objects.filter(content_type_id__in= display_update_types,
+                                                action_flag__in=display_action_types).order_by('-id')[:5]
 
-    # make something with logentry, user-person, and target if possible
     recent_updates = []
-
-    # make the dictionary of descendants by branch
     for update in recent_logentries:
         update_author = User.objects.get(username=update.user)
         user_profile = Profile.objects.get(user=update_author)
-        user_person = Person.objects.get(id=user_profile.person_id)  # @TODO: see how to consolidate these steps
+        user_person = Person.objects.get(id=user_profile.person_id)  # @TODO: can I consolidate these steps?
+        updated_person = None
 
-        combination = [update, user_person]
+        if update.content_type_id == 4:
+            updated_person = Person.objects.get(id=update.object_id)
+
+        content_type = str(ContentType.objects.get(id=update.content_type_id)).replace("familytree | ","")
+        change_type = "added" if update.action_flag==1 else "updated"
+        combination = [update, user_person, content_type, change_type, updated_person]
         recent_updates.append(combination)
-
 
     try:
         birthday_people = Person.objects.filter(birthdate__month=today.month).order_by('birthdate__day')
@@ -318,13 +323,6 @@ def outline(request):
                'chunk_view': "familytree/outline_family_chunk.html", 'total_results': total_results}
 
     return render(request, 'familytree/outline.html', context)
-
-
-# def make_html_for_branch_outline(list):
-#     html_step_one =  list.replace("[<Family", "<ul>Family").replace(", [...]", "").replace("]", "</ul>")
-#     html_step_two = html_step_one.replace("<Person:", "<li>Person: ").replace(">,", "</li>").replace(">", "</li>")
-#
-#     return html_step_two
 
 
 def landing(request):
