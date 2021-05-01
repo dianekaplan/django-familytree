@@ -244,6 +244,23 @@ def video_detail(request, video_id):
                                                             'video_url': video_url, 'show_book': True})
 
 
+def video_index(request):
+    user_person = get_user_person(request.user).first()
+    accessible_branches = get_valid_branches(request)
+    existing_branches = Branch.objects.all()
+    video_list = Video.objects.none()
+
+    for branch in existing_branches:
+        if branch in accessible_branches:
+            name = branch.display_name
+            video_list = video_list.union(Video.objects.filter(branches__display_name__contains=name).order_by('year'))
+    sorted_list = video_list.order_by('year')
+
+    context = { 'video_list': sorted_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
+                'user_person': user_person, 'media_server' : media_server}
+    return render(request, 'familytree/video_index.html', context)
+
+
 def story(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
 
