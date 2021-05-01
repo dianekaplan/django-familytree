@@ -3,7 +3,7 @@
 {% block title %} - image detail{% endblock title %}
 {% block content %}
 
-<div style="float: left; width: 65%;">
+<div style="float: left; width: 80%;">
     <div style="margin-bottom: 20px">
         <img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}"/>
     </div>
@@ -16,7 +16,7 @@
     </div>
  </div>
 
- <div style="float: right; width: 35%; margin-top: 20px">
+ <div style="float: right; width: 20%; margin-top: 20px">
     {% if image_person %}
         {% for person in image_person %}
      Go to person's page: <br/><br/>
