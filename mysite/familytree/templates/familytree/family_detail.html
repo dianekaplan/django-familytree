@@ -21,26 +21,24 @@
 </div>
 
 <div style="float: left;width: 100%;">
-
     <div style="float: left;width: 31%;">
-        {% if family.marriage_date and not family.divorced %}
+        {% if family.marriage_date %}
             <b>Marriage date:</b> {{ family.marriage_date }}
-        {% elif family.marriage_date_note and not family.divorced %}
+        {% elif family.marriage_date_note %}
             <b>Marriage date:</b> {{ family.marriage_date_note }}
         {%  endif %}
     </div>
-
-<div style="float: left;width: 38%;">
-{% if kids %}
-    <b>Kids:</b><br/>
-    <ul>
-    {% for kid in kids %}
-        {% include "familytree/face_name_link.html" with person=kid %}<br/>
-    {% endfor %}
-    </ul>
-{% endif %}
+    <div style="float: left;width: 38%;">
+    {% if kids %}
+        <b>Kids:</b><br/>
+        <ul>
+        {% for kid in kids %}
+            {% include "familytree/face_name_link.html" with person=kid %}<br/>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    </div>
 </div>
-
 
  <div style="float: left;width: 100%;">
     {% if family.notes1 %} {{ family.notes1 }} <br/>{% endif %}
@@ -48,7 +46,7 @@
     {% if family.notes3 %} {{ family.notes3 }} <br/>{% endif %}
 
     {% if notes %}
-        Notes: <br/>
+        <h2>Notes:</h2>
         {% for note in notes %}
             {% if note.date %}
                 {{ note.date }}
@@ -60,7 +58,7 @@
 
  <div style="float: left;width: 100%;">
     {% if images %}
-    Images:
+    <h2>Images:</h2>
     <ul>
     {% for image in images %}
         {% include "familytree/image_link.html" with image=image %}

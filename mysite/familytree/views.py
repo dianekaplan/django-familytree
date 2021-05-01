@@ -210,12 +210,12 @@ def family_detail(request, family_id):
         featured_images = None
 
     try:
-        images = Image.objects.filter(family_id=family_id)
+        images = Image.objects.filter(family_id=family_id).order_by('year')
     except Image.DoesNotExist:
         images = None
 
     return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes,'show_book': True,
-                                                             'featured_images': featured_images, 'icons': images,
+                                                             'featured_images': featured_images, 'images': images,
                                                              'user_person': user_person, 'media_server': media_server})
 
 
