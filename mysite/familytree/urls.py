@@ -1,6 +1,8 @@
-from django.urls import path
+from django.conf.urls import url
+from django.urls import path, include
 
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # ex: /familytree
@@ -41,5 +43,7 @@ urlpatterns = [
 
     # ex: /stories/4/
     path('stories/<int:story_id>/', views.story, name='story'),
+
+    url('^', include('django.contrib.auth.urls')), # paths for registration pages (password reset)
 
 ]

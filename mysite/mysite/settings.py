@@ -148,6 +148,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Email settings
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'postmaster@mg.ourbigfamilytree.com'
+EMAIL_HOST_PASSWORD = 'bac40b5c58e7c04a2fde5aa031066281' # @TODO: make this a variable somewhere, or https://pypi.org/project/python-decouple/
+EMAIL_USE_TLS = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

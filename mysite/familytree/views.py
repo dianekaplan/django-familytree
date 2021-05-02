@@ -1,12 +1,13 @@
 from datetime import datetime
 
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.contrib.admin.models import LogEntry, ContentType
-
-from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
+
+from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
 
 media_server = settings.MEDIA_SERVER
 today = datetime.now()  # used to get birthday_people and anniversary_couples
@@ -16,7 +17,10 @@ branch2_name = Branch.objects.filter(id=2)
 branch3_name = Branch.objects.filter(id=3)
 branch4_name = Branch.objects.filter(id=4)
 show_by_branch = True if branch1_name else False
+login_url = '/familytree/landing/'
 
+
+@login_required(login_url=login_url)
 def index(request):  # dashboard page
     user = request.user
     this_person = get_user_person(request.user).first()
@@ -77,6 +81,7 @@ def index(request):  # dashboard page
     return render(request, 'familytree/dashboard.html', context )
 
 
+@login_required(login_url=login_url)
 def family_index(request):
     this_person = get_user_person(request.user).first()
     family_list = Family.objects.order_by('display_name')
@@ -102,6 +107,7 @@ def family_index(request):
     return render(request, 'familytree/family_index.html', context)
 
 
+@login_required(login_url=login_url)
 def person_index(request):
     accessible_branches = get_valid_branches(request)
     this_person = get_user_person(request.user).first()
@@ -125,6 +131,7 @@ def person_index(request):
     return render(request, 'familytree/person_index.html', context)
 
 
+@login_required(login_url=login_url)
 def person_detail(request, person_id):
     user_person = get_user_person(request.user).first()
     person = get_object_or_404(Person, pk=person_id)
@@ -190,6 +197,7 @@ def person_detail(request, person_id):
                             'user_person': user_person, 'stories': stories, 'media_server': media_server })
 
 
+@login_required(login_url=login_url)
 def family_detail(request, family_id):
     family = get_object_or_404(Family, pk=family_id)
     user_person = get_user_person(request.user).first()
@@ -219,6 +227,7 @@ def family_detail(request, family_id):
                                                              'user_person': user_person, 'media_server': media_server})
 
 
+@login_required(login_url=login_url)
 def image_detail(request, image_id):
     user_person = get_user_person(request.user).first()
     image = get_object_or_404(Image, pk=image_id)
@@ -233,6 +242,7 @@ def image_detail(request, image_id):
                                                             })
 
 
+@login_required(login_url=login_url)
 def image_index(request):
     user_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
@@ -250,6 +260,7 @@ def image_index(request):
     return render(request, 'familytree/image_index.html', context)
 
 
+@login_required(login_url=login_url)
 def video_detail(request, video_id):
     user_person = get_user_person(request.user).first()
     video = get_object_or_404(Video, pk=video_id)
@@ -265,6 +276,7 @@ def video_detail(request, video_id):
                                                             'video_url': video_url, 'show_book': True})
 
 
+@login_required(login_url=login_url)
 def video_index(request):
     user_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
@@ -282,12 +294,14 @@ def video_index(request):
     return render(request, 'familytree/video_index.html', context)
 
 
+@login_required(login_url=login_url)
 def story(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
 
     return render(request, 'familytree/story.html', {'story': story,'media_server': media_server})
 
 
+@login_required(login_url=login_url)
 def outline(request):
     this_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
@@ -331,6 +345,7 @@ def landing(request):
     context = { 'landing_page_people': landing_page_people, 'media_server': media_server}
     return render(request, 'familytree/landing.html', context)
 
+@login_required(login_url=login_url)
 def history(request):
     this_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
