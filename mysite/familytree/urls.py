@@ -44,6 +44,9 @@ urlpatterns = [
     # ex: /stories/4/
     path('stories/<int:story_id>/', views.story, name='story'),
 
+    # ex: /account/
+    path('account/', views.account, name='account'),
+
     url('^', include('django.contrib.auth.urls')), # paths for registration pages (password reset)
 
 ]

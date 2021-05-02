@@ -398,3 +398,13 @@ def get_descendants(family, results=None):
                         next_results = get_descendants(new_family, these_results)
                         these_results.extend([next_results])
     return these_results
+
+@login_required(login_url=login_url)
+def account(request):
+    this_person = get_user_person(request.user).first()
+    accessible_branches = get_valid_branches(request)
+
+    context = {'accessible_branches': accessible_branches, 'user_person': this_person,
+                'media_server': media_server,}
+
+    return render(request, 'familytree/account.html', context)

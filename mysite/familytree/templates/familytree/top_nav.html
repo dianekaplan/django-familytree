@@ -16,7 +16,7 @@
         {% endif %}
 
         {% if user.is_authenticated %}
-            My Account
+            <a href="{% url 'account' %}">Account</a>
             <a href="{% url 'logout' %}">Log out</a>
         {% endif %}
 
