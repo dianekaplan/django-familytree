@@ -60,7 +60,7 @@
         {% for family in families_made %}
             {% if family.no_kids_bool == True %}
                 <b>Married:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a>
-    <img src="{% static 'familytree/right_arrow.svg' %}" height="25"/><br/>
+    <img src="{% static 'familytree/right_arrow.svg' %}" height="20"/><br/>
             {% else %}
                 <b>Raised family:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a>
     <img src="{% static 'familytree/southeast.png' %}" height="25"/><br/>

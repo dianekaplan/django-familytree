@@ -121,7 +121,7 @@ class ImagePersonAdmin(admin.ModelAdmin):
     search_fields = ('image_id',)
     list_display = ('image_id', 'person_id')
     ordering = ('-created_at', 'image_id')
-    raw_id_fields = ('person',)
+    raw_id_fields = ('person','image')
     pass
 
 
