@@ -1,11 +1,13 @@
 from datetime import datetime
 
-from django.shortcuts import render, get_object_or_404, get_list_or_404
-from django.template.defaultfilters import unordered_list
-
-from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
+from django.contrib.admin.models import LogEntry, ContentType
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
+
+from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
 
 media_server = settings.MEDIA_SERVER
 today = datetime.now()  # used to get birthday_people and anniversary_couples
@@ -15,13 +17,36 @@ branch2_name = Branch.objects.filter(id=2)
 branch3_name = Branch.objects.filter(id=3)
 branch4_name = Branch.objects.filter(id=4)
 show_by_branch = True if branch1_name else False
+login_url = '/familytree/landing/'
 
+
+@login_required(login_url=login_url)
 def index(request):  # dashboard page
     user = request.user
     this_person = get_user_person(request.user).first()
-
     profile = Profile.objects.filter(user=user)
     accessible_branches = get_valid_branches(request)
+
+    # only include additions or updates, for family, person, story
+    display_update_types = [2, 4, 5]
+    display_action_types = [1, 2]
+    recent_logentries = LogEntry.objects.filter(content_type_id__in= display_update_types,
+                                                action_flag__in=display_action_types).order_by('-id')[:5]
+
+    recent_updates = []
+    for update in recent_logentries:
+        update_author = User.objects.get(username=update.user)
+        user_profile = Profile.objects.get(user=update_author)
+        user_person = Person.objects.get(id=user_profile.person_id)  # @TODO: can I consolidate these steps?
+        updated_person = None
+
+        if update.content_type_id == 4:
+            updated_person = Person.objects.get(id=update.object_id)
+
+        content_type = str(ContentType.objects.get(id=update.content_type_id)).replace("familytree | ","")
+        change_type = "added" if update.action_flag==1 else "updated"
+        combination = [update, user_person, content_type, change_type, updated_person]
+        recent_updates.append(combination)
 
     try:
         birthday_people = Person.objects.filter(birthdate__month=today.month).order_by('birthdate__day')
@@ -48,14 +73,15 @@ def index(request):  # dashboard page
     except Person.DoesNotExist:
         today_birthday = None
 
-    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples,
+    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples, 'show_book': False,
                'latest_pics': latest_pics, 'latest_videos': latest_videos, 'user_person': this_person, 'profile': profile,
-               'accessible_branches': accessible_branches, 'today_birthday': today_birthday, 'media_server': media_server
-               }
+               'accessible_branches': accessible_branches, 'today_birthday': today_birthday, 'media_server': media_server,
+               'recent_logentries': recent_logentries, 'recent_updates':recent_updates}
 
     return render(request, 'familytree/dashboard.html', context )
 
 
+@login_required(login_url=login_url)
 def family_index(request):
     this_person = get_user_person(request.user).first()
     family_list = Family.objects.order_by('display_name')
@@ -81,6 +107,7 @@ def family_index(request):
     return render(request, 'familytree/family_index.html', context)
 
 
+@login_required(login_url=login_url)
 def person_index(request):
     accessible_branches = get_valid_branches(request)
     this_person = get_user_person(request.user).first()
@@ -98,12 +125,13 @@ def person_index(request):
                 'branch3_people': branch3_people, 'branch4_people': branch4_people, 'branch1_name': branch1_name,
                 'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
                 'show_by_branch': show_by_branch, 'accessible_branches':accessible_branches,
-                'request_user': request.user,
+                'request_user': request.user, 'show_book': True,
                 'user_person': this_person, 'media_server': media_server
                 }
     return render(request, 'familytree/person_index.html', context)
 
 
+@login_required(login_url=login_url)
 def person_detail(request, person_id):
     user_person = get_user_person(request.user).first()
     person = get_object_or_404(Person, pk=person_id)
@@ -139,12 +167,12 @@ def person_detail(request, person_id):
         stories = None
 
     try:
-        videos = Video.objects.filter(person=person)
+        videos = Video.objects.filter(person=person).order_by('year')
     except Video.DoesNotExist:
         videos = None
 
     try:
-        group_images = ImagePerson.objects.filter(person_id=person_id)
+        group_images = ImagePerson.objects.filter(person_id=person_id).order_by('image__year')
     except ImagePerson.DoesNotExist:
         group_images = None
 
@@ -158,12 +186,18 @@ def person_detail(request, person_id):
     except Image.DoesNotExist:
         featured_images = None
 
+    try:
+        audio_files = Audiofile.objects.filter(person=person)
+    except Audiofile.DoesNotExist:
+        audio_files = None
+
     return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made,
                             'origin_family': origin_family, 'images': images, 'group_images': group_images,
-                            'notes': notes, 'videos': videos, 'featured_images': featured_images,
+                            'notes': notes, 'videos': videos, 'featured_images': featured_images,'audio_files': audio_files,
                             'user_person': user_person, 'stories': stories, 'media_server': media_server })
 
 
+@login_required(login_url=login_url)
 def family_detail(request, family_id):
     family = get_object_or_404(Family, pk=family_id)
     user_person = get_user_person(request.user).first()
@@ -184,15 +218,16 @@ def family_detail(request, family_id):
         featured_images = None
 
     try:
-        images = Image.objects.filter(family_id=family_id)
+        images = Image.objects.filter(family_id=family_id).order_by('year')
     except Image.DoesNotExist:
         images = None
 
-    return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes,
-                                                             'featured_images': featured_images, 'icons': images,
+    return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes,'show_book': True,
+                                                             'featured_images': featured_images, 'images': images,
                                                              'user_person': user_person, 'media_server': media_server})
 
 
+@login_required(login_url=login_url)
 def image_detail(request, image_id):
     user_person = get_user_person(request.user).first()
     image = get_object_or_404(Image, pk=image_id)
@@ -201,12 +236,13 @@ def image_detail(request, image_id):
     image_full_path = media_server + "/image/upload/r_20/" + image.big_name
 
     return render(request, 'familytree/image_detail.html', {'image': image, 'image_person': this_image_person,
-                                                            'image_family': this_image_family,
+                                                            'image_family': this_image_family, 'show_book': False,
                                                             'image_people' : image_people, 'user_person': user_person,
                                                             'image_full_path' : image_full_path, 'media_server' : media_server
                                                             })
 
 
+@login_required(login_url=login_url)
 def image_index(request):
     user_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
@@ -224,6 +260,7 @@ def image_index(request):
     return render(request, 'familytree/image_index.html', context)
 
 
+@login_required(login_url=login_url)
 def video_detail(request, video_id):
     user_person = get_user_person(request.user).first()
     video = get_object_or_404(Video, pk=video_id)
@@ -236,15 +273,35 @@ def video_detail(request, video_id):
 
     return render(request, 'familytree/video_detail.html', {'video': video,'video_people': video_people,
                                                             'user_person': user_person, 'media_server': media_server,
-                                                            'video_url': video_url})
+                                                            'video_url': video_url, 'show_book': True})
 
 
+@login_required(login_url=login_url)
+def video_index(request):
+    user_person = get_user_person(request.user).first()
+    accessible_branches = get_valid_branches(request)
+    existing_branches = Branch.objects.all()
+    video_list = Video.objects.none()
+
+    for branch in existing_branches:
+        if branch in accessible_branches:
+            name = branch.display_name
+            video_list = video_list.union(Video.objects.filter(branches__display_name__contains=name).order_by('year'))
+    sorted_list = video_list.order_by('year')
+
+    context = { 'video_list': sorted_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
+                'user_person': user_person, 'media_server' : media_server}
+    return render(request, 'familytree/video_index.html', context)
+
+
+@login_required(login_url=login_url)
 def story(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
 
     return render(request, 'familytree/story.html', {'story': story,'media_server': media_server})
 
 
+@login_required(login_url=login_url)
 def outline(request):
     this_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
@@ -276,17 +333,10 @@ def outline(request):
     # make_html_for_branch_outline(this_branch_results[0])
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
-               'family_dict': users_original_families, 'media_server': media_server,
+               'family_dict': users_original_families, 'media_server': media_server,'show_book': True,
                'chunk_view': "familytree/outline_family_chunk.html", 'total_results': total_results}
 
     return render(request, 'familytree/outline.html', context)
-
-
-# def make_html_for_branch_outline(list):
-#     html_step_one =  list.replace("[<Family", "<ul>Family").replace(", [...]", "").replace("]", "</ul>")
-#     html_step_two = html_step_one.replace("<Person:", "<li>Person: ").replace(">,", "</li>").replace(">", "</li>")
-#
-#     return html_step_two
 
 
 def landing(request):
@@ -295,6 +345,7 @@ def landing(request):
     context = { 'landing_page_people': landing_page_people, 'media_server': media_server}
     return render(request, 'familytree/landing.html', context)
 
+@login_required(login_url=login_url)
 def history(request):
     this_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
@@ -347,3 +398,13 @@ def get_descendants(family, results=None):
                         next_results = get_descendants(new_family, these_results)
                         these_results.extend([next_results])
     return these_results
+
+@login_required(login_url=login_url)
+def account(request):
+    this_person = get_user_person(request.user).first()
+    accessible_branches = get_valid_branches(request)
+
+    context = {'accessible_branches': accessible_branches, 'user_person': this_person,
+                'media_server': media_server,}
+
+    return render(request, 'familytree/account.html', context)

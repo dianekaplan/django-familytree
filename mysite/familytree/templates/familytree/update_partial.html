@@ -1,0 +1,21 @@
+{% load familytree_extras %}
+{% load static %}
+
+ {% get_time_ago update.action_time as timesince %}
+
+<div>
+        {% include "familytree/person_name_link.html" %}
+        {{change_type}}
+
+        {% if updated_person %}
+                {% include "familytree/face_name_link.html" with person=updated_person %}<br/>
+        {% elif content_type == 'family' %}
+                <a href="{% url 'family_detail' update.object_id %}">{{ update.object_repr }}</a><br/>
+        {% elif content_type == 'story' %}
+                <a href="{% url 'story' update.object_id %}">this story
+                <img src="{% static 'familytree/book.png' %}" height="30"/>
+                </a>
+        {% endif %}
+
+        {{ timesince }}
+</div>

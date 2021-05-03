@@ -57,6 +57,14 @@ class Person(models.Model):
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
+    def has_stories(self):
+        try:
+            person_story_records = PersonStory.objects.filter(person_id=self.id)
+        except PersonStory.DoesNotExist:
+            person_story_records = None
+        if person_story_records:
+            return True
+
     class Meta(object):
         verbose_name_plural = 'People'
         db_table = 'people'
@@ -120,18 +128,33 @@ class Image(models.Model):
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     def image_subjects(self):
-        # Get the queryset for ImagePerson records, then get the people from that
-        image_person_records = ImagePerson.objects.filter(image_id=self.id)
         image_people = set()
-        for record in image_person_records:
-            person = Person.objects.filter(id = record.person_id)
-            image_people.add(person)
 
         # get the featured person, if there is one
-        this_image_person = Person.objects.filter(id=self.person_id)
+        if self.person:
+            this_image_person = Person.objects.get(id=self.person_id)
+        else:
+            this_image_person = None
 
         # get the featured family, if there is one
-        this_image_family = Family.objects.filter(id=self.family_id)
+        if self.family:
+            this_image_family = Family.objects.get(id=self.family_id)
+            if this_image_family.wife:
+                image_people.add(this_image_family.wife)
+            if this_image_family.husband:
+                image_people.add(this_image_family.husband)
+            kids = Person.objects.filter(family=self.family)
+            if kids:
+                for kid in kids:
+                    image_people.add(kid)
+        else:
+            this_image_family = None
+
+        # Get the queryset for ImagePerson records, then get the people from that
+        image_person_records = ImagePerson.objects.filter(image_id=self.id)
+        for record in image_person_records:
+            person = Person.objects.get(id = record.person_id)
+            image_people.add(person)
 
         return this_image_person, this_image_family, image_people
 
@@ -154,27 +177,6 @@ class ImagePerson(models.Model):
 
     def __str__(self):
         return str(self.image_id)
-
-
-class Note(models.Model):
-    author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='author')
-    author_name = models.CharField(max_length=50, null=True, blank=True)
-    body = models.CharField(max_length=3000, blank=True)
-    date = models.DateField(null=True, blank=True)
-    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='note_person')
-    family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family_note')
-    active = models.BooleanField(null=True, default=True)
-    for_self = models.BooleanField(null=True, default=False)
-    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
-    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
-
-    class Meta(object):
-        verbose_name_plural = 'Notes'
-        db_table = 'notes'
-
-    def __str__(self):
-        return self.author_name + self.body
-
 
 class Profile(models.Model): # This class holds additional info for user records
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -292,6 +294,25 @@ class VideoPerson(models.Model):
 
     def __str__(self):
         return str(self.video_id)
+
+class Note(models.Model):
+    author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='author')
+    author_name = models.CharField(max_length=50, null=True, blank=True)
+    body = models.CharField(max_length=3000, blank=True)
+    date = models.DateField(null=True, blank=True)
+    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='note_person')
+    family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family_note')
+    active = models.BooleanField(null=True, default=True)
+    for_self = models.BooleanField(null=True, default=False)
+    created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
+
+    class Meta(object):
+        verbose_name_plural = 'Notes'
+        db_table = 'notes'
+
+    def __str__(self):
+        return self.author_name + self.body
 
 
 class Audiofile(models.Model):

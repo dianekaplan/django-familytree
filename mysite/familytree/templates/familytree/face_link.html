@@ -1,7 +1,4 @@
 {% if person %}
-
-{# FL person_id: {{ person.id }}:#}
-
     {% if person.face %}
     {# have face </br>#}
         <a href="{% url 'person_detail' person.id %}"><img src= "{{ media_server }}/image/upload/h_51,r_20/{{ person.face }}" /></a>

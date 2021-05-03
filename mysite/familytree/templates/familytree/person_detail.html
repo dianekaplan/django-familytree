@@ -5,9 +5,9 @@
 
 <div style="float: left; width: 100%;">
     {%  if person.display_name %}
-        <h3>{{ person.display_name }}</h3>
+        <h1>{{ person.display_name }}</h1>
     {%  else %}
-        <h3>{{ person.first }} {{ person.last }}</h3>
+        <h1>{{ person.first }} {{ person.last }}</h1>
     {%  endif %}
 </div>
 
@@ -18,11 +18,13 @@
             <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.last }}<br/>
         {% endif %}
 
+        <b>Birthdate:</b>
         {% if person.birthdate %}
-            <b>Birthdate:</b> {{ person.birthdate }} <br/>
-        {% else %}
-        <b> Birthdate: </b>{{ person.birthdate_note }}<br/>
+            {{ person.birthdate }}
+        {% elif person.birthdate_note %}
+           {{ person.birthdate_note }}
         {% endif %}
+        <br/>
 
         <b>Born in:</b> {{ person.birthplace|default_if_none:"" }}<br/>
 
@@ -58,7 +60,7 @@
         {% for family in families_made %}
             {% if family.no_kids_bool == True %}
                 <b>Married:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a>
-    <img src="{% static 'familytree/right_arrow.svg' %}" height="25"/><br/>
+    <img src="{% static 'familytree/right_arrow.svg' %}" height="20"/><br/>
             {% else %}
                 <b>Raised family:</b> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a>
     <img src="{% static 'familytree/southeast.png' %}" height="25"/><br/>
@@ -67,23 +69,25 @@
     {% endif %}
  </div>
 <div style="float: left; width: 100%;">
-    {% if person.notes1 %} {{ person.notes1 }} <br/>{% endif %}
-    {% if person.notes2 %} {{ person.notes2 }} <br/>{% endif %}
-    {% if person.notes3 %} {{ person.notes3 }} <br/>{% endif %}
+    {% if person.notes1 %} <div style="margin: 10px">{{ person.notes1 | safe}} </div>{% endif %}
+    {% if person.notes2 %} <div style="margin: 10px">{{ person.notes2 | safe}} </div>{% endif %}
+    {% if person.notes3 %} <div style="margin: 10px">{{ person.notes3 | safe}} </div>{% endif %}
 
     {% if notes %}
-
         {% for note in notes %}
+            <div style="display: inline-block; margin: 10px;" >
+                {% include "familytree/face_name_link.html" with person=note.author %}:
               {% if note.date %}
-                    {{ note.date }}
+                    <br/>({{ note.date }})
               {% endif %}
-              {% include "familytree/face_name_link.html" with person=note.author %}: {{ note.body }}
+            </div>
+            <div style="display: inline-block; width: 75%; margin: 5px;">
+                {{ note.body | safe }}
+            </div>
             <br/>
         {% endfor %}
-
     {% endif %}
 </div>
-
 <div style="float: left; width: 100%;">
     {% if stories %}
         {% for story in stories %}
@@ -99,30 +103,43 @@
     {% endif %}
 </div>
 
-<div>
-    {% if videos %}
-        <h4>Videos: </h4>
-        <div style="width:100%;">
+
+{% if videos %}
+    <div style="float: left; width: 100%;">
+        <h2>Videos: </h2>
+        <div>
             {% for video in videos %}
                 {% include "familytree/video_link.html" with video=video %}
             {% endfor %}
         </div>
+    </div>
+{% endif %}
 
-    {% endif %}
-</div>
 
-<div>
-    {% if images %}
-        <h4>Pictures of {{ person.first }}: </h4>
+{% if audio_files %}
+    <div style="float: left; width: 100%;">
+        <h2>Audio links: </h2>
+        <div>
+            {% for file in audio_files %}
+                {{ file.summary}}
+                <a href="{{ media_server }}/video/upload/{{ file.filename }}">click here</a><br/>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+{% if images %}
+    <div style="float: left; width: 100%;">
+        <h2>Pictures of {{ person.first }}: </h2>
         {% for image in images %}
             {% include "familytree/image_link.html" with image=image %}
         {% endfor %}
-    {% endif %}
-</div>
-
-<div>
+    </div>
+{% endif %}
+<br/><br/><br/>
+<div style="float: left; width: 100%;">
     {% if group_images %}
-        <h4>Group pictures:</h4>
+        <h2>Group pictures:</h2>
         {% for listing in group_images %}
           {% include "familytree/image_link.html" with image=listing.image %}
         {% endfor %}

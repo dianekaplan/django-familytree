@@ -1,0 +1,14 @@
+{% extends 'familytree/base.html' %}
+{% load familytree_extras %}
+
+{% block title %} - account{% endblock title %}
+{% block content %}
+
+{% autoescape off %}
+{{html_string}}
+{% endautoescape %}
+
+<h2>Account </h2>
+Click <a href="{% url 'password_reset' %}">here</a> to reset your password
+
+{% endblock content %}

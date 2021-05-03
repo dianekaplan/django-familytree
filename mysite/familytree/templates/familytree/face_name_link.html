@@ -1,3 +1,4 @@
+{% load static %}
 {% if person %}
         {% if person.display_name %}
 {#  FNL person id: {{ person.id }} <br/>#}
@@ -9,6 +10,9 @@
             {% include "familytree/face_link.html" with person=person %}
             <a href="{% url 'person_detail' person.id %}">{{ person.first }} {{ person.last }}</a>
         {%  endif %}
+        {% if person.has_stories and show_book %}
+                <img src="{% static 'familytree/book.png' %}" height="50"/>
+        {%  endif %}
 {% else %}
-    (no person defined to get face link)
+    (no person defined to get face link
 {%  endif %}

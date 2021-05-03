@@ -3,9 +3,9 @@
 {% block title %} - image detail{% endblock title %}
 {% block content %}
 
-<div style="float: left; width: 65%;">
+<div style="float: left; width: 80%;">
     <div style="margin-bottom: 20px">
-        <img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}"/>
+        <img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}"  style="max-width:100%;">
     </div>
     <div>
         {{ image.year }}
@@ -16,28 +16,23 @@
     </div>
  </div>
 
- <div style="float: right; width: 35%; margin-top: 20px">
+ <div style="float: right; width: 20%; margin-top: 20px">
     {% if image_person %}
-        {% for person in image_person %}
      Go to person's page: <br/><br/>
-            {% include "familytree/face_name_link.html" with person=person %}
-        {% endfor %}
+            {% include "familytree/face_name_link.html" with person=image_person %}
         <br/>
     {%  endif %}
 
     {% if image_family %}
-        {% for family in image_family %}
-        Go to family's page: <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a>
-        {% endfor %}
+        Go to family's page: <a href="{% url 'family_detail' image_family.id %}">{{ image_family.display_name }}</a>
         <br/>
     {%  endif %}
-
 <br/>
 
     {% if image_people %}
      <h2>This picture contains:</h2>
         {% for person in image_people %}
-            {% include "familytree/face_name_link.html" with person=person.first %} <br/>
+            {% include "familytree/face_name_link.html" with person=person %} <br/>
         {% endfor %}
     {%  endif %}
  </div>
