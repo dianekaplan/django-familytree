@@ -347,11 +347,13 @@ def landing(request):
 
 @login_required(login_url=login_url)
 def history(request):
-    this_person = get_user_person(request.user).first()
+    user = request.user
+    this_person = get_user_person(user).first()
+    profile = Profile.objects.get(user=user)
     accessible_branches = get_valid_branches(request)
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
-                'media_server': media_server,}
+                'media_server': media_server,'profile': profile}
 
     return render(request, 'familytree/history.html', context)
 

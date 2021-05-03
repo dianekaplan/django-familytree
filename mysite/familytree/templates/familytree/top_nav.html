@@ -3,24 +3,25 @@
     <ul class="nav navbar-nav">
 
         <a href="{% url 'dashboard' %}">Home</a>
-        <a href="{% url 'family_index' %}">Families</a>
-        <a href="{% url 'person_index' %}">People</a>
-        {%  if user_person %}
-            {% include "familytree/face_link.html" with person=user_person %}
-        {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right">
 
-        {% if user.is_superuser %}
-            <a href="{% url 'admin:index' %}">Admin</a>
-        {% endif %}
-
         {% if user.is_authenticated %}
-            <a href="{% url 'account' %}">Account</a>
+            <a href="{% url 'family_index' %}">Families</a>
+            <a href="{% url 'person_index' %}">People</a>
+        {%  if user_person %}
+            {% include "familytree/face_link.html" with person=user_person %}
+        {% endif %}
+<!--            <a href="{% url 'account' %}">Account</a>-->
+            <a href="{% url 'password_reset' %}">Reset Password</a>
             <a href="{% url 'logout' %}">Log out</a>
         {% endif %}
 
          FAQs
+
+        {% if user.is_superuser %}
+            <a href="{% url 'admin:index' %}">Admin</a>
+        {% endif %}
 
     </ul>
     </div>
