@@ -1,10 +1,11 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from ...models import Person, Family, Branch
 from pathlib import Path
 
 
-def get_descendants(family, results=None):
+def get_descendants(family):
     these_results = [family]
 
     try:
@@ -15,14 +16,10 @@ def get_descendants(family, results=None):
         if kids:
             for kid in kids:
                 these_results.append(kid)
-                families_made = None
-                if kid.sex == 'F':
-                    families_made = Family.objects.filter(wife=kid)
-                if kid.sex == 'M':
-                    families_made = Family.objects.filter(husband=kid)
+                families_made = Family.objects.filter(Q(wife=kid) | Q(husband=kid))
                 if families_made:
                     for new_family in families_made:
-                        next_results = get_descendants(new_family, these_results)
+                        next_results = get_descendants(new_family)
                         these_results.extend([next_results])
     return these_results
 
