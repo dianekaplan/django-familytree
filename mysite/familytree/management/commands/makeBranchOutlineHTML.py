@@ -23,7 +23,6 @@ def get_descendants(family, results=None):
                     for new_family in families_made:
                         next_results = get_descendants(new_family, these_results)
                         these_results.extend([next_results])
-
     return these_results
 
 
@@ -33,9 +32,12 @@ def make_branch_list(branch):
     orig_family_list = Family.objects.filter(branches__display_name__contains=name, original_family=True)
 
     for family in orig_family_list:
+        print("\n Add results for:" + family.display_name + ": ")
         this_family_results = get_descendants(family)
+        # print(str(this_family_results))
         this_branch_results.append(this_family_results)
-    results = this_branch_results[0]
+    results = this_branch_results
+    print("\n Branch results: " + str(results))
     return results
 
 
@@ -75,6 +77,7 @@ class Command(BaseCommand):
 
             filename = name + "_outline.html"
             path_plus_file = path.joinpath(filename)
+
             f = open(path_plus_file, 'w')
             f.write(str(html))
             f.closed
