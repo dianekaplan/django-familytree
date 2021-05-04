@@ -1,14 +1,15 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import ObjectDoesNotExist
 from ...models import Person, Family, Branch
 from pathlib import Path
 
+
 def get_descendants(family, results=None):
     these_results = [family]
-    kids = None
 
     try:
         kids = Person.objects.filter(family=family).order_by('id')
-    except:
+    except Person.DoesNotExist:
         pass
     else:
         if kids:
@@ -32,12 +33,9 @@ def make_branch_list(branch):
     orig_family_list = Family.objects.filter(branches__display_name__contains=name, original_family=True)
 
     for family in orig_family_list:
-        print("\n Add results for:" + family.display_name + ": ")
         this_family_results = get_descendants(family)
-        # print(str(this_family_results))
         this_branch_results.append(this_family_results)
     results = this_branch_results
-    print("\n Branch results: " + str(results))
     return results
 
 
