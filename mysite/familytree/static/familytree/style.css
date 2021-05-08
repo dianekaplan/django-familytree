@@ -56,6 +56,20 @@ caption 	{font-size: 14pt; color:#888888; background-color: #FFFFFF;
     margin: 10px;
 }
 
+.one_branch_display {
+  margin: 30px;
+  width: 35%;
+}
+
+.two_branch_display {
+  margin: 20px;
+  width: 35%;
+}
+
+.four_branch_display {
+  width: 19%;
+}
+
 .navbar-nav {
   margin: 7.5px -15px; }
   .navbar-nav > li > a {

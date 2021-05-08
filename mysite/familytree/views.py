@@ -10,7 +10,7 @@ from django.conf import settings
 from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
 
 media_server = settings.MEDIA_SERVER
-today = datetime.now()  # used to get birthday_people and anniversary_couples
+today = datetime.now()
 
 branch1_name = Branch.objects.filter(id=1)
 branch2_name = Branch.objects.filter(id=2)
@@ -18,6 +18,21 @@ branch3_name = Branch.objects.filter(id=3)
 branch4_name = Branch.objects.filter(id=4)
 show_by_branch = True if branch1_name else False
 login_url = '/familytree/landing/'
+
+# pass style class name for index pages based on user's number of columns
+branch_classes = {
+    1: 'one_branch_display',
+    2: 'two_branch_display',
+    4: 'four_branch_display'
+}
+
+from django.contrib.auth.backends import ModelBackend
+
+class MyBackend(ModelBackend):
+    def authenticate(self, request, username=None, password=None):
+        # Check the username/password and return a user.
+        print("I GET HERE")
+        return True
 
 
 @login_required(login_url=login_url)
@@ -30,7 +45,7 @@ def index(request):  # dashboard page
     # only include additions or updates, for family, person, story
     display_update_types = [2, 4, 5]
     display_action_types = [1, 2]
-    recent_logentries = LogEntry.objects.filter(content_type_id__in= display_update_types,
+    recent_logentries = LogEntry.objects.filter(content_type_id__in=display_update_types,
                                                 action_flag__in=display_action_types).order_by('-id')[:5]
 
     recent_updates = []
@@ -102,7 +117,8 @@ def family_index(request):
                 'branch3_families': branch3_families, 'branch4_families': branch4_families, 'branch1_name': branch1_name,
                 'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
                 'show_by_branch': show_by_branch, 'accessible_branches': accessible_branches, 'user_person': this_person,
-                'media_server': media_server}
+                'media_server': media_server, 'branch_class': branch_classes[len(accessible_branches)] }
+
 
     return render(request, 'familytree/family_index.html', context)
 
@@ -126,7 +142,7 @@ def person_index(request):
                 'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
                 'show_by_branch': show_by_branch, 'accessible_branches':accessible_branches,
                 'request_user': request.user, 'show_book': True,
-                'user_person': this_person, 'media_server': media_server
+                'user_person': this_person, 'media_server': media_server, 'branch_class': branch_classes[len(accessible_branches)]
                 }
     return render(request, 'familytree/person_index.html', context)
 
