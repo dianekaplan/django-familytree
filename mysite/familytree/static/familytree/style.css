@@ -1,11 +1,12 @@
 
-
 :root {
   --text-color: #663300;
   --link-color: #99CC66;
   --link-hover: #23527c;
   --background-color: #FFFFFF;
   --caption-color: #888888;
+  --header-color: #666869;
+  --header-hover: #131213;
 }
 
 .navbar li{
@@ -18,15 +19,15 @@
 }
 
 .navbar a {
-    color: var(--text-color) !important;
+    color: var(--header-color) !important;
+}
+.navbar a:hover {
+    color: var(--header-hover) !important;
+  text-decoration: none;
 }
 .navbar-brand {
   font-size: 1.5em;
 }
-
-
-
-/*.navbar     { font-size: 1em; text-decoration: underline;  color: #8b8378; background-color: #FFFFFF}*/
 
 body	    {color: var(--text-color);
 
