@@ -49,7 +49,7 @@ if ENV_ROLE == 'development':
     FAMILY_LOCAL_DB_PASS = get_env_variable('FAMILY_LOCAL_DB_PASS')
 
 ALLOWED_HOSTS = []
-
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Application definition
 
