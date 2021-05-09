@@ -4,12 +4,12 @@
 {% block title %} - family history{% endblock title %}
 {% block content %}
 
-{% autoescape off %}
-{{html_string}}
-{% endautoescape %}
 
     <h2>Family history: </h2>
 
+        {% if profile.connection_notes %}
+                <p>{{ profile.connection_notes }}</p>
+        {%  endif %}
     {% for branch in accessible_branches %}
         {% get_history_filepath branch as filepath %}
         <div class="circled_section">

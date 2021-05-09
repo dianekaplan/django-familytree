@@ -1,29 +1,26 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from ...models import Person, Family, Branch
 from pathlib import Path
 
-def get_descendants(family, results=None):
+
+def get_descendants(family):
     these_results = [family]
-    kids = None
 
     try:
         kids = Person.objects.filter(family=family).order_by('id')
-    except:
+    except Person.DoesNotExist:
         pass
     else:
         if kids:
             for kid in kids:
                 these_results.append(kid)
-                families_made = None
-                if kid.sex == 'F':
-                    families_made = Family.objects.filter(wife=kid)
-                if kid.sex == 'M':
-                    families_made = Family.objects.filter(husband=kid)
+                families_made = Family.objects.filter(Q(wife=kid) | Q(husband=kid))
                 if families_made:
                     for new_family in families_made:
-                        next_results = get_descendants(new_family, these_results)
+                        next_results = get_descendants(new_family)
                         these_results.extend([next_results])
-
     return these_results
 
 
@@ -35,7 +32,7 @@ def make_branch_list(branch):
     for family in orig_family_list:
         this_family_results = get_descendants(family)
         this_branch_results.append(this_family_results)
-    results = this_branch_results[0]
+    results = this_branch_results
     return results
 
 
@@ -75,6 +72,7 @@ class Command(BaseCommand):
 
             filename = name + "_outline.html"
             path_plus_file = path.joinpath(filename)
+
             f = open(path_plus_file, 'w')
             f.write(str(html))
             f.closed

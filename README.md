@@ -6,10 +6,11 @@ common geneology standard used on sites like ancestry.com).
 Setup/data import: 
 - For local environment, update .bash_profile with: 
 export ENV_ROLE=development
-export FAMILY_LOCAL_DB_PASS=[your local password]
+export FAMILY_LOCAL_DB_PASS=[your local db password]
+export EMAIL_HOST_PASSWORD=[your email host password]
 
-- save gedcom file in expected place (to start: mysite/familytree/management/commands/gedcom_files)
-- run in directory with manage.py: python3 manage.py importgedcom your_file.ged
+- save gedcom file in: mysite/familytree/management/commands/gedcom_files
+- from directory with manage.py, run: python3 manage.py importgedcom your_file.ged
 
 By default, all of your person/family records will display to all users
 

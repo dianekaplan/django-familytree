@@ -41,9 +41,9 @@
 </div>
 
  <div style="float: left;width: 100%;">
-    {% if family.notes1 %} {{ family.notes1 }} <br/>{% endif %}
-    {% if family.notes2 %} {{ family.notes2 }} <br/>{% endif %}
-    {% if family.notes3 %} {{ family.notes3 }} <br/>{% endif %}
+    {% if family.notes1 %} {{ family.notes1 | safe }} <br/>{% endif %}
+    {% if family.notes2 %} {{ family.notes2 | safe }} <br/>{% endif %}
+    {% if family.notes3 %} {{ family.notes3 | safe }} <br/>{% endif %}
 
     {% if notes %}
         <h2>Notes:</h2>

@@ -23,7 +23,7 @@ class Person(models.Model):
     maiden = models.CharField(max_length=20, null=True, blank=True, default='')
     nickname = models.CharField(max_length=20, null=True, blank=True, default='')
     display_name = models.CharField(max_length=40, null=True)
-    branches = models.ManyToManyField(Branch, null=True, blank=True)
+    branches = models.ManyToManyField(Branch, blank=True)
 
     birthdate = models.DateField(null=True, blank=True)
     birthdate_note = models.CharField(max_length=55, null=True, blank=True, default='')
@@ -87,7 +87,7 @@ class Family(models.Model):
     no_kids_bool = models.BooleanField(null=True)
     original_family = models.BooleanField(null=True)
     original_family_text = models.CharField(max_length=600, null=True, blank=True, default='')
-    branches = models.ManyToManyField(Branch, null=True, blank=True)
+    branches = models.ManyToManyField(Branch, blank=True)
     direct_family_number = models.IntegerField(blank=True, null=True)
     marriage_date = models.DateField(null=True, blank=True)
     marriage_date_note = models.CharField(max_length=100, null=True, blank=True, default='')
@@ -96,7 +96,6 @@ class Family(models.Model):
     sequence = models.IntegerField(blank=True, null=True)
     notes1 = models.CharField(max_length=600, null=True, blank=True, default='')
     notes2 = models.CharField(max_length=600, null=True, blank=True, default='')
-    # branch = models.IntegerField(blank=True, null=True)
     branch_seq = models.IntegerField(blank=True, null=True)
     reviewed = models.BooleanField(null=True, default=False)
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
@@ -118,7 +117,7 @@ class Image(models.Model):
     med_name = models.CharField(max_length=50, null=True, blank=True) # optional file name for different medium sized image (rather than just resized)
     little_name = models.CharField(max_length=50, null=True, blank=True) # optional file name for zoomed-in thumbnail (rather than just resized)
     caption = models.CharField(max_length=50, null=True, blank=True)
-    branches = models.ManyToManyField(Branch, null=True, blank=True)
+    branches = models.ManyToManyField(Branch, blank=True)
 
     year = models.CharField(max_length=20, null=True, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person')
@@ -177,6 +176,7 @@ class ImagePerson(models.Model):
 
     def __str__(self):
         return str(self.image_id)
+
 
 class Profile(models.Model): # This class holds additional info for user records
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -261,9 +261,9 @@ class Video(models.Model):
     year = models.CharField(max_length=25, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    branches = models.ManyToManyField(Branch, null=True, blank=True)
-    person = models.ManyToManyField(Person, null=True, blank=True)
-    family = models.ManyToManyField(Family, null=True, blank=True)
+    branches = models.ManyToManyField(Branch, blank=True)
+    person = models.ManyToManyField(Person, blank=True)
+    family = models.ManyToManyField(Family, blank=True)
 
     def video_subjects(self):
         # Get the queryset for VideoPerson records, then get the people from that
@@ -319,8 +319,8 @@ class Audiofile(models.Model):
     filename = models.CharField(max_length=150, blank=True, null=True)
     summary = models.CharField(max_length=255, blank=True, null=True)
     recording_date = models.DateField(blank=True, null=True)
-    person = models.ManyToManyField(Person, null=True, blank=True)
-    branches = models.ManyToManyField(Branch, null=True, blank=True)
+    person = models.ManyToManyField(Person, blank=True)
+    branches = models.ManyToManyField(Branch, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
