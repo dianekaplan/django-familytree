@@ -9,8 +9,6 @@ class LoginView(BaseLoginView):
     def form_valid(self, form):
         # A redirect is just a HttpResponse, so you can grab and hold it
         response = super().form_valid(form)
-
-        print("self.request.user IS: " + str(self.request.user))
         Login.objects.create(user=self.request.user, created_at=timezone.now())
         # And then release
         return response

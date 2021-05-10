@@ -27,21 +27,6 @@ branch_classes = {
 }
 
 
-# from django.contrib.auth.views import LoginView as BaseLoginView
-# from django.utils import timezone
-#
-#
-# class LoginView(BaseLoginView):
-#     def form_valid(self, form):
-#         # A redirect is just a HttpResponse, so you can grab and hold it
-#         response = super().form_valid(form)
-#         print("WE GOT HERE")
-#         Login.objects.create(user=self.request.user, logged_in_at=timezone.now())
-#         # And then release
-#         return response
-#
-
-
 @login_required(login_url=login_url)
 def index(request):  # dashboard page
     user = request.user

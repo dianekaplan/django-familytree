@@ -242,19 +242,6 @@ class FamilyStory(models.Model):
         return str(self.story.description)
 
 
-# class Login(models.Model):
-#     user = models.ManyToManyField(User)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
-#
-#     class Meta:
-#         #managed = False
-#         db_table = 'logins'
-#
-#     def __str__(self):
-#         return str(self.created_at)
-
-
 class Video(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     caption = models.CharField(max_length=255, blank=True, null=True)
