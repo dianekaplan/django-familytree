@@ -1,6 +1,8 @@
+{% extends 'familytree/base.html' %}
+
 {% block content %}
 
-  {% if login_form.errors %}
+  {% if form.errors %}
     <p>Your username and password didn't match. Please try again.</p>
   {% endif %}
 
@@ -18,11 +20,11 @@
     <table>
       <tr>
         <td>Email address: </td>
-        <td>{{ login_form.username }}</td>
+        <td>{{ form.username }}</td>
       </tr>
       <tr>
-        <td>{{ login_form.password.label_tag }}</td>
-        <td>{{ login_form.password }}</td>
+        <td>{{ form.password.label_tag }}</td>
+        <td>{{ form.password }}</td>
       </tr>
     </table>
     <input type="submit" value="Log in" />
@@ -30,7 +32,7 @@
   </form>
 
 <br/>
-{# Assumes you setup the password_reset view in your URLconf #}
+
 <a href="{% url 'password_reset' %}">Forgot password?</a>
 <br/>
 {% endblock %}

@@ -26,13 +26,20 @@ branch_classes = {
     4: 'four_branch_display'
 }
 
-from django.contrib.auth.backends import ModelBackend
 
-class MyBackend(ModelBackend):
-    def authenticate(self, request, username=None, password=None):
-        # Check the username/password and return a user.
-        print("I GET HERE")
-        return True
+# from django.contrib.auth.views import LoginView as BaseLoginView
+# from django.utils import timezone
+#
+#
+# class LoginView(BaseLoginView):
+#     def form_valid(self, form):
+#         # A redirect is just a HttpResponse, so you can grab and hold it
+#         response = super().form_valid(form)
+#         print("WE GOT HERE")
+#         Login.objects.create(user=self.request.user, logged_in_at=timezone.now())
+#         # And then release
+#         return response
+#
 
 
 @login_required(login_url=login_url)
@@ -356,7 +363,7 @@ def outline(request):
 
 
 def landing(request):
-    landing_page_people = Person.objects.filter(show_on_landing_page=True)
+    landing_page_people = Person.objects.filter(show_on_landing_page=True).order_by('last', 'first')
 
     context = { 'landing_page_people': landing_page_people, 'media_server': media_server}
     return render(request, 'familytree/landing.html', context)
