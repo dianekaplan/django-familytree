@@ -1,13 +1,4 @@
 from django.contrib import admin
-
-# Register your models here.
-
-
-from django.contrib import admin
-from django.contrib.admin.models import LogEntry
-from django.db import models
-from django.forms import TextInput, Textarea
-
 from .models import Login
 
 
