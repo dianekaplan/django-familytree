@@ -7,6 +7,7 @@
   --caption-color: #888888;
   --header-color: #666869;
   --header-hover: #131213;
+
 }
 
 .navbar li{
@@ -24,13 +25,14 @@
 .navbar a:hover {
     color: var(--header-hover) !important;
   text-decoration: none;
+    color: var(--text-color) !important;
 }
 .navbar-brand {
   font-size: 1.5em;
 }
 
 body	    {color: var(--text-color);
-
+  
 			font-family: eurostile, arial, sans-serif;
             background-color:  var(--background-color);}
 
