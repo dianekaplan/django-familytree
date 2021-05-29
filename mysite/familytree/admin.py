@@ -46,7 +46,7 @@ class ImageAdmin(admin.ModelAdmin):
     search_fields = ('big_name',)
     list_display = ('big_name', 'year','created_at')
     ordering = ('-created_at', 'big_name')
-    raw_id_fields = ('person',)
+    raw_id_fields = ('person','family')
     pass
 
 
