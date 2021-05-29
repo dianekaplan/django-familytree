@@ -22,4 +22,5 @@ urlpatterns = [
     path('familytree/', include('familytree.urls')),
     path('admin/', admin.site.urls, name='admin'),
     path('accounts/', include('myauth.urls')),
+
 ]
