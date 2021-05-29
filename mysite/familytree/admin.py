@@ -2,6 +2,15 @@ from django.contrib import admin
 from django.contrib.admin.models import LogEntry
 from django.db import models
 from django.forms import TextInput, Textarea
+# from base import Login
+
+# import sys
+# import os
+# print("sys.path has: " + str(sys.path))
+# print("os.getcwd() gives: " + str(os.getcwd()))
+
+# from mysite.myauth.models import Login  # No module named 'mysite.myauth'
+# from ..myauth import Login
 
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Story, PersonStory, Video, Audiofile, \
     VideoPerson, FamilyStory
@@ -76,6 +85,7 @@ class NoteAdmin(admin.ModelAdmin):
         models.CharField: {'widget': TextInput(attrs={'size':'200', 'rows':2})},
         models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
     }
+    raw_id_fields = ('author','person','family')
     pass
 
 
@@ -90,11 +100,14 @@ class BranchAdmin(admin.ModelAdmin):
     # }
     pass
 
+# class LoginInline(admin.StackedInline):
+#     model = Login
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     # search_fields = ('user',)
     list_display = ('user', 'person', 'connection_notes')
+    # inlines = [LoginInline]
     pass
 
 

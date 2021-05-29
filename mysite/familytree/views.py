@@ -26,14 +26,6 @@ branch_classes = {
     4: 'four_branch_display'
 }
 
-from django.contrib.auth.backends import ModelBackend
-
-class MyBackend(ModelBackend):
-    def authenticate(self, request, username=None, password=None):
-        # Check the username/password and return a user.
-        print("I GET HERE")
-        return True
-
 
 @login_required(login_url=login_url)
 def index(request):  # dashboard page
@@ -356,7 +348,7 @@ def outline(request):
 
 
 def landing(request):
-    landing_page_people = Person.objects.filter(show_on_landing_page=True)
+    landing_page_people = Person.objects.filter(show_on_landing_page=True).order_by('last', 'first')
 
     context = { 'landing_page_people': landing_page_people, 'media_server': media_server}
     return render(request, 'familytree/landing.html', context)
