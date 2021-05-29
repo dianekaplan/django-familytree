@@ -2,7 +2,10 @@
 {% block title %}{% endblock title %}
 {% block content %}
 
+
 <div style="margin: 10px">Welcome, {{ user_person.display_name }}! </div>
+
+Welcome, {{ user_person.display_name }}! <br/><br/>
 
 <div>
     <div style="float: left; width: 23%;" class="circled_section">
@@ -15,11 +18,15 @@
     </div>
 
 <div style="float: left; width: 30%;" class="circled_section">
-
     {%  if today_birthday%}
         <b>Today's birthdays:</b>
         {% for person in today_birthday %}
             <li style="list-style-type:none;"> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
+
+    <b>Birthdays this month:</b>
+    {%  if birthday_people%}
+        {% for person in birthday_people %}
+            <li> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
         {% endfor %}
         <br/><br/>
     {% endif %}
