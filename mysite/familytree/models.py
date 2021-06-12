@@ -46,9 +46,9 @@ class Person(models.Model):
     direct_line = models.BooleanField(null=True, default=False)
     show_on_landing_page = models.BooleanField(null=True, default=False)
     sibling_seq = models.IntegerField(blank=True, null=True)  # will later update families to handle this individually
-    notes1 = models.CharField(max_length=600, null=True, blank=True, default='')
-    notes2 = models.CharField(max_length=600, null=True, blank=True, default='')
-    notes3 = models.CharField(max_length=600, null=True, blank=True, default='')
+    notes1 = models.CharField(max_length=1200, null=True, blank=True, default='')
+    notes2 = models.CharField(max_length=1200, null=True, blank=True, default='')
+    notes3 = models.CharField(max_length=1200, null=True, blank=True, default='')
     flag1 = models.CharField(max_length=10, null=True, blank=True, default='') # will probably get rid of these anyway
     flag2 = models.CharField(max_length=10, null=True, blank=True, default='') # will probably get rid of these anyway
     flag3 = models.CharField(max_length=10, null=True, blank=True, default='') # will probably get rid of these anyway
