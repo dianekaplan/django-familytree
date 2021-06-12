@@ -111,6 +111,7 @@ def family_index(request):
                 'show_by_branch': show_by_branch, 'accessible_branches': accessible_branches, 'user_person': this_person,
                 'media_server': media_server, 'branch_class': branch_classes[len(accessible_branches)]}
 
+
     return render(request, 'familytree/family_index.html', context)
 
 
