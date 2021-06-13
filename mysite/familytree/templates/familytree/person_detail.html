@@ -55,6 +55,9 @@
     {% elif person.deathdate_note%}
         <b>Deathdate: </b>{{ person.deathdate_note }}<br/>
     {% endif %}
+    {% if person.death_place %}
+        <b>Death place:</b> {{ person.death_place }} <br/>
+    {% endif %}
 
     {% if families_made %}
         {% for family in families_made %}
