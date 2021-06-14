@@ -343,8 +343,6 @@ def outline(request):
             this_branch_html = make_list_into_html(this_branch_results)
             total_results_html[name] = this_branch_html
 
-    # make_html_for_branch_outline(this_branch_results[0])
-
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
                'family_dict': users_original_families, 'media_server': media_server,'show_book': True,
                'chunk_view': "familytree/outline_family_chunk.html", 'total_results': total_results,
