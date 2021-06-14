@@ -10,6 +10,7 @@ from django.conf import settings
 from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
 
 media_server = settings.MEDIA_SERVER
+root_url = settings.ROOT_URL
 today = datetime.now()
 
 branch1_name = Branch.objects.filter(id=1)
@@ -318,6 +319,7 @@ def outline(request):
 
     users_original_families = {}  # Dictionary with entries [branch name]: [original families in that branch]
     total_results = {}  # giant dictionary for all descendants
+    total_results_html = {}
 
     for branch in existing_branches:
         # For each branch this user has access for, we'll loop through the original families and:
@@ -335,18 +337,39 @@ def outline(request):
             # make the dictionary of descendants by branch
             for family in orig_family_list:
                 this_family_results = get_descendants(family)
-                # print("OUTLINE HAS: " + str(this_family_results))
                 this_branch_results.append(this_family_results)
             total_results[name] = this_branch_results
 
-    # make_html_for_branch_outline(this_branch_results[0])
+            this_branch_html = make_list_into_html(this_branch_results)
+            total_results_html[name] = this_branch_html
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
                'family_dict': users_original_families, 'media_server': media_server,'show_book': True,
-               'chunk_view': "familytree/outline_family_chunk.html", 'total_results': total_results}
+               'total_results': total_results,
+               'total_results_html': total_results_html}
 
     return render(request, 'familytree/outline.html', context)
 
+
+def make_list_into_html(list):
+    result = ''
+
+    for item in list:
+        if type(item) == Person:
+            name = item.display_name
+            path = root_url + "/people/" + str(item.id)
+            link = '<li><a href="' + path + '">' + name + '</a></li>'
+            result += link
+        elif type(item) == Family:
+            name = item.display_name
+            path = root_url + "/families/" + str(item.id)
+            link = '<ul><li><a href="' + path + '">' + name + '</a></li>'
+            result += link
+        else:
+            html = make_list_into_html(item)
+            result += html
+            result += '</ul>'
+    return result
 
 def landing(request):
     landing_page_people = Person.objects.filter(show_on_landing_page=True).order_by('last', 'first')
