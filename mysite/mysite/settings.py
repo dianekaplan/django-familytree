@@ -32,6 +32,8 @@ def get_env_variable(var_name):
 # Get ENV VARIABLES key
 ENV_ROLE = get_env_variable('ENV_ROLE')
 
+ROOT_URL = get_env_variable('ROOT_URL')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 

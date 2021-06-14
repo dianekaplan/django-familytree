@@ -64,12 +64,10 @@ def make_list_into_html(list):
 
     for item in list:
         if type(item) == Person:
-            # id = item.id
             name = item.display_name
-            link = '<li><a href="{% url ' + "'person_detail' " + str(item.id) + ' %}">'+ name + "</a></li>"
+            link = '<li><a href="{% url ' + "'person_detail' " + str(item.id) + ' %}">' + name + "</a></li>"
             result += link
         elif type(item) == Family:
-            # id = item.id
             name = item.display_name
             link = '<ul><li><a href="{% url ' + "'family_detail' " + str(item.id) + ' %}">' + name + "</a></li>"
             result += link
