@@ -41,7 +41,7 @@ def get_descendants_generator(family):
                 families_made = Family.objects.filter(Q(wife=kid) | Q(husband=kid))
                 if families_made:
                     for new_family in families_made:
-                        next_results = get_descendants(new_family)
+                        next_results = get_descendants_generator(new_family)
                         these_results.extend([next_results])
     yield these_results
 
@@ -52,8 +52,8 @@ def make_branch_list(branch):
     orig_family_list = Family.objects.filter(branches__display_name__contains=name, original_family=True)
 
     for family in orig_family_list:
-        #this_family_results = get_descendants_generator(family)
-        this_family_results = get_descendants(family)
+        this_family_results = get_descendants_generator(family)
+        #this_family_results = get_descendants(family)
         this_branch_results.append(this_family_results)
     results = this_branch_results
     return results
@@ -85,7 +85,7 @@ class Command(BaseCommand):
         path = Path("familytree/templates/familytree/outline_branch_partials")
         branches = Branch.objects.all()
 
-        print ('Memory (Before): {}Mb'.format(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss))
+        print ('Memory (Before): {}'.format(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss))
 
         for branch in branches:
             name = branch.display_name
@@ -93,8 +93,7 @@ class Command(BaseCommand):
             t1 = time.process_time()
             results = make_branch_list(branch)
             t2 = time.process_time()
-            # print('Took {} seconds'.format(t2 - t1))
-
+            print('Took {} seconds'.format(t2 - t1))
 
             # t3 = time.process_time()
             html = make_list_into_html(results)
@@ -110,4 +109,4 @@ class Command(BaseCommand):
             f.closed
             print("Wrote file: " + filename)
 
-        print ('Memory (After): {}Mb'.format(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss))
+        print ('Memory (After): {}'.format(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss))
