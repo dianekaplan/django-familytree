@@ -51,7 +51,7 @@ class ImageAdmin(admin.ModelAdmin):
 
 
 @admin.register(Story)
-class ImageAdmin(admin.ModelAdmin):
+class StoryAdmin(admin.ModelAdmin):
     search_fields = ('description',)
     list_display = ('description', 'image', 'intro', 'slug', 'source','created_at')
     ordering = ('-created_at', 'description')
