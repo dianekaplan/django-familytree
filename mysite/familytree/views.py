@@ -245,14 +245,15 @@ def image_detail(request, image_id):
 
     return render(request, 'familytree/image_detail.html', {'image': image, 'image_person': this_image_person,
                                                             'image_family': this_image_family, 'show_book': False,
-                                                            'image_people' : image_people, 'user_person': user_person,
-                                                            'image_full_path' : image_full_path, 'media_server' : media_server
+                                                            'image_people': image_people, 'user_person': user_person,
+                                                            'image_full_path': image_full_path,
+                                                            'media_server': media_server,
                                                             })
 
 
 @login_required(login_url=login_url)
 def image_index(request):
-    user_person = get_user_person(request.user).first()
+    user_person=get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
     existing_branches = Branch.objects.all()
     image_list = Image.objects.none()
