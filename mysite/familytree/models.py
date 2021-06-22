@@ -127,7 +127,7 @@ class Image(models.Model):
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     def image_subjects(self):
-        # image_people = set()
+        image_people = [] # use list instead of queryset to preserve display order on image detail page
 
         # get the featured person, if there is one
         if self.person:
@@ -140,8 +140,6 @@ class Image(models.Model):
             this_image_family = Family.objects.get(id=self.family_id)
         else:
             this_image_family = None
-
-        image_people = [] # use list instead of queryset to preserve display order on image detail page
 
         # Get the queryset for ImagePerson records, then get the people from that
         image_person_records = ImagePerson.objects.filter(image_id=self.id).order_by('id')
