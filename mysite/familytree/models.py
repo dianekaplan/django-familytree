@@ -277,6 +277,7 @@ class VideoPerson(models.Model):
 class Note(models.Model):
     author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='author')
     author_name = models.CharField(max_length=50, null=True, blank=True)
+    external_author = models.BooleanField(null=True, default=False)
     body = models.CharField(max_length=3000, blank=True)
     date = models.DateField(null=True, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='note_person')
@@ -291,7 +292,7 @@ class Note(models.Model):
         db_table = 'notes'
 
     def __str__(self):
-        return self.author_name + self.body
+        return self.body
 
 
 class Audiofile(models.Model):
