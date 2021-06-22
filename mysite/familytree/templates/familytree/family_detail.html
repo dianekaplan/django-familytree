@@ -46,13 +46,7 @@
     {% if family.notes3 %} {{ family.notes3 | safe }} <br/>{% endif %}
 
     {% if notes %}
-        <h2>Notes:</h2>
-        {% for note in notes %}
-            {% if note.date %}
-                {{ note.date }}
-            {% endif %}
-            {% include "familytree/face_name_link.html" with person=note.author %} {{ note.body | safe }}
-        {% endfor %}
+        {% include "familytree/_notes_display.html" with notes=notes %}
     {% endif %}
  </div>
 

@@ -1,0 +1,19 @@
+<h2>Notes: </h2>
+        {% for note in notes %}
+            <div style="display: inline-block; margin: 10px;" >
+                {% if note.external_author %}
+                    {% if note.author_name %}
+                        {{ note.author_name }}:
+                    {% endif %}
+                {% else %}
+                    {% include "familytree/face_name_link.html" with person=note.author %}:
+                {% endif %}
+              {% if note.date %}
+                    <br/>({{ note.date }})
+              {% endif %}
+            </div>
+            <div style="display: inline-block; width: 75%; margin: 5px;">
+                {{ note.body | safe }}
+            </div>
+            <br/>
+        {% endfor %}
