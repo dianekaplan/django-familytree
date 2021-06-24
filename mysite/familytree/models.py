@@ -180,13 +180,14 @@ class Profile(models.Model): # This class holds additional info for user records
     connection_notes = models.CharField(null=True, max_length=250, blank=True)
     furthest_html = models.CharField(null=True, max_length=250, blank=True)
     shared_account = models.BooleanField(null=True, default=False)
+    guest_user = models.BooleanField(default=False)
 
     class Meta(object):
         verbose_name_plural = 'Profiles'
         db_table = 'profiles'
 
     def __str__(self):
-        return self.person.display_name
+        return self.user.username
 
 
 class Story(models.Model):

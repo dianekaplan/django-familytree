@@ -2,16 +2,22 @@
 {% block title %}{% endblock title %}
 {% block content %}
 
-<div style="margin: 10px">Welcome, {{ user_person.display_name }}! </div>
+{% if not user_is_guest %}
+    <div style="margin: 10px">Welcome, {{ user_person.display_name }}! </div>
+{% endif %}
 
 <div>
     <div style="float: left; width: 23%;" class="circled_section">
-    {% include "familytree/face_name_link.html" with person=user_person %}<br/>
-    <h2><a href="{% url 'history'  %}">My family history</a></h2>
-    <h2><a href="{% url 'image_index'  %}">Family album</a></h2>
-    <h2><a href="{% url 'video_index'  %}">Home Movies</a></h2>
-    <h2><a href="{% url 'outline'  %}">Outline View</a></h2>
-    My furthest ancestors here: <br/>{{ profile.first.furthest_html | safe}}<br/>
+        {% if not user_is_guest %}
+            {% include "familytree/face_name_link.html" with person=user_person %}<br/>
+        {% endif %}
+        <h2><a href="{% url 'history'  %}">My family history</a></h2>
+        <h2><a href="{% url 'image_index'  %}">Family album</a></h2>
+        <h2><a href="{% url 'video_index'  %}">Home Movies</a></h2>
+        <h2><a href="{% url 'outline'  %}">Outline View</a></h2>
+        {% if not user_is_guest %}
+            My furthest ancestors here: <br/>{{ profile.first.furthest_html | safe}}<br/>
+        {% endif %}
     </div>
 
 <div style="float: left; width: 30%;" class="circled_section">

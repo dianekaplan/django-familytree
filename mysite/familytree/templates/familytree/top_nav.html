@@ -17,7 +17,9 @@
         {% if user.is_authenticated %}
         <div style="display: inline-block; float: right;">
             <ul>
-                 <li><a href="{% url 'account' %}">Account</a></li>
+                {% if not user_is_guest %}
+                    <li><a href="{% url 'account' %}">Account</a></li>
+                {% endif %}
                  <li><a href="{% url 'logout' %}">Log out</a></li>
 
                 {% if user.is_superuser %}
