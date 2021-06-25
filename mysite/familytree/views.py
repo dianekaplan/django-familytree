@@ -159,6 +159,7 @@ def person_index(request):
 def person_detail(request, person_id):
     user_person = get_user_person(request.user).first()
     person = get_object_or_404(Person, pk=person_id)
+    user_is_guest = Profile.objects.get(user=request.user).guest_user
 
     try:
         wife_of = Family.objects.filter(wife=person_id)
@@ -218,7 +219,7 @@ def person_detail(request, person_id):
     return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made,
                             'origin_family': origin_family, 'images': images, 'group_images': group_images,
                             'notes': notes, 'videos': videos, 'featured_images': featured_images,'audio_files': audio_files,
-                            'user_person': user_person, 'stories': stories, 'media_server': media_server })
+                            'user_person': user_person, 'stories': stories, 'media_server': media_server, 'user_is_guest': user_is_guest })
 
 
 @login_required(login_url=login_url)

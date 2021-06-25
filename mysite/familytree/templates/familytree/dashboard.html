@@ -81,12 +81,14 @@
         (none)
     {% endif %}
     </div>
+    {% if not user_is_guest %}
     <div class="circled_section">
         <b>Latest updates:</b><br/>
         {% for update, person, content_type, change_type, updated_person in recent_updates %}
            {% include "familytree/update_partial.html"%}
         {% endfor %}
     </div>
+    {% endif %}
 
 
  </div>
