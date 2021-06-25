@@ -1,7 +1,7 @@
 {% load static %}
 
 {%  if user_is_guest and person.living %}
-    (living person)
+    <img src="{{ media_server }}/image/upload/h_51,r_20/noimage.gif" />(living person)
 {% else %}
 
     {% if person %}
