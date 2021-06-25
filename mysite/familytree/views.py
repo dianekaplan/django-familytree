@@ -357,7 +357,7 @@ def outline(request):
 
             # make the dictionary of descendants by branch
             for family in orig_family_list:
-                this_family_results = get_descendants(family)
+                this_family_results = get_descendants(family, user_is_guest)
                 this_branch_results.append(this_family_results)
             total_results[name] = this_branch_results
 
@@ -430,7 +430,7 @@ def get_user_person(user):
     return this_user_person
 
 
-def get_descendants(family, results=None):
+def get_descendants(family, user_is_guest, results=None):
     these_results = [family]
     kids = None
 
@@ -441,16 +441,17 @@ def get_descendants(family, results=None):
     else:
         if kids:
             for kid in kids:
-                these_results.append(kid)
-                families_made = None
-                if kid.sex == 'F':
-                    families_made = Family.objects.filter(wife=kid)
-                if kid.sex == 'M':
-                    families_made = Family.objects.filter(husband=kid)
-                if families_made:
-                    for new_family in families_made:
-                        next_results = get_descendants(new_family, these_results)
-                        these_results.extend([next_results])
+                if not user_is_guest or not kid.living:
+                    these_results.append(kid)
+                    families_made = None
+                    if kid.sex == 'F':
+                        families_made = Family.objects.filter(wife=kid)
+                    if kid.sex == 'M':
+                        families_made = Family.objects.filter(husband=kid)
+                    if families_made:
+                        for new_family in families_made:
+                            next_results = get_descendants(new_family, user_is_guest, these_results)
+                            these_results.extend([next_results])
     return these_results
 
 @login_required(login_url=login_url)
