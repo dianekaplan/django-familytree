@@ -1,1 +1,1 @@
-web: gunicorn family-django.wsgi --log-file -
+web: gunicorn familytree.wsgi --log-file -
