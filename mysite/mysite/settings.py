@@ -41,14 +41,25 @@ ROOT_URL = get_env_variable('ROOT_URL')
 SECRET_KEY = '15bn5^27+n*h!^e&3ezqv4jsgoelm@+i8kx1zbb2o%hw1z*xf1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-FAMILY_LOCAL_DB_PASS = False
+DB_PASSWORD = False
 
 MEDIA_SERVER = 'https://res.cloudinary.com/hnyiprajv/'
 
 if ENV_ROLE == 'development':
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
-    FAMILY_LOCAL_DB_PASS = get_env_variable('FAMILY_LOCAL_DB_PASS')
+    DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS')
+    SOURCE_DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS') #@TODO: update these to be different
+
+if ENV_ROLE == 'staging': #@TODO: update these to be different
+    DEBUG = False
+    TEMPLATE_DEBUG = DEBUG
+    DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
+
+if ENV_ROLE == 'prod': #@TODO: update these to be different
+    DEBUG = False
+    TEMPLATE_DEBUG = DEBUG
+    DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
 
 ALLOWED_HOSTS = []
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -110,7 +121,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "migration_test5", # "migration_test5_apr10_safe", #
         "USER": "family",
-        "PASSWORD": FAMILY_LOCAL_DB_PASS,
+        "PASSWORD": DB_PASSWORD,
         "HOST": "localhost",
         "PORT": "5432",
     },
@@ -118,7 +129,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "backup_mar30_2021",  # postgres
         "USER": "family",
-        "PASSWORD": FAMILY_LOCAL_DB_PASS,
+        "PASSWORD": SOURCE_DB_PASSWORD,
         "HOST": "localhost",
         "PORT": "5432",
     }
