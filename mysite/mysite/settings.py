@@ -55,11 +55,13 @@ if ENV_ROLE == 'staging': #@TODO: update these to be different
     DEBUG = False
     TEMPLATE_DEBUG = DEBUG
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
+    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
 
 if ENV_ROLE == 'prod': #@TODO: update these to be different
     DEBUG = False
     TEMPLATE_DEBUG = DEBUG
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
+    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
 
 ALLOWED_HOSTS = []
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
