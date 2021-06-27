@@ -9,7 +9,9 @@
             <img src="{{ media_server }}/image/upload/h_100,r_20/{{ image.big_name }}" />
         {%  endif %}
         <br/>
-        ({{ image.year }})
+        {%  if image.year %}
+            ({{ image.year }})
+        {%  endif %}
         </a>
 </div>
 

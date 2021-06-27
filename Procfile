@@ -1,1 +1,1 @@
-web: gunicorn familytree.wsgi --log-file -
+web: gunicorn mysite.wsgi --log-file -
