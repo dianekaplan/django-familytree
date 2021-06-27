@@ -1,1 +1,1 @@
-web: gunicorn familytree.wsgi
+web: gunicorn mysite.wsgi
