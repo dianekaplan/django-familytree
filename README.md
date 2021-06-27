@@ -4,10 +4,13 @@ common geneology standard used on sites like ancestry.com).
 
 **Basic family tree (import once from gedcom)**
 Setup/data import: 
-- For local environment, update .bash_profile with: 
+- Set environment variables (local in .bash_profile, staging/prod in heroku): 
 export ENV_ROLE=development
 export FAMILY_LOCAL_DB_PASS=[your local db password]
 export EMAIL_HOST_PASSWORD=[your email host password]
+ROOT_URL (temporary?)
+SOURCE_DATABASE_PASSWORD
+SECRET_KEY
 
 - save gedcom file in: mysite/familytree/management/commands/gedcom_files
 - from directory with manage.py, run: python3 manage.py importgedcom your_file.ged
