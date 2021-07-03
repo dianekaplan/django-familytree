@@ -3,3 +3,5 @@ django-heroku
 gunicorn
 python-dateutil
 whitenoise
+
+psycopg2-binary

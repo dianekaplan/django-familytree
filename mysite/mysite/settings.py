@@ -60,6 +60,7 @@ if ENV_ROLE == 'development':
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = 'localhost'
     DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS')
+    DB_OPTIONS = {'sslmode': 'allow'}
     SOURCE_DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS') #@TODO: update these to be different
 
 if ENV_ROLE == 'staging': #@TODO: update these to be different
@@ -67,6 +68,7 @@ if ENV_ROLE == 'staging': #@TODO: update these to be different
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = get_env_variable('DB_HOST')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
+    DB_OPTIONS = {'sslmode': 'require'}
     SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
 
 if ENV_ROLE == 'prod': #@TODO: update these to be different
@@ -74,6 +76,7 @@ if ENV_ROLE == 'prod': #@TODO: update these to be different
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = get_env_variable('DB_HOST')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
+    DB_OPTIONS = {'sslmode': 'require'}
     SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
 
 ALLOWED_HOSTS = ['127.0.0.1', 'family-django-stage.herokuapp.com', 'family-django-prod.herokuapp.com']
@@ -142,6 +145,7 @@ DATABASES = {
         "PASSWORD": DB_PASSWORD,
         "HOST": DB_HOST,
         "PORT": "5432",
+        "OPTIONS": DB_OPTIONS,
     },
     "source": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -152,6 +156,9 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+# import dj_database_url
+# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # For unit tests we'll use sqlite
 import sys
