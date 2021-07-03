@@ -58,22 +58,25 @@ MEDIA_SERVER = 'https://res.cloudinary.com/hnyiprajv/'
 if ENV_ROLE == 'development':
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
+    DB_HOST = 'localhost'
     DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS')
     SOURCE_DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS') #@TODO: update these to be different
 
 if ENV_ROLE == 'staging': #@TODO: update these to be different
     DEBUG = False
     TEMPLATE_DEBUG = DEBUG
+    DB_HOST = get_env_variable('DB_HOST')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
 
 if ENV_ROLE == 'prod': #@TODO: update these to be different
     DEBUG = False
     TEMPLATE_DEBUG = DEBUG
+    DB_HOST = get_env_variable('DB_HOST')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
 
-ALLOWED_HOSTS = ['family-django-stage.herokuapp.com', 'family-django-prod.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'family-django-stage.herokuapp.com', 'family-django-prod.herokuapp.com']
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Application definition
@@ -137,7 +140,7 @@ DATABASES = {
         "NAME": "migration_test5", # "migration_test5_apr10_safe", #
         "USER": "family",
         "PASSWORD": DB_PASSWORD,
-        "HOST": "localhost",
+        "HOST": DB_HOST,
         "PORT": "5432",
     },
     "source": {
@@ -145,7 +148,7 @@ DATABASES = {
         "NAME": "backup_mar30_2021",  # postgres
         "USER": "family",
         "PASSWORD": SOURCE_DB_PASSWORD,
-        "HOST": "localhost",
+        "HOST": DB_HOST,
         "PORT": "5432",
     }
 }
