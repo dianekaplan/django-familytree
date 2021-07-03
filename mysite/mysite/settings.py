@@ -59,6 +59,8 @@ if ENV_ROLE == 'development':
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = 'localhost'
+    DB_DATABASE = "migration_test5"
+    DB_USER = 'family'
     DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS')
     DB_OPTIONS = {'sslmode': 'allow'}
     SOURCE_DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS') #@TODO: update these to be different
@@ -67,6 +69,8 @@ if ENV_ROLE == 'staging': #@TODO: update these to be different
     DEBUG = False
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = get_env_variable('DB_HOST')
+    DB_DATABASE = get_env_variable('DB_DATABASE')
+    DB_USER = get_env_variable('DB_USERNAME')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     DB_OPTIONS = {'sslmode': 'require'}
     SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
@@ -75,6 +79,8 @@ if ENV_ROLE == 'prod': #@TODO: update these to be different
     DEBUG = False
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = get_env_variable('DB_HOST')
+    DB_DATABASE = get_env_variable('DB_DATABASE')
+    DB_USER = get_env_variable('DB_USERNAME')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     DB_OPTIONS = {'sslmode': 'require'}
     SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
@@ -140,8 +146,8 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "migration_test5", # "migration_test5_apr10_safe", #
-        "USER": "family",
+        "NAME": DB_DATABASE, #"migration_test5",
+        "USER": DB_USER, #'family',
         "PASSWORD": DB_PASSWORD,
         "HOST": DB_HOST,
         "PORT": "5432",
@@ -150,7 +156,7 @@ DATABASES = {
     "source": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "backup_mar30_2021",  # postgres
-        "USER": "family",
+        "USER": DB_USER,
         "PASSWORD": SOURCE_DB_PASSWORD,
         "HOST": DB_HOST,
         "PORT": "5432",
