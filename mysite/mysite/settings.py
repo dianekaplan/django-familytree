@@ -73,7 +73,7 @@ if ENV_ROLE == 'prod': #@TODO: update these to be different
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['family-django-stage.herokuapp.com', 'family-django-prod.herokuapp.com']
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Application definition
