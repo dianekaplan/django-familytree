@@ -66,7 +66,7 @@ if ENV_ROLE == 'development':
     SOURCE_DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS') #@TODO: update these to be different
 
 if ENV_ROLE == 'staging': #@TODO: update these to be different
-    DEBUG = False
+    DEBUG = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = get_env_variable('DB_HOST')
     DB_DATABASE = get_env_variable('DB_DATABASE')
