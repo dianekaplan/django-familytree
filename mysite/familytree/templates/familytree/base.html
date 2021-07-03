@@ -8,10 +8,15 @@
            {{ page_title|default:"Untitled Page" }}
           {% endblock title %}
         </title>
+
+        {% load static %}
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'familytree/favicon/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'familytree/favicon/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'familytree/favicon/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'familytree/favicon/site.webmanifest' %}">
     </head>
 
     <body>
-    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'familytree/style.css' %}">
 
 {# Top nav#}
