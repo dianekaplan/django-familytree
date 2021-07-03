@@ -73,7 +73,7 @@ if ENV_ROLE == 'staging': #@TODO: update these to be different
     DB_USER = get_env_variable('DB_USERNAME')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     DB_OPTIONS = {'sslmode': 'require'}
-
+    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
 
 if ENV_ROLE == 'prod': #@TODO: update these to be different
     DEBUG = False
@@ -83,7 +83,7 @@ if ENV_ROLE == 'prod': #@TODO: update these to be different
     DB_USER = get_env_variable('DB_USERNAME')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     DB_OPTIONS = {'sslmode': 'require'}
-
+    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
 
 ALLOWED_HOSTS = ['127.0.0.1', 'family-django-stage.herokuapp.com', 'family-django-prod.herokuapp.com']
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
