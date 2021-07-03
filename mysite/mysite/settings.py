@@ -73,7 +73,7 @@ if ENV_ROLE == 'staging': #@TODO: update these to be different
     DB_USER = get_env_variable('DB_USERNAME')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     DB_OPTIONS = {'sslmode': 'require'}
-    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
+    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove this now that import is done?
 
 if ENV_ROLE == 'prod': #@TODO: update these to be different
     DEBUG = False
@@ -83,7 +83,7 @@ if ENV_ROLE == 'prod': #@TODO: update these to be different
     DB_USER = get_env_variable('DB_USERNAME')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     DB_OPTIONS = {'sslmode': 'require'}
-    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')
+    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove this now that import is done?
 
 ALLOWED_HOSTS = ['127.0.0.1', 'family-django-stage.herokuapp.com', 'family-django-prod.herokuapp.com']
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -157,7 +157,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "backup_mar30_2021",  # postgres
         "USER": DB_USER,
-        "PASSWORD": SOURCE_DB_PASSWORD,
+        "PASSWORD": "test", # @TODO: remove this section now that import is done?
         "HOST": DB_HOST,
         "PORT": "5432",
     }
