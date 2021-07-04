@@ -108,13 +108,13 @@ def family_index(request):
 
     # @@TODO: update so we can use branch1_name variables like outline_branch_partials view has
     branch1_families = Family.objects.filter(branches__display_name__contains="Keem",
-                                             show_on_branch_view=True).order_by('branch_seq', 'marriage_date')
+                                             show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
     branch2_families = Family.objects.filter(branches__display_name__contains="Husband",
-                                             show_on_branch_view=True).order_by('branch_seq', 'marriage_date')
+                                             show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
     branch3_families = Family.objects.filter(branches__display_name__contains="Kemler",
-                                             show_on_branch_view=True).order_by('branch_seq', 'marriage_date')
+                                             show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
     branch4_families = Family.objects.filter(branches__display_name__contains="Kobrin",
-                                             show_on_branch_view=True).order_by('branch_seq', 'marriage_date')
+                                             show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
 
     context = { 'family_list': family_list,
                 'branch1_families': branch1_families, 'branch2_families': branch2_families,
@@ -136,10 +136,10 @@ def person_index(request):
 
     # to start we'll assume up to 4 branches, gets ids 1-4, entering names manually
     # @@TODO: update so we can use branch1_name variables like outline_branch_partials view has
-    branch1_people = Person.objects.filter(branches__display_name__contains="Keem", hidden=False).order_by('last', 'first')
-    branch2_people = Person.objects.filter(branches__display_name__contains="Husband", hidden=False).order_by('last', 'first')
-    branch3_people = Person.objects.filter(branches__display_name__contains="Kemler", hidden=False).order_by('last', 'first')
-    branch4_people = Person.objects.filter(branches__display_name__contains="Kobrin", hidden=False).order_by('last', 'first')
+    branch1_people = Person.objects.filter(branches__display_name__contains="Keem", hidden=False, reviewed=True).order_by('last', 'first')
+    branch2_people = Person.objects.filter(branches__display_name__contains="Husband", hidden=False, reviewed=True).order_by('last', 'first')
+    branch3_people = Person.objects.filter(branches__display_name__contains="Kemler", hidden=False, reviewed=True).order_by('last', 'first')
+    branch4_people = Person.objects.filter(branches__display_name__contains="Kobrin", hidden=False, reviewed=True).order_by('last', 'first')
 
     # person_list is used if there aren't defined branches yet
     person_list = Person.objects.order_by('display_name') # add this to limit list displayed: [:125]
