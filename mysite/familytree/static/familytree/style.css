@@ -49,9 +49,14 @@ a:hover     { text-decoration: underline;
 
 em   		{font-weight: bold; }
 
-/*div    		{margin-left: 5em; margin-right: 6em;*/
-		/*font-size: 14pt;*/
-		/*padding: 1em}*/
+
+div    		{
+            /*float: left;*/
+            /*margin-left: 5em; */
+            /*margin-right: 6em;*/
+		    /*font-size: 14pt;*/
+		    /*padding: 1em*/
+}
 
 .thin		{ border-width: thin }
 .groove 	{ border-style: groove }
