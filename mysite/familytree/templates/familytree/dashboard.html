@@ -16,7 +16,7 @@
         <h2><a href="{% url 'video_index'  %}">Home Movies</a></h2>
         <h2><a href="{% url 'outline'  %}">Outline View</a></h2>
         {% if not user_is_guest %}
-            My furthest ancestors here: <br/>{{ profile.first.furthest_html | safe}}<br/>
+            My furthest ancestors here: <br/>{{ profile.furthest_html | safe}}<br/>
         {% endif %}
     </div>
 
