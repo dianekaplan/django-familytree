@@ -1,10 +1,10 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from ...models import Person, Family
-from django.utils import timezone
 from django.db.models import Q
 
+
 class Command(BaseCommand):
-    help = 'Populates display names for migrated database (internal use)'
+    help = 'Populates unique IDs for person records without one'
 
     # given a person, get the families that they're a spouse in
     def get_person_families(self, person):
@@ -20,8 +20,6 @@ class Command(BaseCommand):
     def get_family_kids(self, family):
         kids = Person.objects.filter(family_id=family).order_by('id')
         return kids
-
-
 
     def populate_children_values(self, person):
         pass
@@ -127,7 +125,7 @@ class Command(BaseCommand):
         else:
             siblings = self.get_family_kids(origin_family)
             for kid in siblings:
-                if kid.gedcom_uuid and not person.gedcom_uuid: # only fill it in when it's still missing
+                if kid.gedcom_uuid and not person.gedcom_uuid:  # only fill it in when it's still missing
                     value_to_use = kid.gedcom_uuid + "S" + person.first.replace(" ", "_")
                     person.gedcom_uuid = value_to_use
                     person.save()
@@ -142,15 +140,13 @@ class Command(BaseCommand):
             for family in families:
                 kids = self.get_family_kids(family)
                 for kid in kids:
-                    if kid.gedcom_uuid and not person.gedcom_uuid: # only fill it in when it's still missing
+                    if kid.gedcom_uuid and not person.gedcom_uuid:  # only fill it in when it's still missing
                         value_to_use = kid.gedcom_uuid + "P" + person.first.replace(" ", "_")
                         person.gedcom_uuid = value_to_use
                         person.save()
                         print("set value for " + person.display_name + ": " + person.gedcom_uuid)
 
-
-
-    def populate_the_rest(self): # Rachel Weeks, Iain, then upward
+    def populate_the_rest(self):  # kids of people who married in, then upward
         # grab the people with gedcom_uuid NOT populated
         people_missing_value = Person.objects.filter(gedcom_uuid__isnull=True)
         still_missing = 0
