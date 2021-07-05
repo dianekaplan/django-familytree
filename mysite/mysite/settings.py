@@ -100,7 +100,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     "myauth",
-    # 'django_nose',
+    'django_user_agents',
 ]
 
 MIDDLEWARE = [
@@ -114,6 +114,7 @@ MIDDLEWARE = [
     # Simplified static file serving.
     # https://warehouse.python.org/project/whitenoise/
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'

@@ -38,6 +38,7 @@ def index(request):  # dashboard page
     profile = Profile.objects.get(user=user)
     user_is_guest = profile.guest_user
     accessible_branches = get_valid_branches(request)
+    browser = request.user_agent.browser.family
 
     # only include additions or updates, for family, person, story
     display_update_types = [2, 4, 5]
@@ -94,7 +95,8 @@ def index(request):  # dashboard page
     context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples, 'show_book': False,
                'latest_pics': latest_pics, 'latest_videos': latest_videos, 'user_person': this_person, 'profile': profile,
                'accessible_branches': accessible_branches, 'today_birthday': today_birthday, 'media_server': media_server,
-               'recent_logentries': recent_logentries, 'recent_updates':recent_updates, 'user_is_guest': user_is_guest}
+               'recent_logentries': recent_logentries, 'recent_updates':recent_updates, 'user_is_guest': user_is_guest,
+               'browser': browser}
 
     return render(request, 'familytree/dashboard.html', context )
 
@@ -168,6 +170,7 @@ def person_detail(request, person_id):
     user_person = get_user_person(request.user).first()
     person = get_object_or_404(Person, pk=person_id)
     user_is_guest = Profile.objects.get(user=request.user).guest_user
+    browser = request.user_agent.browser.family
 
     try:
         wife_of = Family.objects.filter(wife=person_id)
@@ -227,7 +230,8 @@ def person_detail(request, person_id):
     return render(request, 'familytree/person_detail.html', {'person': person, 'families_made': families_made,
                             'origin_family': origin_family, 'images': images, 'group_images': group_images,
                             'notes': notes, 'videos': videos, 'featured_images': featured_images,'audio_files': audio_files,
-                            'user_person': user_person, 'stories': stories, 'media_server': media_server, 'user_is_guest': user_is_guest })
+                            'user_person': user_person, 'stories': stories, 'media_server': media_server, 'browser': browser,
+                                                             'user_is_guest': user_is_guest })
 
 
 @login_required(login_url=login_url)
