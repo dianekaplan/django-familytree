@@ -105,15 +105,19 @@ def family_index(request):
     family_list = Family.objects.order_by('display_name')
     accessible_branches = get_valid_branches(request)
     user_is_guest = Profile.objects.get(user=request.user).guest_user
+    existing_branches_list = list(Branch.objects.all())
 
-    # @@TODO: update so we can use branch1_name variables like outline_branch_partials view has
-    branch1_families = Family.objects.filter(branches__display_name__contains="Keem",
+    # @@TODO: specific to 4-branch setup, will want to be flexible for others
+    branch1_families = Family.objects.filter(branches__display_name__contains=existing_branches_list[0],
                                              show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
-    branch2_families = Family.objects.filter(branches__display_name__contains="Husband",
+
+    branch2_families = Family.objects.filter(branches__display_name__contains=existing_branches_list[1],
                                              show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
-    branch3_families = Family.objects.filter(branches__display_name__contains="Kemler",
+
+    branch3_families = Family.objects.filter(branches__display_name__contains=existing_branches_list[2],
                                              show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
-    branch4_families = Family.objects.filter(branches__display_name__contains="Kobrin",
+
+    branch4_families = Family.objects.filter(branches__display_name__contains=existing_branches_list[3],
                                              show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
 
     context = { 'family_list': family_list,
@@ -133,13 +137,17 @@ def person_index(request):
     accessible_branches = get_valid_branches(request)
     this_person = get_user_person(request.user).first()
     user_is_guest = Profile.objects.get(user=request.user).guest_user
+    existing_branches_list = list(Branch.objects.all())
 
-    # to start we'll assume up to 4 branches, gets ids 1-4, entering names manually
-    # @@TODO: update so we can use branch1_name variables like outline_branch_partials view has
-    branch1_people = Person.objects.filter(branches__display_name__contains="Keem", hidden=False, reviewed=True).order_by('last', 'first')
-    branch2_people = Person.objects.filter(branches__display_name__contains="Husband", hidden=False, reviewed=True).order_by('last', 'first')
-    branch3_people = Person.objects.filter(branches__display_name__contains="Kemler", hidden=False, reviewed=True).order_by('last', 'first')
-    branch4_people = Person.objects.filter(branches__display_name__contains="Kobrin", hidden=False, reviewed=True).order_by('last', 'first')
+    # @@TODO: specific to 4-branch setup, will want to be flexible for others
+    branch1_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[0], hidden=False,
+                                           reviewed=True).order_by('last', 'first')
+    branch2_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[1], hidden=False,
+                                           reviewed=True).order_by('last', 'first')
+    branch3_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[2], hidden=False,
+                                           reviewed=True).order_by('last', 'first')
+    branch4_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[3], hidden=False,
+                                           reviewed=True).order_by('last', 'first')
 
     # person_list is used if there aren't defined branches yet
     person_list = Person.objects.order_by('display_name') # add this to limit list displayed: [:125]
