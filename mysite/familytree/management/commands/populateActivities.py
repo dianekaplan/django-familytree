@@ -5,6 +5,7 @@ from django.contrib.admin.models import LogEntry
 from django.conf import settings
 from django.utils.timezone import make_aware
 
+
 class Command(BaseCommand):
     help = 'Migrates activities from previous database info django_admin_log (internal use)'
 
@@ -22,7 +23,7 @@ class Command(BaseCommand):
         action_flag = 2 if action=="updated" else 1
         display_value = ''
 
-        if type =="person":
+        if type == "person":
             content_type_id = 4
             try:
                 person_to_associate = Person.objects.get(id=row_list[1])
@@ -30,7 +31,7 @@ class Command(BaseCommand):
                 print(str(row_list[1]) + " doesn't match a person_id in our data. Here's the row data:" + str(row_list))
             else:
                 display_value = person_to_associate.display_name
-        if type =="family":
+        if type == "family":
             content_type_id = 2
             try:
                 family_to_associate = Family.objects.get(id=row_list[1])
@@ -38,7 +39,7 @@ class Command(BaseCommand):
                 print(str(row_list[1]) + " doesn't match a family_id in our data. Here's the row data:" + str(row_list))
             else:
                 display_value = family_to_associate.display_name
-        if type =="note":
+        if type == "note":
             content_type_id = 9
             try:
                 note_to_associate = Note.objects.get(id=row_list[1])
@@ -47,9 +48,9 @@ class Command(BaseCommand):
             else:
                 display_value = "Note by: " + note_to_associate.author_name
 
-        info_dict = {'action_time': make_aware(row_list[5]),'object_id':row_list[1], 'object_repr':display_value,
-                     'action_flag':action_flag, 'change_message':"[change from old laravel site]", 'content_type_id':content_type_id,
-                     'user_id':row_list[4]}
+        info_dict = {'action_time': make_aware(row_list[5]),'object_id': row_list[1], 'object_repr': display_value,
+                     'action_flag': action_flag, 'change_message': "[change from old laravel site]",
+                     'content_type_id': content_type_id, 'user_id': row_list[4]}
 
         (obj, created_bool) = LogEntry.objects.using('default').get_or_create(**info_dict)
 

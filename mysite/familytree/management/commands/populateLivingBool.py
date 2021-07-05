@@ -1,12 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
 from ...models import Person
 from datetime import date
-from django.utils import timezone
+
 
 class Command(BaseCommand):
-    help = 'Populates display names for migrated database (internal use)'
-
-    # update living bool from false to true if: birth year within 100 years and deathdate fields are empty
+    help = 'Populates living bool: true if birth year within 100 years and deathdate fields are empty'
 
     def handle(self, *args, **options):
         people = Person.objects.all()
@@ -20,10 +18,10 @@ class Command(BaseCommand):
             else:
                 this_display_name = person.first.strip() + " " + person.last.strip()
 
-            if not(person.deathdate_note) and not(person.deathdate):
+            if not person.deathdate_note  and not person.deathdate :
                 birthdate_info = ''
                 current_year_as_int = int(today.year)
-                birthyear_as_int=0
+                birthyear_as_int = 0
 
                 if person.birthdate_note:
                     if len(person.birthdate_note) == 4:
@@ -37,7 +35,6 @@ class Command(BaseCommand):
 
                     if current_year_as_int - birthyear_as_int < 100:
                         birthdate_info += person.birthdate_note
-
 
                 if person.birthdate:
                     if today.year - person.birthdate.year < 100:

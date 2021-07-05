@@ -7,6 +7,7 @@ from ...models import Person, Family
 from pathlib import Path
 from django.utils import timezone
 
+
 class Command(BaseCommand):
     help = 'Imports records from GEDCOM file'
     missing_args_message = 'Please specify GEDCOM file'
@@ -16,7 +17,6 @@ class Command(BaseCommand):
     family_added_count = 0;
     person_skipped_count = 0;
     child_family_dict = {}  # map of gedcom child/family associations (eg. P7: F1)
-
 
     def add_arguments(self, parser):
         parser.add_argument('file name', type=Path, help='Name of GEDCOM file to import from')
@@ -32,7 +32,7 @@ class Command(BaseCommand):
         path = Path("familytree/management/commands/gedcom_files/") # @@TODO: update to take the whole path (so it doesn't need to be saved in a particular folder)
         path_plus_file = path.joinpath(filename)
 
-        if (path_plus_file.is_file()):
+        if path_plus_file.is_file():
             gedcom_parser = Parser()
             gedcom_parser.parse_file(path_plus_file)
             root_child_elements = gedcom_parser.get_root_child_elements()
