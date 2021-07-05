@@ -1,5 +1,6 @@
 django
 django-heroku
+django_user_agents
 gunicorn
 python-dateutil
 whitenoise
