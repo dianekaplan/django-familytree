@@ -10,14 +10,21 @@
         </title>
 
         {% load static %}
+        <!-- favicon files-->
         <link rel="apple-touch-icon" sizes="180x180" href="{% static 'familytree/favicon/apple-touch-icon.png' %}">
         <link rel="icon" type="image/png" sizes="32x32" href="{% static 'familytree/favicon/favicon-32x32.png' %}">
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'familytree/favicon/favicon-16x16.png' %}">
         <link rel="manifest" href="{% static 'familytree/favicon/site.webmanifest' %}">
+
+        <!-- Bootstrap CDN: CSS, jQuery library, compiled JavaScript-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="{% static 'familytree/style.css' %}">
     </head>
 
     <body>
-    <link rel="stylesheet" type="text/css" href="{% static 'familytree/style.css' %}">
 
 {# Top nav#}
     {% include "familytree/top_nav.html" with user_person=user_person  %}

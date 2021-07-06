@@ -18,12 +18,22 @@
         <div style="display: inline-block; float: right;">
             <ul>
                 {% if not user_is_guest %}
-                    <li><a href="{% url 'account' %}">Account</a></li>
+<!--                    <li><a href="{% url 'account' %}">Account</a></li>-->
+                    <li><a href="{% url 'password_reset' %}">Reset Password</a></li>
                 {% endif %}
                  <li><a href="{% url 'logout' %}">Log out</a></li>
 
                 {% if user.is_superuser %}
-                    <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                <li>
+                    <div class="dropdown">
+                      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Admin
+                      <span class="caret"></span></button>
+                      <ul class="dropdown-menu">
+                        <li><a href="{% url 'admin:index' %}">Django Admin</a></li>
+                        <li><a href="{% url 'user_metrics' %}">User metrics</a></li>
+                      </ul>
+                    </div>
+                </li>
                 {% endif %}
             </ul>
         </div>

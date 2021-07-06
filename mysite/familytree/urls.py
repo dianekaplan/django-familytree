@@ -47,6 +47,9 @@ urlpatterns = [
     # ex: /account/
     path('account/', views.account, name='account'),
 
+    # ex: /user_metrics/
+    path('user_metrics/', views.user_metrics, name='user_metrics'),
+
     url('^', include('django.contrib.auth.urls')),  # paths for registration pages (password reset)
 
 ]
