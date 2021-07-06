@@ -15,6 +15,8 @@ root_url = settings.ROOT_URL
 today = datetime.now()
 guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
 month_ago_date = today.date() - relativedelta(days=30)
+laravel_site_creation = datetime.strptime('2015-12-01', '%Y-%m-%d').date()
+django_site_creation = datetime.strptime('2021-07-01', '%Y-%m-%d').date()
 
 branch1_name = Branch.objects.filter(id=1)
 branch2_name = Branch.objects.filter(id=2)
@@ -478,11 +480,16 @@ def account(request):
 
     return render(request, 'familytree/account.html', context)
 
+# These metrics are specific to my usage/history
 @login_required(login_url=login_url)
 def user_metrics(request):
     this_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
     profiles = Profile.objects.all()
+
+    last_login_old_site_only =  [x for x in profiles if x.last_login and x.last_login < laravel_site_creation]
+    last_login_laravel_site = [x for x in profiles if x.last_login and laravel_site_creation < x.last_login < django_site_creation]
+    last_login_django_site = [x for x in profiles if x.last_login and x.last_login > django_site_creation]
 
     last_login_never = Profile.objects.filter(last_login=None)
     last_login_past_month = [x for x in profiles if x.last_login and x.last_login > month_ago_date]
@@ -490,7 +497,8 @@ def user_metrics(request):
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
                 'profiles': profiles, 'last_login_never': last_login_never, 'last_login_past_month': last_login_past_month,
-               'last_login_over_a_month': last_login_over_a_month,
+               'last_login_over_a_month': last_login_over_a_month, 'last_login_old_site_only': last_login_old_site_only,
+               'last_login_laravel_site': last_login_laravel_site, 'last_login_django_site': last_login_django_site
                }
 
     return render(request, 'familytree/user_metrics.html', context)

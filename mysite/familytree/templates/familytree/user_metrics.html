@@ -5,54 +5,48 @@
 past month's logins:
         <ul>
         {% for profile in last_login_past_month %}
-            {% if profile.person.id %}
-            <li><a href="{% url 'person_detail' profile.person.id %}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>:
-             last login: {{ profile.last_login }} </li>
-            {% else %}
-            <li>{{ profile.user }}</li>
-            {% endif %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
         {% endfor %}
         </ul>
 
-Older logins:
 
+Only logged into old site:
         <ul>
-        {% for profile in last_login_over_a_month %}
-            {% if profile.person.id %}
-            <li><a href="{% url 'person_detail' profile.person.id %}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>:
-             last login: {{ profile.last_login }} </li>
-            {% else %}
-            <li>{{ profile.user }}</li>
-            {% endif %}
+        {% for profile in last_login_old_site_only %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
         {% endfor %}
         </ul>
 
+Only logged into laravel site:
+        <ul>
+        {% for profile in last_login_laravel_site %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
+
+Logged into django site:
+        <ul>
+        {% for profile in last_login_django_site %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
 
 Never logged in:
         <ul>
         {% for profile in last_login_never %}
-            {% if profile.person.id %}
-            <li><a href="{% url 'person_detail' profile.person.id %}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>:
-             last login: {{ profile.last_login }} </li>
-            {% else %}
-            <li>{{ profile.user }}</li>
-            {% endif %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
         {% endfor %}
         </ul>
 
 Admin users:
 
 Users by activity level:
-        Logged into django site
-        Logged into Laravel site
-        Never logged in
         Did stuff on laravel site
         Added notes on old site (asp.net?)
-        Not logged in to new site        Logged in to new site        Did stuff on new site        Added notes on old site        Everyone
+
 
 Users by branch access
 Users needing password change (have logged in, but still have original default password)
-
 
 
 
