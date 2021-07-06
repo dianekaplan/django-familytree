@@ -324,6 +324,7 @@ def video_index(request):
     accessible_branches = get_valid_branches(request)
     existing_branches = Branch.objects.all()
     video_list = Video.objects.none()
+    browser = request.user_agent.browser.family
 
     for branch in existing_branches:
         if branch in accessible_branches:
@@ -332,7 +333,7 @@ def video_index(request):
     sorted_list = video_list.order_by('year')
 
     context = { 'video_list': sorted_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
-                'user_person': user_person, 'media_server' : media_server}
+                'user_person': user_person, 'media_server' : media_server, 'browser': browser}
     return render(request, 'familytree/video_index.html', context)
 
 
@@ -475,3 +476,14 @@ def account(request):
                 'media_server': media_server,}
 
     return render(request, 'familytree/account.html', context)
+
+@login_required(login_url=login_url)
+def user_metrics(request):
+    this_person = get_user_person(request.user).first()
+    accessible_branches = get_valid_branches(request)
+    profiles = Profile.objects.all()
+
+    context = {'accessible_branches': accessible_branches, 'user_person': this_person,
+                'profiles': profiles,}
+
+    return render(request, 'familytree/user_metrics.html', context)
