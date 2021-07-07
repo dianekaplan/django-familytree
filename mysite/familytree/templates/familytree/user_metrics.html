@@ -10,33 +10,62 @@ past month's logins:
         </ul>
 
 
-Only logged into old site:
-        <ul>
+<div class="container">
+  <h2>Basic Table</h2>
+  <p>The .table class adds basic styling (light padding and only horizontal dividers) to a table:</p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No logins yet</th>
+        <th>Logged in to old site</th>
+        <th>Logged in to django site</th>
+        <th>Did stuff on new site</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{last_login_never.count}}</td>
+        <td>{{last_login_old_site_only.count}}, {{last_login_laravel_site.count}}</td>
+        <td>{{last_login_django_site.count}}</td>
+         <td>did actions count</td>
+      </tr>
+      <tr>
+
+       <td>
+                      <ul>
+        {% for profile in last_login_never %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
+
+       </td>
+        <td>Old site:
+                                        <ul>
         {% for profile in last_login_old_site_only %}
             {% include "familytree/_user_link_display.html" with profile=profile %}
         {% endfor %}
         </ul>
 
-Only logged into laravel site:
-        <ul>
+Laravel site:
+                        <ul>
         {% for profile in last_login_laravel_site %}
             {% include "familytree/_user_link_display.html" with profile=profile %}
         {% endfor %}
         </ul>
-
-Logged into django site:
-        <ul>
+        </td>
+        <td>
+                        <ul>
         {% for profile in last_login_django_site %}
             {% include "familytree/_user_link_display.html" with profile=profile %}
         {% endfor %}
         </ul>
+        </td>
+        <td>placedholder for actions</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-Never logged in:
-        <ul>
-        {% for profile in last_login_never %}
-            {% include "familytree/_user_link_display.html" with profile=profile %}
-        {% endfor %}
-        </ul>
 
 Admin users:
 
