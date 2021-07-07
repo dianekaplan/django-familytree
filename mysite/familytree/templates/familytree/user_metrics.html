@@ -24,9 +24,9 @@ past month's logins:
     </thead>
     <tbody>
       <tr>
-        <td>{{last_login_never.count}}</td>
-        <td>{{last_login_old_site_only.count}}, {{last_login_laravel_site.count}}</td>
-        <td>{{last_login_django_site.count}}</td>
+        <td>{{last_login_never | length}}</td>
+        <td>{{last_login_old_site_only | length}}, {{last_login_laravel_site | length}}</td>
+        <td>{{last_login_django_site | length}}</td>
          <td>did actions count</td>
       </tr>
       <tr>
