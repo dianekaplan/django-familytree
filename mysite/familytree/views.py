@@ -407,6 +407,7 @@ def make_list_into_html(list):
             result += '</ul>'
     return result
 
+
 def landing(request):
     landing_page_people = Person.objects.filter(show_on_landing_page=True).order_by('last', 'first')
 
@@ -486,6 +487,7 @@ def user_metrics(request):
     this_person = get_user_person(request.user).first()
     accessible_branches = get_valid_branches(request)
     profiles = Profile.objects.all()
+    existing_branches_list = list(Branch.objects.all())
 
     last_login_old_site_only =  [x for x in profiles if x.last_login and x.last_login < laravel_site_creation]
     last_login_laravel_site = [x for x in profiles if x.last_login and laravel_site_creation < x.last_login < django_site_creation]
@@ -493,12 +495,23 @@ def user_metrics(request):
 
     last_login_never = Profile.objects.filter(last_login=None)
     last_login_past_month = [x for x in profiles if x.last_login and x.last_login > month_ago_date]
-    last_login_over_a_month = [x for x in profiles if x.last_login and x.last_login < month_ago_date]
+    profiles_who_made_notes = [x for x in profiles if x.notes_written()]
+
+
+
+    branch1_users= Profile.objects.filter(branches__display_name__contains=existing_branches_list[0])
+    branch2_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[1])
+    branch3_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[2])
+    branch4_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[3])
+
+
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
                 'profiles': profiles, 'last_login_never': last_login_never, 'last_login_past_month': last_login_past_month,
-               'last_login_over_a_month': last_login_over_a_month, 'last_login_old_site_only': last_login_old_site_only,
-               'last_login_laravel_site': last_login_laravel_site, 'last_login_django_site': last_login_django_site
+               'last_login_old_site_only': last_login_old_site_only, 'profiles_who_made_notes': profiles_who_made_notes,
+               'last_login_laravel_site': last_login_laravel_site, 'last_login_django_site': last_login_django_site,
+               'branch1_users': branch1_users, 'branch2_users': branch2_users, 'branch3_users': branch3_users,
+               'branch4_users': branch4_users
                }
 
     return render(request, 'familytree/user_metrics.html', context)
