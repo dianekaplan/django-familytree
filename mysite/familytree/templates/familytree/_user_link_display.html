@@ -1,0 +1,6 @@
+            {% if profile.person.id %}
+            <li><a href="{% url 'person_detail' profile.person.id %}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>
+             last login: {{ profile.last_login }}</li>
+            {% else %}
+            <li>{{ profile.user }} last login: {{ profile.last_login }}</li>
+            {% endif %}

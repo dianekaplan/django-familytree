@@ -186,6 +186,17 @@ class Profile(models.Model): # This class holds additional info for user records
         verbose_name_plural = 'Profiles'
         db_table = 'profiles'
 
+    def notes_written(self):
+
+        if self.person:
+            notes_written_count = Note.objects.filter(author=self.person.id).count()
+            notes_written = notes_written_count if notes_written_count > 0 else False
+        else:
+            notes_written = False
+
+        return notes_written
+
+
     def __str__(self):
         return self.user.username
 
