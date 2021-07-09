@@ -318,3 +318,12 @@ class Audiofile(models.Model):
     class Meta:
         #managed = False
         db_table = 'audiofiles'
+
+
+class Login(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    user_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'logins'
