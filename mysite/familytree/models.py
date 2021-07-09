@@ -174,7 +174,7 @@ class Profile(models.Model): # This class holds additional info for user records
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     person = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
     branches = models.ManyToManyField(Branch, blank=True)
-    logins = models.IntegerField(null=True, default=0)
+    login_count = models.IntegerField(null=True, default=0)
     last_pestered = models.DateField(null=True, blank=True)
     connection_notes = models.CharField(null=True, max_length=250, blank=True)
     furthest_html = models.CharField(null=True, max_length=250, blank=True)
@@ -186,18 +186,16 @@ class Profile(models.Model): # This class holds additional info for user records
         db_table = 'profiles'
 
     def notes_written(self):
-
         if self.person:
             notes_written_count = Note.objects.filter(author=self.person.id).count()
             notes_written = notes_written_count if notes_written_count > 0 else False
         else:
             notes_written = False
-
         return notes_written
 
     def last_login(self):
         return self.user.last_login
-    
+
     def __str__(self):
         return self.user.username
 
