@@ -489,12 +489,8 @@ def user_metrics(request):
     profiles = Profile.objects.all()
     existing_branches_list = list(Branch.objects.all())
 
-    for x in profiles:
-        print(x.last_login())
-
     last_login_never = [x for x in profiles if not x.last_login()]
     last_login_past_month = [x for x in profiles if x.last_login() and x.last_login().date() > month_ago_date]
-
     last_login_old_site_only = [x for x in profiles if x.last_login() and x.last_login().date() < laravel_site_creation]
     last_login_laravel_site = [x for x in profiles if x.last_login() and laravel_site_creation < x.last_login().date() < django_site_creation]
     last_login_django_site = [x for x in profiles if x.last_login() and x.last_login().date() > django_site_creation]

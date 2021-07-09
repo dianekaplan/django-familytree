@@ -175,7 +175,6 @@ class Profile(models.Model): # This class holds additional info for user records
     person = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
     branches = models.ManyToManyField(Branch, blank=True)
     logins = models.IntegerField(null=True, default=0)
-    last_login = models.DateField(null=True, blank=True)
     last_pestered = models.DateField(null=True, blank=True)
     connection_notes = models.CharField(null=True, max_length=250, blank=True)
     furthest_html = models.CharField(null=True, max_length=250, blank=True)
