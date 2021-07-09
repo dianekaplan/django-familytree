@@ -195,7 +195,9 @@ class Profile(models.Model): # This class holds additional info for user records
 
         return notes_written
 
-
+    def last_login(self):
+        return self.user.last_login
+    
     def __str__(self):
         return self.user.username
 

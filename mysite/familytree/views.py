@@ -489,11 +489,11 @@ def user_metrics(request):
     profiles = Profile.objects.all()
     existing_branches_list = list(Branch.objects.all())
 
-    last_login_old_site_only = [x for x in profiles if x.last_login and x.last_login < laravel_site_creation]
-    last_login_laravel_site = [x for x in profiles if x.last_login and laravel_site_creation < x.last_login < django_site_creation]
-    last_login_django_site = [x for x in profiles if x.last_login and x.last_login > django_site_creation]
-    last_login_never = Profile.objects.filter(last_login=None)
-    last_login_past_month = [x for x in profiles if x.last_login and x.last_login > month_ago_date]
+    last_login_never = [x for x in profiles if not x.last_login()]
+    last_login_past_month = [x for x in profiles if x.last_login() and x.last_login().date() > month_ago_date]
+    last_login_old_site_only = [x for x in profiles if x.last_login() and x.last_login().date() < laravel_site_creation]
+    last_login_laravel_site = [x for x in profiles if x.last_login() and laravel_site_creation < x.last_login().date() < django_site_creation]
+    last_login_django_site = [x for x in profiles if x.last_login() and x.last_login().date() > django_site_creation]
 
     profiles_who_made_notes = [x for x in profiles if x.notes_written()]
 
@@ -501,8 +501,6 @@ def user_metrics(request):
     branch2_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[1])
     branch3_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[2])
     branch4_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[3])
-
-
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
                 'profiles': profiles, 'last_login_never': last_login_never, 'last_login_past_month': last_login_past_month,
