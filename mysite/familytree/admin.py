@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.models import LogEntry
 from django.db import models
-from django.forms import TextInput, Textarea
+from django.forms import TextInput, Textarea, ModelForm
 # from base import Login
 
 # import sys
@@ -13,9 +13,9 @@ from django.forms import TextInput, Textarea
 # from ..myauth import Login
 
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Story, PersonStory, Video, Audiofile, \
-    VideoPerson, FamilyStory
+    VideoPerson, FamilyStory, Login
 
-admin.site.register(LogEntry)
+# admin.site.register(LogEntry)
 # class LogAdmin(admin.ModelAdmin):
 #     list_display = ('action_time','user','content_type','change_message','is_addition','is_change','is_deletion')
 #     list_filter = ['action_time','user','content_type']
@@ -100,14 +100,16 @@ class BranchAdmin(admin.ModelAdmin):
     # }
     pass
 
-# class LoginInline(admin.StackedInline):
-#     model = Login
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    # search_fields = ('user',)
-    list_display = ('user', 'person', 'connection_notes')
-    # inlines = [LoginInline]
+    list_display = ('user', 'person', 'login_count', 'logins')
+
+    def logins(self, instance):
+        return instance.get_logins()
+
+    ordering = ('login_count', 'guest_user')
+
     pass
 
 
