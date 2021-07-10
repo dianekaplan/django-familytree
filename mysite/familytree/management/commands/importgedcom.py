@@ -55,11 +55,11 @@ class Command(BaseCommand):
             raise CommandError('That gedcom file does not exist in the expected directory')
 
         # gather run results
-        run_results = 'gedcom_person_records: ' + str(self.gedcom_person_records) +  '\n'
-        run_results += 'gedcom_family_records: ' + str(self.gedcom_family_records) +  '\n'
-        run_results += 'person_added_count: ' + str(self.person_added_count) +  '\n'
-        run_results += 'person_skipped_count: ' + str(self.person_skipped_count) +  '\n'
-        run_results += 'family_added_count: ' + str(self.family_added_count) +  '\n'
+        run_results = 'gedcom_person_records: ' + str(self.gedcom_person_records) + '\n'
+        run_results += 'gedcom_family_records: ' + str(self.gedcom_family_records) + '\n'
+        run_results += 'person_added_count: ' + str(self.person_added_count) + '\n'
+        run_results += 'person_skipped_count: ' + str(self.person_skipped_count) + '\n'
+        run_results += 'family_added_count: ' + str(self.family_added_count) + '\n'
 
         # Display and log them
         self.stdout.write(self.style.SUCCESS('You passed filename: ') + str(filename))
