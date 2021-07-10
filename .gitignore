@@ -1,7 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 #exclude any gedcom file, and interim import files
-*.gedcom
+#*.gedcom
 /mysite/familytree/management/commands/export_files
 
 # Django #
