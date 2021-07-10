@@ -1,3 +1,4 @@
+gedcompy
 django
 django-heroku
 django_user_agents
