@@ -1,26 +1,8 @@
 from django.contrib import admin
-from django.contrib.admin.models import LogEntry
 from django.db import models
-from django.forms import TextInput, Textarea, ModelForm
-# from base import Login
-
-# import sys
-# import os
-# print("sys.path has: " + str(sys.path))
-# print("os.getcwd() gives: " + str(os.getcwd()))
-
-# from mysite.myauth.models import Login  # No module named 'mysite.myauth'
-# from ..myauth import Login
-
+from django.forms import TextInput, Textarea
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Story, PersonStory, Video, Audiofile, \
-    VideoPerson, FamilyStory, Login
-
-# admin.site.register(LogEntry)
-# class LogAdmin(admin.ModelAdmin):
-#     list_display = ('action_time','user','content_type','change_message','is_addition','is_change','is_deletion')
-#     list_filter = ['action_time','user','content_type']
-#     ordering = ('-action_time',)
-
+    VideoPerson, FamilyStory
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
@@ -104,11 +86,10 @@ class BranchAdmin(admin.ModelAdmin):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'person', 'login_count', 'logins')
+    ordering = ('login_count', 'guest_user')
 
     def logins(self, instance):
         return instance.get_logins()
-
-    ordering = ('login_count', 'guest_user')
 
     pass
 
