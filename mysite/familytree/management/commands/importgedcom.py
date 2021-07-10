@@ -29,7 +29,7 @@ class Command(BaseCommand):
             raise CommandError('Please specify GEDCOM file, ex: myGedcom.ged')
 
         # Check that the file is there
-        path = Path("familytree/management/commands/gedcom_files/") # @@TODO: update to take the whole path (so it doesn't need to be saved in a particular folder)
+        path = Path("mysite/familytree/management/commands/gedcom_files/") # @@TODO: update to take the whole path (so it doesn't need to be saved in a particular folder)
         path_plus_file = path.joinpath(filename)
 
         if path_plus_file.is_file():
