@@ -174,7 +174,7 @@ class Profile(models.Model): # This class holds additional info for user records
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     person = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
     branches = models.ManyToManyField(Branch, blank=True)
-    logins = models.IntegerField(null=True, default=0)
+    login_count = models.IntegerField(null=True, default=0)
     last_pestered = models.DateField(null=True, blank=True)
     connection_notes = models.CharField(null=True, max_length=250, blank=True)
     furthest_html = models.CharField(null=True, max_length=250, blank=True)
@@ -186,18 +186,24 @@ class Profile(models.Model): # This class holds additional info for user records
         db_table = 'profiles'
 
     def notes_written(self):
-
         if self.person:
             notes_written_count = Note.objects.filter(author=self.person.id).count()
             notes_written = notes_written_count if notes_written_count > 0 else False
         else:
             notes_written = False
-
         return notes_written
 
     def last_login(self):
         return self.user.last_login
-    
+
+    # For a given profile, return an array of dates they logged in
+    def get_logins(self):
+        login_dates_queryset = list(Login.objects.filter(user_id=self.user.id).values('created_at'))
+        login_dates = []
+        for x in login_dates_queryset:
+            login_dates.append(x.get('created_at').date())
+        return login_dates
+
     def __str__(self):
         return self.user.username
 
@@ -287,6 +293,7 @@ class VideoPerson(models.Model):
     def __str__(self):
         return str(self.video_id)
 
+
 class Note(models.Model):
     author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='author')
     author_name = models.CharField(max_length=50, null=True, blank=True)
@@ -320,3 +327,12 @@ class Audiofile(models.Model):
     class Meta:
         #managed = False
         db_table = 'audiofiles'
+
+
+class Login(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    user_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'logins'
