@@ -1,4 +1,4 @@
-gedcompy
+python-gedcom
 django
 django-heroku
 django_user_agents
