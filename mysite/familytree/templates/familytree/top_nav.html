@@ -1,68 +1,61 @@
 <div class="container">
 
+  {% if user.is_authenticated %}
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'dashboard' %}">Home</a>
+        </button>
 
-    <div class="navbar">
-        <div style="display: inline-block;">
-            <ul>
-                <li><a href="{% url 'dashboard' %}" class="navbar-brand">Home</a></li>
+        <div class="collapse navbar-collapse" id="navbarColor03">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'history'  %}">My family history
+              </a>
+            </li>
 
-                {% if user.is_authenticated %}
-                    <li><a href="{% url 'history'  %}" class="navbar-brand">My family history</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                 aria-expanded="false">Photos and movies</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'image_index'  %}">Family Album</a>
+                <a class="dropdown-item" href="{% url 'video_index'  %}">Home Movies</a>
+              </div>
+            </li>
 
-                    <li>
-                        <div class="dropdown">
-                          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Photos and movies
-                          <span class="caret"></span></button>
-                          <ul class="dropdown-menu">
-                            <li><a href="{% url 'image_index'  %}">Family album</a></li>
-                            <li><a href="{% url 'video_index'  %}">Home Movies</a></li>
-                          </ul>
-                        </div>
-                    </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                 aria-expanded="false">Search</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'family_index' %}">Families</a>
+                <a class="dropdown-item" href="{% url 'person_index' %}">People</a>
+                <a class="dropdown-item" href="{% url 'outline' %}">Outline View</a>
+              </div>
+            </li>
 
+            {% if not user_is_guest %}
+            <li>{% include "familytree/face_link.html" with person=user_person %}</li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'password_reset' %}">Reset Password</a>
+            </li>
+            {% endif %}
 
-                    <li>
-                        <div class="dropdown">
-                          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Search
-                          <span class="caret"></span></button>
-                          <ul class="dropdown-menu">
-                            <li><a href="{% url 'family_index' %}">Families</a></li>
-                            <li><a href="{% url 'person_index' %}">People</a></li>
-                            <li><a href="{% url 'outline'  %}">Outline View</a></li>
-                          </ul>
-                        </div>
-                    </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">Log out</a>
+            </li>
 
-                    {%  if user_person %}
-                        <li>{% include "familytree/face_link.html" with person=user_person %}</li>
-                    {% endif %}
-                {% endif %}
-            </ul>
+            {% if user.is_superuser %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'admin:index' %}">Django Admin</a>
+                <a class="dropdown-item" href="{% url 'user_metrics' %}">User Metrics</a>
+              </div>
+            </li>
+            {% endif %}
+          </ul>
         </div>
+      </div>
+    </nav>
+{% endif %}
 
-        {% if user.is_authenticated %}
-        <div style="display: inline-block; float: right;">
-            <ul>
-                {% if not user_is_guest %}
-<!--                    <li><a href="{% url 'account' %}">Account</a></li>-->
-                    <li><a href="{% url 'password_reset' %}">Reset Password</a></li>
-                {% endif %}
-                 <li><a href="{% url 'logout' %}">Log out</a></li>
-
-                {% if user.is_superuser %}
-                <li>
-                    <div class="dropdown">
-                      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Admin
-                      <span class="caret"></span></button>
-                      <ul class="dropdown-menu">
-                        <li><a href="{% url 'admin:index' %}">Django Admin</a></li>
-                        <li><a href="{% url 'user_metrics' %}">User metrics</a></li>
-                      </ul>
-                    </div>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-        {% endif %}
-    </div>
 </div>
