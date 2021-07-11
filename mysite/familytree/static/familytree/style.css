@@ -26,7 +26,7 @@
   text-decoration: none;
 }
 .navbar-brand {
-  font-size: 1.5em;
+  font-size: 1em;
 }
 
 body	    {color: var(--text-color);
