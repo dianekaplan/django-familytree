@@ -15,7 +15,7 @@ class Branch(models.Model):
 
 
 class Person(models.Model):
-    gedcom_indi = models.CharField(max_length=10, null=True, blank=True, default='')
+    gedcom_indi = models.CharField(max_length=20, null=True, blank=True, default='')
     gedcom_uuid = models.CharField(max_length=200, null=True, blank=True, default='')
     first = models.CharField(max_length=30, blank=True, default='')
     middle = models.CharField(max_length=20, null=True, blank=True, default='')
@@ -30,7 +30,7 @@ class Person(models.Model):
     birthyear = models.IntegerField(blank=True, null=True)
     birthplace = models.CharField(max_length=60, null=True, blank=True, default='')
     family = models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL) # person's origin family
-    orig_fam_indi = models.CharField(max_length=10, null=True, blank=True, default='')
+    orig_fam_indi = models.CharField(max_length=20, null=True, blank=True, default='')
     sex = models.CharField(max_length=2, null=True, blank=True, default='')
     origin = models.CharField(max_length=100, null=True, blank=True, default='') # big description of background, probably will remove
     face = models.CharField(max_length=25, null=True, blank=True, default='')
@@ -77,13 +77,13 @@ class Person(models.Model):
 
 
 class Family(models.Model):
-    gedcom_indi = models.CharField(max_length=10, null=True, blank=True, default='')
-    display_name = models.CharField(max_length=50, blank=True)
+    gedcom_indi = models.CharField(max_length=20, null=True, blank=True, default='')
+    display_name = models.CharField(max_length=60, blank=True)
     wife = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='partner1')
     husband = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='partner2')
-    wife_indi = models.CharField(max_length=10, null=True, blank=True, default='')
-    husband_indi = models.CharField(max_length=10, null=True, blank=True, default='')
-    child_indi = models.CharField(max_length=10, null=True, blank=True, default='')  # temporary- still need this?
+    wife_indi = models.CharField(max_length=20, null=True, blank=True, default='')
+    husband_indi = models.CharField(max_length=20, null=True, blank=True, default='')
+    child_indi = models.CharField(max_length=20, null=True, blank=True, default='')  # temporary- still need this?
     no_kids_bool = models.BooleanField(null=True)
     original_family = models.BooleanField(null=True)
     original_family_text = models.CharField(max_length=600, null=True, blank=True, default='')

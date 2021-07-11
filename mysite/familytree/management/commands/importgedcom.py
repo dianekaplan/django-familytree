@@ -68,6 +68,7 @@ class Command(BaseCommand):
         f.write(run_results)
         f.closed
 
+    # steps to process a person record in the gedcom file
     def handle_person(self, element):
         matching_record = None
         self.gedcom_person_records += 1
@@ -75,6 +76,7 @@ class Command(BaseCommand):
         gedcom_uuid = ''
         skip_record = False
 
+        # gather the data we'll want to use
         if "INDI" in str(element):
             gedcom_indi = str(element).replace(" INDI", "").replace("0 ", "").replace("\r\n", "")
         # get the fields available from our parser
@@ -87,7 +89,6 @@ class Command(BaseCommand):
         # check the children for our custom UUID field (applicable for subsequent imports)
         element_children = element.get_child_elements()
         for child in element_children:
-            # print(element.to_gedcom_string(recursive=True))
             if "ALIA" in str(child):
                 gedcom_uuid = str(child).replace("1 ALIA ", "").replace("\r\n", "")
 
@@ -117,6 +118,7 @@ class Command(BaseCommand):
             matching_record.save()
             self.person_skipped_count += 1
 
+    # steps to process a family record in the gedcom file
     def handle_family(self, element):
         gedcom_indi = str(element).replace(" FAM", "").replace("0 ", "").replace("\r\n", "")
         self.gedcom_family_records += 1
