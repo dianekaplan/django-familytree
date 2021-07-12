@@ -1,0 +1,22 @@
+
+{% if user.is_authenticated %}
+    {% if person %}
+        {% if person.face %}
+            <a href="{% url 'person_detail' person.id %}"><img src= "{{ media_server }}/image/upload/h_51,r_20/{{ person.face }}" /></a>
+        {% else %}
+        <a href="{% url 'person_detail' person.id %}"><img src="{{ media_server }}/image/upload/h_51,r_20/noimage.gif"/></a>
+        {% endif %}
+    {% else %}
+        Got here with no person
+    {% endif %}
+{% else %}
+    {% if person %}
+        {% if person.face %}
+            <img src= "{{ media_server }}/image/upload/h_51,r_20/{{ person.face }}"/>
+        {% else %}
+            <img src="{{ media_server }}/image/upload/h_51,r_20/noimage.gif" />
+        {% endif %}
+    {% else %}
+        Got here with no person
+    {% endif %}
+{% endif %}
