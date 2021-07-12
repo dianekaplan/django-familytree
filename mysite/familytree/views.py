@@ -409,7 +409,7 @@ def make_list_into_html(list):
 
 
 def landing(request):
-    landing_page_people = Person.objects.filter(show_on_landing_page=True).order_by('last', 'first')
+    landing_page_people = Person.objects.filter(living=False, show_on_landing_page=True).order_by('last', 'first')
 
     context = { 'landing_page_people': landing_page_people, 'media_server': media_server}
     return render(request, 'familytree/landing.html', context)
