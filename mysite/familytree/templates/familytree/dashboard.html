@@ -1,13 +1,15 @@
 {% extends 'familytree/base.html' %}
 {% block title %}{% endblock title %}
 {% block content %}
+{% load static %}
 
 {% if not user_is_guest %}
     <div style="margin: 10px">Welcome, {{ user_person.display_name }}! </div>
 {% endif %}
 
 <div>
-    <div style="float: left; width: 23%;" class="circled_section">
+    <div style="float: left; width: 23%;">
+        <div class="circled_section">
         {% if not user_is_guest %}
             {% include "familytree/face_name_link.html" with person=user_person %}<br/>
         {% endif %}
@@ -18,6 +20,20 @@
         {% if not user_is_guest %}
             My furthest ancestors here: <br/>{{ profile.furthest_html | safe}}<br/>
         {% endif %}
+        </div>
+
+        <div  class="circled_section">
+        <b>Latest stories:</b> <br/>
+        {%  if latest_stories%}
+            {% for story in latest_stories %}
+                <img src="{% static 'familytree/book.png' %}" height="25"/>
+                    <a href="{% url 'story' story.id %}">{{ story.description }}</a>
+            {% endfor %}
+        {% else %}
+            (none)
+        {% endif %}
+    </div>
+
     </div>
 
 <div style="float: left; width: 30%;" class="circled_section">
@@ -58,7 +74,7 @@
     </div>
 </div>
 
-<div style="float: right; width: 35%;"  >
+<div style="float: right; width: 43%;"  >
     <div  class="circled_section">
         <b>Latest pics:</b> <br/>
        {%  if latest_pics%}
