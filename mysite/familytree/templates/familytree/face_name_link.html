@@ -6,11 +6,11 @@
     {% if user.is_authenticated %}
         {% if person %}
                 {% if person.display_name %}
-                    {% include "familytree/face_link.html" with person=person %}
+                    {% include "familytree/_face_link.html" with person=person %}
                     <a href="{% url 'person_detail' person.id %}">{{ person.display_name }}</a>
                 {%  else %}
                     {#  Don't have display name <br/>#}
-                    {% include "familytree/face_link.html" with person=person %}
+                    {% include "familytree/_face_link.html" with person=person %}
                     <a href="{% url 'person_detail' person.id %}">{{ person.first }} {{ person.last }}</a>
                 {%  endif %}
                 {% if person.has_stories and show_book %}
@@ -21,10 +21,10 @@
         {%  endif %}
     {% else %}
         {% if person.display_name %}
-            {% include "familytree/face_link.html" with person=person %}
+            {% include "familytree/_face_link.html" with person=person %}
                 {{ person.display_name }}
         {%  else %}
-            {% include "familytree/face_link.html" with person=person %}
+            {% include "familytree/_face_link.html" with person=person %}
                 {{ person.first }} {{ person.last }}
         {%  endif %}
 
