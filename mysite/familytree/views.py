@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
 
@@ -100,13 +102,29 @@ def index(request):  # dashboard page
     except Story.DoesNotExist:
         latest_stories = None
 
+    # test_email()
     context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples, 'show_book': False,
                'latest_pics': latest_pics, 'latest_videos': latest_videos, 'user_person': this_person, 'profile': profile,
                'accessible_branches': accessible_branches, 'today_birthday': today_birthday, 'media_server': media_server,
                'recent_logentries': recent_logentries, 'recent_updates':recent_updates, 'user_is_guest': user_is_guest,
                'browser': browser, 'latest_stories': latest_stories}
 
-    return render(request, 'familytree/dashboard.html', context )
+    return render(request, 'familytree/dashboard.html', context)
+
+#
+# def test_email():
+#     from_email = 'me@email.com'
+#     recipient_list = ['dianekaplan@gmail.com', ]  # put your real email here
+#     subject = render_to_string(
+#         template_name='familytree/email/login_email_subject.txt'
+#     )
+#     message = render_to_string(
+#         template_name='familytree/email/login_email_message.txt'
+#     )
+#     html_message = render_to_string(
+#         template_name='familytree/email/login_email_message.html'
+#     )
+#     send_mail(subject, html_message, from_email, recipient_list, fail_silently=False,)
 
 
 @login_required(login_url=login_url)
