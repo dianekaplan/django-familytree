@@ -37,8 +37,8 @@ branch_classes = {
 @login_required(login_url=login_url)
 def index(request):  # dashboard page
     user = request.user
-    this_person = get_user_person(request.user).first()
-    profile = Profile.objects.get(user=user)
+    profile = get_display_profile(request).first()
+    this_person = get_profile_person(profile)
     user_is_guest = profile.guest_user
     accessible_branches = get_valid_branches(request)
     browser = request.user_agent.browser.family
@@ -111,7 +111,8 @@ def index(request):  # dashboard page
 
 @login_required(login_url=login_url)
 def family_index(request):
-    this_person = get_user_person(request.user).first()
+    profile = get_display_profile(request).first()
+    this_person = get_profile_person(profile)
     family_list = Family.objects.order_by('display_name')
     accessible_branches = get_valid_branches(request)
     user_is_guest = Profile.objects.get(user=request.user).guest_user
@@ -145,7 +146,8 @@ def family_index(request):
 @login_required(login_url=login_url)
 def person_index(request):
     accessible_branches = get_valid_branches(request)
-    this_person = get_user_person(request.user).first()
+    profile = get_display_profile(request).first()
+    user_person = get_profile_person(profile)
     user_is_guest = Profile.objects.get(user=request.user).guest_user
     existing_branches_list = list(Branch.objects.all())
 
@@ -167,7 +169,7 @@ def person_index(request):
                 'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
                 'show_by_branch': show_by_branch, 'accessible_branches':accessible_branches,
                 'request_user': request.user, 'show_book': True, 'user_is_guest': user_is_guest,
-                'user_person': this_person, 'media_server': media_server,
+                'user_person': user_person, 'media_server': media_server,
                 'branch_class': branch_classes[len(accessible_branches)]
                 }
     return render(request, 'familytree/person_index.html', context)
@@ -175,7 +177,8 @@ def person_index(request):
 
 @login_required(login_url=login_url)
 def person_detail(request, person_id):
-    user_person = get_user_person(request.user).first()
+    profile = get_display_profile(request).first()
+    user_person = get_profile_person(profile)
     person = get_object_or_404(Person, pk=person_id)
     user_is_guest = Profile.objects.get(user=request.user).guest_user
     browser = request.user_agent.browser.family
@@ -245,7 +248,8 @@ def person_detail(request, person_id):
 @login_required(login_url=login_url)
 def family_detail(request, family_id):
     family = get_object_or_404(Family, pk=family_id)
-    user_person = get_user_person(request.user).first()
+    profile = get_display_profile(request).first()
+    user_person = get_profile_person(profile)
     user_is_guest = Profile.objects.get(user=request.user).guest_user
 
     try:
@@ -276,7 +280,8 @@ def family_detail(request, family_id):
 
 @login_required(login_url=login_url)
 def image_detail(request, image_id):
-    user_person = get_user_person(request.user).first()
+    profile = get_display_profile(request).first()
+    user_person = get_profile_person(profile)
     image = get_object_or_404(Image, pk=image_id)
     user_is_guest = Profile.objects.get(user=request.user).guest_user
 
@@ -293,7 +298,8 @@ def image_detail(request, image_id):
 
 @login_required(login_url=login_url)
 def image_index(request):
-    user_person=get_user_person(request.user).first()
+    profile = get_display_profile(request).first()
+    user_person = get_profile_person(profile)
     accessible_branches = get_valid_branches(request)
     existing_branches = Branch.objects.all()
     image_list = Image.objects.none()
@@ -311,7 +317,8 @@ def image_index(request):
 
 @login_required(login_url=login_url)
 def video_detail(request, video_id):
-    user_person = get_user_person(request.user).first()
+    profile = get_display_profile(request).first()
+    user_person = get_profile_person(profile)
     video = get_object_or_404(Video, pk=video_id)
     video_people = Video.video_subjects(video)
     user_is_guest = Profile.objects.get(user=request.user).guest_user
@@ -328,7 +335,8 @@ def video_detail(request, video_id):
 
 @login_required(login_url=login_url)
 def video_index(request):
-    user_person = get_user_person(request.user).first()
+    profile = get_display_profile(request).first()
+    user_person = get_profile_person(profile)
     accessible_branches = get_valid_branches(request)
     existing_branches = Branch.objects.all()
     video_list = Video.objects.none()
@@ -354,7 +362,8 @@ def story(request, story_id):
 
 @login_required(login_url=login_url)
 def outline(request):
-    this_person = get_user_person(request.user).first()
+    profile = get_display_profile(request).first()
+    this_person = get_profile_person(profile)
     accessible_branches = get_valid_branches(request)
     existing_branches = Branch.objects.all()
     user_is_guest = Profile.objects.get(user=request.user).guest_user
@@ -416,19 +425,19 @@ def make_list_into_html(list):
 def landing(request):
     landing_page_people = Person.objects.filter(living=False, show_on_landing_page=True).order_by('last', 'first')
 
-    context = { 'landing_page_people': landing_page_people, 'media_server': media_server}
+    context = {'landing_page_people': landing_page_people, 'media_server': media_server}
     return render(request, 'familytree/landing.html', context)
+
 
 @login_required(login_url=login_url)
 def history(request):
     user = request.user
-    this_person = get_user_person(user).first()
-    profile = Profile.objects.get(user=user)
+    profile = get_display_profile(request).first()
+    this_person = get_profile_person(profile)
     accessible_branches = get_valid_branches(request)
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
                 'media_server': media_server,'profile': profile}
-
     return render(request, 'familytree/history.html', context)
 
 
@@ -438,15 +447,27 @@ def logout(request):
 
 
 def get_valid_branches(request):
-    user = request.user
-    profile = Profile.objects.filter(user=user)
+    profile = get_display_profile(request)
     accessible_branches = Branch.objects.filter(profile__in=profile)
     return accessible_branches
 
 
-def get_user_person(user):
+# typically we'll use the display for the logged-in-user, but superusers can view as other profiles
+def get_display_profile(request):
+    user = request.user
+    profile = Profile.objects.filter(user=user)
+    # if it's a superuser, also check for show_profile parameter
+    if request.user.is_superuser:
+        show_profile = request.GET.get('show_profile', None)
+        if show_profile:
+            profile = Profile.objects.filter(id=int(show_profile))
+            print("viewing as profile: ", profile)
+    return profile
+
+
+def get_profile_person(profile):
     try:
-        this_user_person = Person.objects.filter(profile__user_id=user)
+        this_user_person = profile.person
     except Profile.DoesNotExist:
         this_user_person = None
     return this_user_person
@@ -478,7 +499,8 @@ def get_descendants(family, user_is_guest, results=None):
 
 @login_required(login_url=login_url)
 def account(request):
-    this_person = get_user_person(request.user).first()
+    profile = get_display_profile(request).first()
+    this_person = get_profile_person(profile)
     accessible_branches = get_valid_branches(request)
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
@@ -489,7 +511,8 @@ def account(request):
 # These metrics are specific to my usage/history
 @login_required(login_url=login_url)
 def user_metrics(request):
-    this_person = get_user_person(request.user).first()
+    profile = get_display_profile(request).first()
+    this_person = get_profile_person(profile)
     accessible_branches = get_valid_branches(request)
     profiles = Profile.objects.all()
     existing_branches_list = list(Branch.objects.all())
