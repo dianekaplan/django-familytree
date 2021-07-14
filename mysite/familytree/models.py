@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.auth.models import AbstractUser
 
 
 class Branch(models.Model):
@@ -336,3 +335,28 @@ class Login(models.Model):
     class Meta:
         managed = False
         db_table = 'logins'
+
+
+# signals
+from django.core.mail import send_mail
+from django.db.models.signals import post_save
+
+from django.dispatch import receiver
+from django.template.loader import render_to_string
+from .models import Login
+
+
+@receiver(post_save, sender=User)
+def send_login_email(sender, instance, **kwargs):
+
+    email_data = {'user': instance}
+
+    from_email = 'diane@ourbigfamilytree.com'  # @TODO: make setting for global from email
+    recipient_list = ['dianekaplan@gmail.com', ]
+    subject = render_to_string(
+        template_name='familytree/email/login_email_subject.txt'
+    )
+    html_message = render_to_string(
+        'familytree/email/login_email_message.html', email_data
+    )
+    send_mail(subject, html_message, from_email, recipient_list, fail_silently=False, )
