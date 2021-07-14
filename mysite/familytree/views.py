@@ -16,7 +16,7 @@ today = datetime.now()
 guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
 month_ago_date = today.date() - relativedelta(days=30)
 laravel_site_creation = datetime.strptime('2015-12-01', '%Y-%m-%d').date()
-django_site_creation = datetime.strptime('2021-07-01', '%Y-%m-%d').date()
+django_site_creation = datetime.strptime('2021-07-14', '%Y-%m-%d').date()
 
 branch1_name = Branch.objects.filter(id=1)
 branch2_name = Branch.objects.filter(id=2)
