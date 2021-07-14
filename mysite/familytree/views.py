@@ -7,8 +7,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
 
 from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
 
@@ -102,7 +100,6 @@ def index(request):  # dashboard page
     except Story.DoesNotExist:
         latest_stories = None
 
-    # test_email()
     context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples, 'show_book': False,
                'latest_pics': latest_pics, 'latest_videos': latest_videos, 'user_person': this_person, 'profile': profile,
                'accessible_branches': accessible_branches, 'today_birthday': today_birthday, 'media_server': media_server,
@@ -110,21 +107,6 @@ def index(request):  # dashboard page
                'browser': browser, 'latest_stories': latest_stories}
 
     return render(request, 'familytree/dashboard.html', context)
-
-#
-# def test_email():
-#     from_email = 'me@email.com'
-#     recipient_list = ['dianekaplan@gmail.com', ]  # put your real email here
-#     subject = render_to_string(
-#         template_name='familytree/email/login_email_subject.txt'
-#     )
-#     message = render_to_string(
-#         template_name='familytree/email/login_email_message.txt'
-#     )
-#     html_message = render_to_string(
-#         template_name='familytree/email/login_email_message.html'
-#     )
-#     send_mail(subject, html_message, from_email, recipient_list, fail_silently=False,)
 
 
 @login_required(login_url=login_url)
@@ -539,8 +521,9 @@ def user_metrics(request):
     last_login_past_month = [x for x in profiles if x.last_login() and x.last_login().date() > month_ago_date]
 
     last_login_old_site_only = [x for x in profiles if x.last_login() and x.last_login().date() < laravel_site_creation]
-    last_login_laravel_site = [x for x in profiles if x.last_login() and laravel_site_creation < x.last_login().date() < django_site_creation]
-    last_login_django_site = [x for x in profiles if x.last_login() and x.last_login().date() > django_site_creation]
+    last_login_laravel_site = [x for x in profiles if x.last_login() and laravel_site_creation < x.last_login().date() <
+                               django_site_creation]
+    last_login_django_site = [x for x in profiles if x.last_login() and x.last_login().date() >= django_site_creation]
 
     profiles_who_made_notes = [x for x in profiles if x.notes_written()]
 
