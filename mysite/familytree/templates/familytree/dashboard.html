@@ -44,14 +44,6 @@
             <li style="list-style-type:none;"> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
         {% endfor %}
     {% endif %}
-    
-    <b>Birthdays this month:</b>
-    {%  if birthday_people%}
-        {% for person in birthday_people %}
-            <li> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
-        {% endfor %}
-        <br/><br/>
-    {% endif %}
 
     <b>Anniversaries this month:</b>
     {%  if anniversary_couples%}
