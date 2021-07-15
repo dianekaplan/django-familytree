@@ -22,15 +22,13 @@
         {% endif %}
         </div>
 
-        <div  class="circled_section">
-        <b>Latest stories:</b> <br/>
-        {%  if latest_stories%}
-            {% for story in latest_stories %}
-                <img src="{% static 'familytree/book.png' %}" height="25"/>
+        {% if latest_stories %}
+            <div  class="circled_section">
+                <b>Latest stories:</b> <br/>
+                {% for story in latest_stories %}
+                    <img src="{% static 'familytree/book.png' %}" height="25"/>
                     <a href="{% url 'story' story.id %}">{{ story.description }}</a>
-            {% endfor %}
-        {% else %}
-            (none)
+                {% endfor %}
         {% endif %}
     </div>
 
@@ -94,7 +92,6 @@
         {% endfor %}
     </div>
     {% endif %}
-
 
  </div>
 
