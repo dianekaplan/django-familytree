@@ -49,6 +49,7 @@ def index(request):  # dashboard page
     recent_logentries = LogEntry.objects.filter(content_type_id__in=display_update_types,
                                                 action_flag__in=display_action_types).order_by('-id')[:5]
 
+    # get list of latest updates
     recent_updates = []
     for update in recent_logentries:
         update_author = User.objects.get(username=update.user)
@@ -64,6 +65,7 @@ def index(request):  # dashboard page
         combination = [update, user_person, content_type, change_type, updated_person]
         recent_updates.append(combination)
 
+    # get list of people with birthdays this month
     birthday_people_combined = Person.objects.none()
     try:
         for branch in accessible_branches:
@@ -77,6 +79,7 @@ def index(request):  # dashboard page
     if user_is_guest:
         birthday_people = [x for x in birthday_people if x.living is False]
 
+    # get list of families with anniversaries this month
     try:
         anniversary_couples = Family.objects.filter(marriage_date__month=today.month, divorced=False).order_by('marriage_date__day')
     except Family.DoesNotExist:
@@ -85,34 +88,40 @@ def index(request):  # dashboard page
     if user_is_guest:
         anniversary_couples = [x for x in anniversary_couples if x.marriage_date < guest_user_anniversary_cutoff]
 
+    # get list of recent images
     image_list = Image.objects.none()
     try:
         for branch in accessible_branches:
             latest_pics = Image.objects.filter(branches__display_name__contains=branch.display_name).order_by('-id')
             image_list = image_list | latest_pics
         combined_image_list = image_list.order_by('-id').distinct()[:10]
-
     except Image.DoesNotExist:
         combined_image_list = None
 
-
+    # get list of recent videos
+    video_list = Video.objects.none()
     try:
-        latest_videos = Video.objects.all().order_by('-id')[:3]
+        for branch in accessible_branches:
+            latest_videos = Video.objects.filter(branches__display_name__contains=branch.display_name).order_by('-id')
+            video_list = video_list | latest_videos
+        combined_video_list = video_list.order_by('-id').distinct()[:3]
     except Video.DoesNotExist:
-        latest_videos = None
+        combined_video_list = None
 
+    # get list of people with a birthday today
     try:
         today_birthday = Person.objects.filter(birthdate__month=today.month).filter(birthdate__day=today.day).order_by('birthdate__year')
     except Person.DoesNotExist:
         today_birthday = None
 
+    # get list of recent stories
     try:
         latest_stories = Story.objects.all().order_by('-id')[:5]
     except Story.DoesNotExist:
         latest_stories = None
 
     context = {'user': user, 'birthday_people': birthday_people_sorted,  'anniversary_couples': anniversary_couples,
-               'show_book': False, 'latest_pics': combined_image_list, 'latest_videos': latest_videos, 'user_person': this_person,
+               'show_book': False, 'latest_pics': combined_image_list, 'latest_videos': combined_video_list, 'user_person': this_person,
                'profile': profile, 'accessible_branches': accessible_branches, 'today_birthday': today_birthday,
                'media_server': media_server, 'recent_logentries': recent_logentries, 'recent_updates': recent_updates,
                'user_is_guest': user_is_guest, 'browser': browser, 'latest_stories': latest_stories}
