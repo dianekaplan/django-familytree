@@ -263,7 +263,7 @@ def family_detail(request, family_id):
         notes = None
 
     try:
-        featured_images = Image.objects.filter(family_id=family_id) & Image.objects.filter(featured=1)
+        featured_images = Image.objects.filter(family_id=family_id).order_by('id') & Image.objects.filter(featured=1)
     except Image.DoesNotExist:
         featured_images = None
 

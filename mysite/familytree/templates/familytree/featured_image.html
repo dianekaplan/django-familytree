@@ -1,3 +1,5 @@
+<div style="display: inline-block;" >
+<!--    @FIXME: for the few families with multiple featured images, if these are too wide, the second will wrap underneath-->
 {%  if image.id %}
     {%  if image.med_name %}
         <img src="https://res.cloudinary.com/hnyiprajv/image/upload/h_250,r_20/{{ image.med_name }}" />
@@ -5,3 +7,4 @@
         <img src="https://res.cloudinary.com/hnyiprajv/image/upload/h_250,r_20/{{ image.big_name }}" />
     {%  endif %}
 {%  endif %}
+</div>
