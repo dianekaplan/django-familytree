@@ -80,10 +80,15 @@ def index(request):  # dashboard page
         birthday_people = [x for x in birthday_people if x.living is False]
 
     # get list of families with anniversaries this month
+    anniversary_list = Family.objects.none()
     try:
-        anniversary_couples = Family.objects.filter(marriage_date__month=today.month, divorced=False).order_by('marriage_date__day')
+        for branch in accessible_branches:
+            this_branch_anniversary = Family.objects.filter(marriage_date__month=today.month).\
+                filter(branches__display_name__contains=branch.display_name, divorced=False).order_by('marriage_date__day')
+            anniversary_list = anniversary_list | this_branch_anniversary
+        anniversary_couples = anniversary_list.order_by('marriage_date__day').distinct()
     except Family.DoesNotExist:
-        anniversary_couples = None
+        anniversary_couples = False
 
     if user_is_guest:
         anniversary_couples = [x for x in anniversary_couples if x.marriage_date < guest_user_anniversary_cutoff]
