@@ -215,6 +215,7 @@ class Story(models.Model):
     source = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
+    branches = models.ManyToManyField(Branch, blank=True)
 
     class Meta(object):
         verbose_name_plural = 'Stories'
