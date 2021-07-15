@@ -71,7 +71,7 @@ def index(request):  # dashboard page
             these_birthday_people = Person.objects.filter(birthdate__month=today.month).\
                 filter(branches__display_name__contains=name)
             birthday_people_combined = birthday_people_combined | these_birthday_people
-        birthday_people = set(birthday_people_combined.order_by('birthdate__day'))
+        birthday_people_sorted = birthday_people_combined.order_by('birthdate__day').distinct()
     except Person.DoesNotExist:
         birthday_people = None
 
@@ -106,12 +106,11 @@ def index(request):  # dashboard page
     except Story.DoesNotExist:
         latest_stories = None
 
-    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples,
+    context = {'user': user, 'birthday_people': birthday_people_sorted,  'anniversary_couples': anniversary_couples,
                'show_book': False, 'latest_pics': latest_pics, 'latest_videos': latest_videos, 'user_person': this_person,
-               'profile': profile,
-               'accessible_branches': accessible_branches, 'today_birthday': today_birthday, 'media_server': media_server,
-               'recent_logentries': recent_logentries, 'recent_updates': recent_updates, 'user_is_guest': user_is_guest,
-               'browser': browser, 'latest_stories': latest_stories}
+               'profile': profile, 'accessible_branches': accessible_branches, 'today_birthday': today_birthday,
+               'media_server': media_server, 'recent_logentries': recent_logentries, 'recent_updates': recent_updates,
+               'user_is_guest': user_is_guest, 'browser': browser, 'latest_stories': latest_stories}
 
     return render(request, 'familytree/dashboard.html', context)
 
