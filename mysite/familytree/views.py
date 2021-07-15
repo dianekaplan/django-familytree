@@ -64,13 +64,19 @@ def index(request):  # dashboard page
         combination = [update, user_person, content_type, change_type, updated_person]
         recent_updates.append(combination)
 
+    birthday_people_combined = Person.objects.none()
     try:
-        birthday_people = Person.objects.filter(birthdate__month=today.month).order_by('birthdate__day')
+        for branch in accessible_branches:
+            name = branch.display_name
+            these_birthday_people = Person.objects.filter(birthdate__month=today.month).\
+                filter(branches__display_name__contains=name)
+            birthday_people_combined = birthday_people_combined | these_birthday_people
+        birthday_people = set(birthday_people_combined.order_by('birthdate__day'))
     except Person.DoesNotExist:
         birthday_people = None
 
     if user_is_guest:
-         birthday_people = [x for x in birthday_people if x.living == False]
+        birthday_people = [x for x in birthday_people if x.living is False]
 
     try:
         anniversary_couples = Family.objects.filter(marriage_date__month=today.month, divorced=False).order_by('marriage_date__day')
@@ -100,10 +106,11 @@ def index(request):  # dashboard page
     except Story.DoesNotExist:
         latest_stories = None
 
-    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples, 'show_book': False,
-               'latest_pics': latest_pics, 'latest_videos': latest_videos, 'user_person': this_person, 'profile': profile,
+    context = {'user': user, 'birthday_people': birthday_people,  'anniversary_couples': anniversary_couples,
+               'show_book': False, 'latest_pics': latest_pics, 'latest_videos': latest_videos, 'user_person': this_person,
+               'profile': profile,
                'accessible_branches': accessible_branches, 'today_birthday': today_birthday, 'media_server': media_server,
-               'recent_logentries': recent_logentries, 'recent_updates':recent_updates, 'user_is_guest': user_is_guest,
+               'recent_logentries': recent_logentries, 'recent_updates': recent_updates, 'user_is_guest': user_is_guest,
                'browser': browser, 'latest_stories': latest_stories}
 
     return render(request, 'familytree/dashboard.html', context)
@@ -138,7 +145,6 @@ def family_index(request):
                 'show_by_branch': show_by_branch, 'accessible_branches': accessible_branches, 'user_person': this_person,
                 'media_server': media_server, 'branch_class': branch_classes[len(accessible_branches)],
                 'user_is_guest': user_is_guest, 'newest_generation_for_guest': newest_generation_for_guest}
-
 
     return render(request, 'familytree/family_index.html', context)
 
@@ -310,7 +316,7 @@ def image_index(request):
             image_list = image_list.union(Image.objects.filter(branches__display_name__contains=name).order_by('year'))
     sorted_list = image_list.order_by('year')
 
-    context = { 'image_list': sorted_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
+    context = {'image_list': sorted_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
                 'user_person': user_person, 'media_server' : media_server}
     return render(request, 'familytree/image_index.html', context)
 
