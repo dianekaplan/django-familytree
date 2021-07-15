@@ -90,14 +90,6 @@ def index(request):  # dashboard page
     except Family.DoesNotExist:
         anniversary_couples = False
 
-
-
-    #
-    # try:
-    #     anniversary_couples = Family.objects.filter(marriage_date__month=today.month, divorced=False).order_by('marriage_date__day')
-    # except Family.DoesNotExist:
-    #     anniversary_couples = None
-
     if user_is_guest:
         anniversary_couples = [x for x in anniversary_couples if x.marriage_date < guest_user_anniversary_cutoff]
 
