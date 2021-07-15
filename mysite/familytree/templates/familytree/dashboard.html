@@ -45,15 +45,14 @@
         {% endfor %}
     {% endif %}
 
+    {% if anniversary_couples %}
     <b>Anniversaries this month:</b>
-    {%  if anniversary_couples%}
         {% for family in anniversary_couples %}
             <li style="list-style-type:none;"> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a> {{family.marriage_date}}</li>
         {% endfor %}
-    {% else %}
-        (none)
+        <br/>
     {% endif %}
-    <br/>
+    
     <b>Birthdays this month:</b>
     {%  if birthday_people%}
         {% for person in birthday_people %}
