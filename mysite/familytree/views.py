@@ -120,16 +120,22 @@ def index(request):  # dashboard page
         today_birthday = None
 
     # get list of recent stories
+
+
+    story_list = Story.objects.none()
     try:
-        latest_stories = Story.objects.all().order_by('-id')[:5]
+        for branch in accessible_branches:
+            this_branch_stories = Story.objects.filter(branches__display_name__contains=branch.display_name).order_by('-id')
+            story_list = story_list | this_branch_stories
+        combined_story_list = story_list.order_by('-id').distinct()[:5]
     except Story.DoesNotExist:
-        latest_stories = None
+        combined_story_list = None
 
     context = {'user': user, 'birthday_people': birthday_people_sorted,  'anniversary_couples': anniversary_couples,
                'show_book': False, 'latest_pics': combined_image_list, 'latest_videos': combined_video_list, 'user_person': this_person,
                'profile': profile, 'accessible_branches': accessible_branches, 'today_birthday': today_birthday,
                'media_server': media_server, 'recent_logentries': recent_logentries, 'recent_updates': recent_updates,
-               'user_is_guest': user_is_guest, 'browser': browser, 'latest_stories': latest_stories}
+               'user_is_guest': user_is_guest, 'browser': browser, 'latest_stories': combined_story_list}
 
     return render(request, 'familytree/dashboard.html', context)
 
