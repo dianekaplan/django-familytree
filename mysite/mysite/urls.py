@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 admin.site.enable_nav_sidebar = False
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/familytree/')),
     path('familytree/', include('familytree.urls')),
     path('admin/', admin.site.urls, name='admin'),
     path('accounts/', include('myauth.urls')),
