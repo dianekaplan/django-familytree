@@ -53,7 +53,7 @@ SECRET_KEY = get_env_variable('EMAIL_HOST_PASSWORD')
 # SECURITY WARNING: don't run with debug turned on in production!
 DB_PASSWORD = False
 
-MEDIA_SERVER = 'https://res.cloudinary.com/hnyiprajv/'
+MEDIA_SERVER = 'https://res.cloudinary.com/hhuyx4tno/'
 
 if ENV_ROLE == 'development':
     DEBUG = True
