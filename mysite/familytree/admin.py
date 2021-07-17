@@ -114,7 +114,7 @@ class VideoPersonAdmin(admin.ModelAdmin):
 
 @admin.register(ImagePerson)
 class ImagePersonAdmin(admin.ModelAdmin):
-    search_fields = ('image_id',)
+    search_fields = ('image__id',)
     list_display = ('image_id', 'person_id')
     ordering = ('-created_at', 'image_id')
     raw_id_fields = ('person','image')
