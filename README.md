@@ -33,7 +33,7 @@ Background info about IDs:
 to the specific file, and THESE IDs CAN CHANGE in subsequent gedcom exports from the same tool. 
 - A combination of import scripts populate unique IDs for the families (following this convention: https://www.ged-gen.com/help/hlpmisc-number.html)
  and people ("gedcom_UUID"), which we then populate
-in ancestry.com as an "also known as" fact, which maps to ALIA tag in gedcom file. 
+in ancestry.com as an "also known as" fact, which maps to a FACT tag of type AKA in gedcom file. 
 
 **Detailed setup and usage notes**
 https://github.com/dianekaplan/familytree-django
