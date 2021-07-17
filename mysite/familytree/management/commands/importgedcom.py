@@ -68,7 +68,28 @@ class Command(BaseCommand):
         f.write(run_results)
         f.closed
 
-    # steps to process a person record in the gedcom file
+    # check a FACT to see if this is an AKA with a value matching a person record (unique ID)
+    # return person record in our data with matching value, otherwise False
+    def handle_fact(self, item, display_name, element):
+        has_type_AKA = False
+        matching_record = False
+
+        children = item.get_child_elements()
+        for x in children:
+            if "AKA" in str(x):
+                has_type_AKA = True
+
+        if has_type_AKA:
+            gedcom_uuid = str(item).replace("1 FACT ", "").replace("\r\n", "").strip()
+            try:
+                matching_record = Person.objects.get(gedcom_uuid=gedcom_uuid)
+            except Person.DoesNotExist:
+                matching_record = False
+                print("REVIEW: " + display_name + ": got AKA FACT value with matching person record: " , gedcom_uuid)
+        return matching_record
+
+
+    # process a person record in the gedcom file
     def handle_person(self, element):
         matching_record = None
         self.gedcom_person_records += 1
@@ -85,38 +106,31 @@ class Command(BaseCommand):
         occupation = element.get_occupation()
         (deathdate, deathplace, sources) = element.get_death_data()
         display_name = gedcom_first_middle + " " + last
-
-        # check the children for our custom UUID field (applicable for subsequent imports)
         element_children = element.get_child_elements()
+
+        should_make_person = True
         for child in element_children:
-            if "ALIA" in str(child):
-                gedcom_uuid = str(child).replace("1 ALIA ", "").replace("\r\n", "")
 
-                try:
-                    matching_record = Person.objects.get(gedcom_uuid=gedcom_uuid)
-                    if matching_record:
-                        person_already_exists = self.check_matching_person_record(matching_record, element)
-                except:
-                    print("REVIEW: " + gedcom_first_middle + " " + last + " gedcom record with ALIA tag had no matching person record")
+            if "FACT" in str(child):
+                matching_record = self.handle_fact(child, display_name, element)
 
-        if not matching_record:
-            # make the person record
-            (obj, created_bool) = Person.objects.get_or_create(gedcom_indi=gedcom_indi, gedcom_uuid=gedcom_uuid,
-                                                           first=gedcom_first_middle, last=last,
-                                                           display_name=display_name, birthdate_note=birthdate,
-                                                           birthplace=birthplace, sex=sex, work=occupation,
-                                                           deathdate_note=deathdate, death_place=deathplace,
-                                                               show_on_landing_page=True,
-                                                           created_at = timezone.now(), updated_at = timezone.now(), reviewed=False)
-            self.update_date_fields(obj)
+                if matching_record:
+                    should_make_person = False
+                    self.update_matching_person_record(matching_record, element, gedcom_indi)
+                    self.person_skipped_count += 1
+        if should_make_person:
+                (obj, created_bool) = Person.objects.get_or_create(gedcom_indi=gedcom_indi, gedcom_uuid=gedcom_uuid,
+                                                                       first=gedcom_first_middle, last=last,
+                                                                       display_name=display_name, birthdate_note=birthdate,
+                                                                       birthplace=birthplace, sex=sex, work=occupation,
+                                                                       deathdate_note=deathdate, death_place=deathplace,
+                                                                           show_on_landing_page=True,
+                                                                       created_at = timezone.now(), updated_at = timezone.now(), reviewed=False)
+                self.update_date_fields(obj)
 
-            if created_bool:
-                self.person_added_count += 1
-        else:
-            # we do have a match, so just update their gedcom_indi value(for family matching)
-            matching_record.gedcom_indi = gedcom_indi
-            matching_record.save()
-            self.person_skipped_count += 1
+                if created_bool:
+                    self.person_added_count += 1
+
 
     # steps to process a family record in the gedcom file
     def handle_family(self, element):
@@ -184,6 +198,7 @@ class Command(BaseCommand):
             existing_record.gedcom_indi = gedcom_indi
             existing_record.save()
 
+
     # Loop through dictionary
     def add_orig_family_values(self, child_family_dict):
         for entry in self.child_family_dict:
@@ -194,21 +209,23 @@ class Command(BaseCommand):
             try:
                 orig_family = Family.objects.get(gedcom_indi=self.child_family_dict.get(entry))
             except:
-                print("REVIEW: check original family for " + this_person.display_name)
+                print("REVIEW: check original family for " + str(entry))
                 print("Gedcom file had child/family association where we didn't find family: " + self.child_family_dict.get(entry))
             else:
                 this_person.origin_family = orig_family
                 this_person.save()
 
-    def check_matching_person_record(self, matching_record, element):
-        print("(Existing person, nothing to create: " + matching_record.first + " " +  matching_record.last + ")")
-        # @TODO: come back and look into whether there are fields we'd want to populate if blank (ex: add birthdate, etc)
 
-        skip_record = True
-        return skip_record
+    # If we have a matching person record already, just update relevant fields
+    # @TODO: consider fields we may want to populate if blank in our record (e.g. birthdate)
+    def update_matching_person_record(self, matching_record, element, gedcom_indi):
+        print("(Existing person, only update gedcom_indi: " + matching_record.first + " " +  matching_record.last + ")")
+
+        matching_record.gedcom_indi = gedcom_indi
+        matching_record.save()
 
 
-    # gedcom files only need one parent and one child @TODO: add support for one parent/child
+    # gedcom files only need one parent and one child  @TODO: add support for one parent/child
     def find_existing_family_record(self, wife, husband):
         existing_family_record = None
         if wife and husband:
