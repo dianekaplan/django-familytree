@@ -32,7 +32,7 @@
             </li>
 
             {% if not user_is_guest %}
-            <li>{% include "familytree/_face_link.html" with person=user_person %}</li>
+            <li>{% include "familytree/_top_nav_face_link.html" with person=user_person%}</li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'password_reset' %}">Reset Password</a>
             </li>
