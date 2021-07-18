@@ -7,7 +7,7 @@
         <a href="{% url 'person_detail' person.id %}"><img src="{{ media_server }}/image/upload/h_51,r_20/noimage.gif"/></a>
         {% endif %}
     {% else %}
-        Got here with no person
+<!--  Got here with no person (aka landing page) -->
     {% endif %}
 {% else %}
     {% if person %}
@@ -16,7 +16,5 @@
         {% else %}
             <img src="{{ media_server }}/image/upload/h_51,r_20/noimage.gif" />
         {% endif %}
-    {% else %}
-<!--        Got here with no person-->
     {% endif %}
 {% endif %}
