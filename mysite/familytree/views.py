@@ -397,7 +397,7 @@ def story(request, story_id):
     user_person = profile.person
     story = get_object_or_404(Story, pk=story_id)
 
-    return render(request, 'familytree/story.html', {'story': story,'media_server': media_server, 
+    return render(request, 'familytree/story.html', {'story': story,'media_server': media_server,
                                                      'user_person': user_person})
 
 
