@@ -69,10 +69,11 @@ class Command(BaseCommand):
         f.closed
 
     # check a FACT to see if this is an AKA with a value matching a person record (unique ID)
-    # return person record in our data with matching value, otherwise False
-    def handle_fact(self, item, display_name, element):
+    # return two things: matching person (or False), and uuid value from AKA FACT
+    def check_fact_for_AKA(self, item, display_name, element):
         has_type_AKA = False
         matching_record = False
+        gedcom_uuid = ''
 
         children = item.get_child_elements()
         for x in children:
@@ -85,8 +86,8 @@ class Command(BaseCommand):
                 matching_record = Person.objects.get(gedcom_uuid=gedcom_uuid)
             except Person.DoesNotExist:
                 matching_record = False
-                print("REVIEW: " + display_name + ": got AKA FACT value with matching person record: " , gedcom_uuid)
-        return matching_record
+                print("REVIEW: " + display_name + ": got AKA FACT value without matching person record: " , gedcom_uuid)
+        return matching_record, gedcom_uuid
 
 
     # process a person record in the gedcom file
@@ -112,7 +113,8 @@ class Command(BaseCommand):
         for child in element_children:
 
             if "FACT" in str(child):
-                matching_record = self.handle_fact(child, display_name, element)
+                matching_record, uuid_from_fact = self.check_fact_for_AKA(child, display_name, element)
+                gedcom_uuid = uuid_from_fact
 
                 if matching_record:
                     should_make_person = False
