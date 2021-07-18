@@ -547,6 +547,7 @@ def account(request):
 def user_metrics(request):
     profile = get_display_profile(request).first()
     this_person = profile.person
+
     accessible_branches = get_valid_branches(request)
     profiles = Profile.objects.all()
     existing_branches_list = list(Branch.objects.all())
@@ -571,7 +572,8 @@ def user_metrics(request):
                'last_login_old_site_only': last_login_old_site_only, 'profiles_who_made_notes': profiles_who_made_notes,
                'last_login_laravel_site': last_login_laravel_site, 'last_login_django_site': last_login_django_site,
                'branch1_users': branch1_users, 'branch2_users': branch2_users, 'branch3_users': branch3_users,
-               'branch4_users': branch4_users, 'existing_branches_list': existing_branches_list
+               'branch4_users': branch4_users, 'existing_branches_list': existing_branches_list,
+               'media_server': media_server
                }
 
     return render(request, 'familytree/user_metrics.html', context)
