@@ -39,7 +39,7 @@ def index(request):  # dashboard page
     profile = get_display_profile(request).first()
     user = profile.user
     this_person = profile.person
-    user_is_guest = Profile.objects.get(user=request.user).guest_user
+    user_is_guest = profile.guest_user
     accessible_branches = get_valid_branches(request)
     browser = request.user_agent.browser.family
 
@@ -66,6 +66,7 @@ def index(request):  # dashboard page
         recent_updates.append(combination)
 
     # get list of people with birthdays this month
+    birthday_people = Person.objects.none()
     birthday_people_combined = Person.objects.none()
     try:
         for branch in accessible_branches:
@@ -180,7 +181,7 @@ def person_index(request):
     profile = get_display_profile(request).first()
     user = profile.user
     user_person = profile.person
-    user_is_guest = Profile.objects.get(user=request.user).guest_user
+    user_is_guest = profile.guest_user
     existing_branches_list = list(Branch.objects.all())
 
     # @@TODO: specific to 4-branch setup, will want to be flexible for others
@@ -213,7 +214,7 @@ def person_detail(request, person_id):
     user = profile.user
     user_person = profile.person
     person = get_object_or_404(Person, pk=person_id)
-    user_is_guest = Profile.objects.get(user=request.user).guest_user
+    user_is_guest = profile.guest_user
     browser = request.user_agent.browser.family
 
     try:
@@ -284,7 +285,7 @@ def family_detail(request, family_id):
     profile = get_display_profile(request).first()
     user = profile.user
     user_person = profile.person
-    user_is_guest = Profile.objects.get(user=request.user).guest_user
+    user_is_guest = profile.guest_user
 
     try:
         kids = Person.objects.filter(family_id=family_id).order_by('birthyear', 'sibling_seq','id')
@@ -318,7 +319,7 @@ def image_detail(request, image_id):
     user = profile.user
     user_person = profile.person
     image = get_object_or_404(Image, pk=image_id)
-    user_is_guest = Profile.objects.get(user=request.user).guest_user
+    user_is_guest = profile.guest_user
 
     this_image_person, this_image_family, image_people = Image.image_subjects(image)
     image_full_path = media_server + "/image/upload/r_20/" + image.big_name
@@ -356,7 +357,7 @@ def video_detail(request, video_id):
     user_person = profile.person
     video = get_object_or_404(Video, pk=video_id)
     video_people = Video.video_subjects(video)
-    user_is_guest = Profile.objects.get(user=request.user).guest_user
+    user_is_guest = profile.guest_user
 
     cloud_name = media_server.split("/")[3]
     public_id = video.name
@@ -403,7 +404,7 @@ def outline(request):
     this_person = profile.person
     accessible_branches = get_valid_branches(request)
     existing_branches = Branch.objects.all()
-    user_is_guest = Profile.objects.get(user=request.user).guest_user
+    user_is_guest = profile.guest_user
 
     users_original_families = {}  # Dictionary with entries [branch name]: [original families in that branch]
     total_results = {}  # giant dictionary for all descendants
