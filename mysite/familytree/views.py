@@ -392,9 +392,13 @@ def video_index(request):
 
 @login_required(login_url=login_url)
 def story(request, story_id):
+    profile = get_display_profile(request).first()
+    user = profile.user
+    user_person = profile.person
     story = get_object_or_404(Story, pk=story_id)
 
-    return render(request, 'familytree/story.html', {'story': story,'media_server': media_server})
+    return render(request, 'familytree/story.html', {'story': story,'media_server': media_server, 
+                                                     'user_person': user_person})
 
 
 @login_required(login_url=login_url)
