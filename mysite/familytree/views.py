@@ -52,9 +52,8 @@ def index(request):  # dashboard page
     # get list of latest updates
     recent_updates = []
     for update in recent_logentries:
-        update_author = User.objects.get(username=update.user)
-        user_profile = Profile.objects.get(user=update_author)
-        user_person = Person.objects.get(id=user_profile.person_id)  # @TODO: can I consolidate these steps?
+        update_author = update.user
+        user_person = Profile.objects.get(user=update_author).person
         updated_person = None
 
         if update.content_type_id == 4:
