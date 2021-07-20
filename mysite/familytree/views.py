@@ -8,7 +8,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
 
-from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
+from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
+from .forms import NoteForm
 
 media_server = settings.MEDIA_SERVER
 root_url = settings.ROOT_URL
@@ -60,7 +61,7 @@ def index(request):  # dashboard page
             updated_person = Person.objects.get(id=update.object_id)
 
         content_type = str(ContentType.objects.get(id=update.content_type_id)).replace("familytree | ","")
-        change_type = "added" if update.action_flag==1 else "updated"
+        change_type = "added" if update.action_flag == 1 else "updated"
         combination = [update, user_person, content_type, change_type, updated_person]
         recent_updates.append(combination)
 
@@ -271,6 +272,39 @@ def person_detail(request, person_id):
                             'notes': notes, 'videos': videos, 'featured_images': featured_images,'audio_files': audio_files,
                             'user_person': user_person, 'stories': stories, 'media_server': media_server, 'browser': browser,
                             'user': user, 'user_is_guest': user_is_guest })
+
+@login_required(login_url=login_url)
+def add_note(request, person_id):
+    template_name = 'familytree/add_note.html'
+    profile = get_display_profile(request).first()
+    user = profile.user
+    user_person = profile.person
+    person = get_object_or_404(Person, pk=person_id)  # person note is about
+    note_form = NoteForm(request.POST)
+
+    context = {
+        'person': person, 'user_person': user_person, 'media_server': media_server, 'note_form': note_form
+    }
+
+    if request.method == 'POST':
+        print("THIS WAS A POST: ", request.POST)
+        form = NoteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('person_detail', person_id=person.id)
+
+    if request.method == 'GET':
+        return render(request, template_name, context)
+
+    # def get(self, request):
+    #     print("GET REQUEST")
+    #
+    # def post(self, request):
+    #     print("POST")
+    # def get(self, request):
+    #     note_form = NoteForm()
+    #     return render(request, self.template_name, context, {'note_form': note_form})
+
 
 
 @login_required(login_url=login_url)

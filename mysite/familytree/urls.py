@@ -17,6 +17,9 @@ urlpatterns = [
     # ex: /people/5/
      path('people/<int:person_id>/', views.person_detail, name='person_detail'),
 
+    # ex: /add_note/5/
+    path('add_note/<int:person_id>/', views.add_note, name='add_note'),
+
     # ex: /families/
     path('families/', views.family_index, name='family_index'),
 
