@@ -85,7 +85,7 @@ if ENV_ROLE == 'prod': #@TODO: update these to be different
     DB_OPTIONS = {'sslmode': 'require'}
     SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove this now that import is done?
 
-ALLOWED_HOSTS = ['127.0.0.1', 'family-django-stage.herokuapp.com', 'family-django-prod.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'family-django-stage.herokuapp.com', 'family-django-prod.herokuapp.com', '.ourbigfamilytree.com']
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Application definition
