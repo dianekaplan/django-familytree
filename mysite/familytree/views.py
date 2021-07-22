@@ -114,14 +114,12 @@ def index(request):  # dashboard page
         combined_video_list = None
 
     # get list of people with a birthday today
-    try:
-        today_birthday = Person.objects.filter(birthdate__month=today.month).filter(birthdate__day=today.day).order_by('birthdate__year')
-    except Person.DoesNotExist:
-        today_birthday = None
+    today_birthday = Person.objects.none()
+    for x in birthday_people_sorted:
+        if x.birthdate.day == today.day:
+            today_birthday = today_birthday | x
 
     # get list of recent stories
-
-
     story_list = Story.objects.none()
     try:
         for branch in accessible_branches:
