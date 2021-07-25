@@ -69,8 +69,9 @@ if ENV_ROLE == 'development':
     DB_OPTIONS = {'sslmode': 'allow'}
     SOURCE_DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS') #@TODO: update these to be different
 
-if ENV_ROLE == 'staging': #@TODO: update these to be different
+if ENV_ROLE == 'staging':
     DEBUG = True
+    SECURE_SSL_REDIRECT = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = get_env_variable('DB_HOST')
     DB_DATABASE = get_env_variable('DB_DATABASE')
@@ -79,8 +80,9 @@ if ENV_ROLE == 'staging': #@TODO: update these to be different
     DB_OPTIONS = {'sslmode': 'require'}
     SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove this now that import is done?
 
-if ENV_ROLE == 'prod': #@TODO: update these to be different
+if ENV_ROLE == 'prod':
     DEBUG = False
+    SECURE_SSL_REDIRECT = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = get_env_variable('DB_HOST')
     DB_DATABASE = get_env_variable('DB_DATABASE')
