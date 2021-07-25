@@ -274,10 +274,9 @@ def person_detail(request, person_id):
                             'user': user, 'user_is_guest': user_is_guest })
 
 @login_required(login_url=login_url)
-def add_note(request, person_id):
-    template_name = 'familytree/add_note.html'
+def add_person_note(request, person_id):
+    template_name = 'familytree/add_person_note.html'
     profile = get_display_profile(request).first()
-    user = profile.user
     user_person = profile.person
     person = get_object_or_404(Person, pk=person_id)  # person note is about
     note_form = NoteForm(request.POST)
@@ -287,7 +286,7 @@ def add_note(request, person_id):
     }
 
     if request.method == 'POST':
-        print("THIS WAS A POST: ", request.POST)
+        # print("THIS WAS A POST: ", request.POST)
         form = NoteForm(request.POST)
         if form.is_valid():
             form.save()
@@ -295,16 +294,6 @@ def add_note(request, person_id):
 
     if request.method == 'GET':
         return render(request, template_name, context)
-
-    # def get(self, request):
-    #     print("GET REQUEST")
-    #
-    # def post(self, request):
-    #     print("POST")
-    # def get(self, request):
-    #     note_form = NoteForm()
-    #     return render(request, self.template_name, context, {'note_form': note_form})
-
 
 
 @login_required(login_url=login_url)

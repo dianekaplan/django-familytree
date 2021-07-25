@@ -77,7 +77,7 @@
 <div style="float: left; width: 100%;">
     {% if not user_is_guest %}
     <img src="{% static 'familytree/pencil.png' %}" height="25" />
-        <a href="{% url 'add_note' person.id %}">
+        <a href="{% url 'add_person_note' person.id %}">
     Add a note or memory</a>
 {% endif %}
 </div>
