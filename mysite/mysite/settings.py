@@ -73,7 +73,7 @@ if ENV_ROLE == 'development':
 
 if ENV_ROLE == 'staging':
     DEBUG = True
-    # SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = get_env_variable('DB_HOST')
     DB_DATABASE = get_env_variable('DB_DATABASE')
@@ -84,7 +84,7 @@ if ENV_ROLE == 'staging':
 
 if ENV_ROLE == 'prod':
     DEBUG = False
-    # SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = get_env_variable('DB_HOST')
     DB_DATABASE = get_env_variable('DB_DATABASE')
