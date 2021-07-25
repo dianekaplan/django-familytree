@@ -114,10 +114,7 @@ def index(request):  # dashboard page
         combined_video_list = None
 
     # get list of people with a birthday today
-    today_birthday = Person.objects.none()
-    for x in birthday_people_sorted:
-        if x.birthdate.day == today.day:
-            today_birthday = today_birthday | x
+    today_birthday = [x for x in birthday_people_sorted if x.birthdate.day == today.day]
 
     # get list of recent stories
     story_list = Story.objects.none()
