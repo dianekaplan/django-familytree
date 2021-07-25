@@ -55,6 +55,10 @@ DB_PASSWORD = False
 
 MEDIA_SERVER = 'https://res.cloudinary.com/hhuyx4tno/'
 
+from datetime import datetime
+LARAVEL_SITE_CREATION = datetime.strptime('2015-12-01', '%Y-%m-%d').date()
+DJANGO_SITE_CREATION = datetime.strptime('2021-07-14', '%Y-%m-%d').date()
+
 if ENV_ROLE == 'development':
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG

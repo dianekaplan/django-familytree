@@ -8,15 +8,18 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
 
-from .models import Person, Family, Image, ImagePerson, Note , Branch, Profile, Video, Story, PersonStory, Audiofile
+from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
+from .forms import NoteForm
 
 media_server = settings.MEDIA_SERVER
+LARAVEL_SITE_CREATION = settings.LARAVEL_SITE_CREATION
+DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
+newest_generation_for_guest = 13 # guest users will not see any generations newer (higher) than this
+
 root_url = settings.ROOT_URL
 today = datetime.now()
 guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
 month_ago_date = today.date() - relativedelta(days=30)
-laravel_site_creation = datetime.strptime('2015-12-01', '%Y-%m-%d').date()
-django_site_creation = datetime.strptime('2021-07-14', '%Y-%m-%d').date()
 
 branch1_name = Branch.objects.filter(id=1)
 branch2_name = Branch.objects.filter(id=2)
@@ -24,7 +27,6 @@ branch3_name = Branch.objects.filter(id=3)
 branch4_name = Branch.objects.filter(id=4)
 show_by_branch = True if branch1_name else False
 login_url = '/familytree/landing/'
-newest_generation_for_guest = 13 # guest users will not see any generations newer (higher) than this
 
 # pass style class name for index pages based on user's number of columns
 branch_classes = {
@@ -60,7 +62,7 @@ def index(request):  # dashboard page
             updated_person = Person.objects.get(id=update.object_id)
 
         content_type = str(ContentType.objects.get(id=update.content_type_id)).replace("familytree | ","")
-        change_type = "added" if update.action_flag==1 else "updated"
+        change_type = "added" if update.action_flag == 1 else "updated"
         combination = [update, user_person, content_type, change_type, updated_person]
         recent_updates.append(combination)
 
@@ -271,6 +273,28 @@ def person_detail(request, person_id):
                             'notes': notes, 'videos': videos, 'featured_images': featured_images,'audio_files': audio_files,
                             'user_person': user_person, 'stories': stories, 'media_server': media_server, 'browser': browser,
                             'user': user, 'user_is_guest': user_is_guest })
+
+@login_required(login_url=login_url)
+def add_person_note(request, person_id):
+    template_name = 'familytree/add_person_note.html'
+    profile = get_display_profile(request).first()
+    user_person = profile.person
+    person = get_object_or_404(Person, pk=person_id)  # person note is about
+    note_form = NoteForm(request.POST)
+
+    context = {
+        'person': person, 'user_person': user_person, 'media_server': media_server, 'note_form': note_form
+    }
+
+    if request.method == 'POST':
+        # print("THIS WAS A POST: ", request.POST)
+        form = NoteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('person_detail', person_id=person.id)
+
+    if request.method == 'GET':
+        return render(request, template_name, context)
 
 
 @login_required(login_url=login_url)
@@ -549,12 +573,13 @@ def user_metrics(request):
     last_login_never = [x for x in profiles if not x.last_login()]
     last_login_past_month = [x for x in profiles if x.last_login() and x.last_login().date() > month_ago_date]
 
-    last_login_old_site_only = [x for x in profiles if x.last_login() and x.last_login().date() < laravel_site_creation]
-    last_login_laravel_site = [x for x in profiles if x.last_login() and laravel_site_creation < x.last_login().date() <
-                               django_site_creation]
-    last_login_django_site = [x for x in profiles if x.last_login() and x.last_login().date() >= django_site_creation]
+    last_login_old_site_only = [x for x in profiles if x.last_login() and x.last_login().date() < LARAVEL_SITE_CREATION]
+    last_login_laravel_site = [x for x in profiles if x.last_login() and LARAVEL_SITE_CREATION < x.last_login().date() <
+                               DJANGO_SITE_CREATION]
+    last_login_django_site = [x for x in profiles if x.last_login() and x.last_login().date() >= DJANGO_SITE_CREATION]
 
-    profiles_who_made_notes = [x for x in profiles if x.notes_written()]
+    profiles_who_made_notes_old = [x for x in profiles if x.notes_written('old')]
+    profiles_who_made_notes_new = [x for x in profiles if x.notes_written('new')]
 
     branch1_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[0])
     branch2_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[1])
@@ -563,7 +588,8 @@ def user_metrics(request):
 
     context = {'accessible_branches': accessible_branches, 'user_person': this_person,
                 'profiles': profiles, 'last_login_never': last_login_never, 'last_login_past_month': last_login_past_month,
-               'last_login_old_site_only': last_login_old_site_only, 'profiles_who_made_notes': profiles_who_made_notes,
+               'last_login_old_site_only': last_login_old_site_only, 'profiles_who_made_notes_old': profiles_who_made_notes_old,
+               'profiles_who_made_notes_new': profiles_who_made_notes_new,
                'last_login_laravel_site': last_login_laravel_site, 'last_login_django_site': last_login_django_site,
                'branch1_users': branch1_users, 'branch2_users': branch2_users, 'branch3_users': branch3_users,
                'branch4_users': branch4_users, 'existing_branches_list': existing_branches_list,
