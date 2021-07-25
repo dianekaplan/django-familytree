@@ -229,11 +229,6 @@ class Profile(models.Model): # This class holds additional info for user records
     def last_login(self):
         return self.user.last_login
 
-
-
-
-
-
     # For a given profile, return an array of dates they logged in
     def get_logins(self):
         login_dates_queryset = list(Login.objects.filter(user_id=self.user.id).values('created_at'))
