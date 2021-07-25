@@ -24,5 +24,6 @@ urlpatterns = [
     path('familytree/', include('familytree.urls')),
     path('admin/', admin.site.urls, name='admin'),
     path('accounts/', include('myauth.urls')),
-
+    path('families/', RedirectView.as_view(url='/familytree/families/')),
+    path('people/', RedirectView.as_view(url='/familytree/people/')),
 ]
