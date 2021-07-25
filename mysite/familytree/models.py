@@ -1,7 +1,9 @@
 from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import User
+from django.conf import settings
 
+DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
 
 class Branch(models.Model):
     display_name = models.CharField(max_length=50, blank=True)
@@ -185,16 +187,52 @@ class Profile(models.Model): # This class holds additional info for user records
         verbose_name_plural = 'Profiles'
         db_table = 'profiles'
 
-    def notes_written(self):
+    # @FIXME- redundancy: these functions work for displaying count on user_metrics.html
+    def old_notes_written(self):
         if self.person:
-            notes_written_count = Note.objects.filter(author=self.person.id).count()
-            notes_written = notes_written_count if notes_written_count > 0 else False
+            all_notes = Note.objects.filter(author=self.person.id)
+            notes_written = [x for x in all_notes if
+                             x.created_at.date() < DJANGO_SITE_CREATION]
+            notes_written_count = len(notes_written) if notes_written else False
         else:
-            notes_written = False
-        return notes_written
+            notes_written_count = False
+        return notes_written_count
+
+    def new_notes_written(self):
+        if self.person:
+            all_notes = Note.objects.filter(author=self.person.id)
+            notes_written = [x for x in all_notes if
+                             x.created_at.date() > DJANGO_SITE_CREATION]
+            notes_written_count = len(notes_written) if notes_written else False
+        else:
+            notes_written_count = False
+        return notes_written_count
+
+
+    # @FIXME- redundancy: this function works for differentiating profiles with/without notes on views.py
+    # (the ones above include everyone even when their result is False)
+    def notes_written(self, type):
+        if self.person:
+            all_notes = Note.objects.filter(author=self.person.id)
+            if type == 'old':
+                notes_written = [x for x in all_notes if
+                                      x.created_at.date() < DJANGO_SITE_CREATION]
+            elif type == 'new':
+                notes_written = [x for x in all_notes if
+                                     x.created_at.date() > DJANGO_SITE_CREATION]
+            notes_written_count = len(notes_written) if notes_written else False
+
+        else:
+            notes_written_count = False
+        return notes_written_count
 
     def last_login(self):
         return self.user.last_login
+
+
+
+
+
 
     # For a given profile, return an array of dates they logged in
     def get_logins(self):
