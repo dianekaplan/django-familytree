@@ -58,6 +58,8 @@ MEDIA_SERVER = 'https://res.cloudinary.com/hhuyx4tno/'
 from datetime import datetime
 LARAVEL_SITE_CREATION = datetime.strptime('2015-12-01', '%Y-%m-%d').date()
 DJANGO_SITE_CREATION = datetime.strptime('2021-07-14', '%Y-%m-%d').date()
+ADMIN_EMAIL_SEND_FROM = 'diane@ourbigfamilytree.com'
+ADMIN_EMAIL_ADDRESS = 'dianekaplan@gmail.com'
 
 if ENV_ROLE == 'development':
     DEBUG = True
@@ -71,7 +73,7 @@ if ENV_ROLE == 'development':
 
 if ENV_ROLE == 'staging':
     DEBUG = True
-    SECURE_SSL_REDIRECT = True
+    # SECURE_SSL_REDIRECT = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = get_env_variable('DB_HOST')
     DB_DATABASE = get_env_variable('DB_DATABASE')
@@ -82,7 +84,7 @@ if ENV_ROLE == 'staging':
 
 if ENV_ROLE == 'prod':
     DEBUG = False
-    SECURE_SSL_REDIRECT = True
+    # SECURE_SSL_REDIRECT = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = get_env_variable('DB_HOST')
     DB_DATABASE = get_env_variable('DB_DATABASE')

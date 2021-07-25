@@ -385,9 +385,8 @@ from .models import Login
 def send_login_email(sender, instance, **kwargs):
 
     email_data = {'user': instance}
-
-    from_email = 'diane@ourbigfamilytree.com'  # @TODO: make setting for global from email
-    recipient_list = ['dianekaplan@gmail.com', ]
+    from_email = settings.ADMIN_EMAIL_SEND_FROM
+    recipient_list = [settings.ADMIN_EMAIL_ADDRESS, ]
     subject = render_to_string(
         template_name='familytree/email/login_email_subject.txt'
     )
