@@ -298,7 +298,7 @@ class Note(models.Model):
     author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='author')
     author_name = models.CharField(max_length=50, null=True, blank=True)
     external_author = models.BooleanField(null=True, default=False)
-    body = models.CharField(max_length=3000, blank=True)
+    body = models.CharField(max_length=3000)
     date = models.DateField(null=True, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='note_person')
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family_note')
