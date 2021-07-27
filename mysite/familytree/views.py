@@ -4,12 +4,12 @@ from dateutil.relativedelta import relativedelta
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.contrib.admin.models import LogEntry, ContentType
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
 
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
-from .forms import NoteForm
+from .forms import NoteForm, EditPersonForm
 
 media_server = settings.MEDIA_SERVER
 LARAVEL_SITE_CREATION = settings.LARAVEL_SITE_CREATION
@@ -287,15 +287,46 @@ def add_person_note(request, person_id):
     }
 
     if request.method == 'POST':
-        # print("THIS WAS A POST: ", request.POST)
-        form = NoteForm(request.POST)
-        if form.is_valid():
-            form.save()
+        if note_form.is_valid():
+            note_form.save()
             return redirect('person_detail', person_id=person.id)
 
     if request.method == 'GET':
         return render(request, template_name, context)
 
+@login_required(login_url=login_url)
+def edit_person(request, person_id):
+    template_name = 'familytree/edit_person.html'
+    profile = get_display_profile(request).first()
+    editing_user = profile.user
+    person = get_object_or_404(Person, pk=person_id)  # person whose info will be updated
+    person_edit_form = EditPersonForm(request.POST, instance=person)
+
+    context = {
+        'person': person, 'editing_user': editing_user, 'media_server': media_server, 'form': person_edit_form
+    }
+
+    if request.method == 'POST':
+        print("post request: ", request.POST)
+        if person_edit_form.is_valid():
+
+            # send an email to me
+
+            # make django_admin_log entry
+
+            # make the edit to the person
+            # test = person_edit_form.save(commit=False)
+            #
+            # test.save()
+            person_edit_form.save()
+
+            return redirect('person_detail', person_id=person.id)
+        else:
+            print("FORM NOT VALID")
+        return redirect('person_detail', person_id=person.id)
+
+    if request.method == 'GET':
+        return render(request, template_name, context)
 
 @login_required(login_url=login_url)
 def family_detail(request, family_id):

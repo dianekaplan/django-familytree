@@ -13,11 +13,17 @@
     </div>
 
     <div style="float: left; width: 33%;">
+
             {% if user.is_superuser %}
                 <img src="{% static 'familytree/pencil.png' %}" height="25" />
                 <a href="/admin/familytree/person/{{ person.id }}" target="_blank">Admin edit</a>
                 <br/>
+           {% elif not user_is_guest %}
+                <img src="{% static 'familytree/pencil.png' %}" height="25" />
+                <a href="{% url 'edit_person' person.id %}">
+                Update this info</a><br/>
             {% endif %}
+
             {% if person.maiden %}
                 <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.maiden }}<br/>
             {% else %}
