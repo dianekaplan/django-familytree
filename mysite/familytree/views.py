@@ -1,5 +1,6 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from django.core.mail import send_mail
 
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.contrib.admin.models import LogEntry, ContentType
@@ -7,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
+from django.template.loader import render_to_string
 
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
 from .forms import NoteForm, EditPersonForm
@@ -307,17 +309,24 @@ def edit_person(request, person_id):
     }
 
     if request.method == 'POST':
-        print("post request: ", request.POST)
         if person_edit_form.is_valid():
 
             # send an email to me
+            email_data = {'user': editing_user, 'person': person}
+            from_email = settings.ADMIN_EMAIL_SEND_FROM
+            recipient_list = [settings.ADMIN_EMAIL_ADDRESS, ]
+            subject = render_to_string(
+                template_name='familytree/email/person_edit_subject.txt'
+            )
+            html_message = render_to_string(
+                'familytree/email/person_edit_message.html', email_data
+            )
+            send_mail(subject, html_message, from_email, recipient_list, fail_silently=False, )
+
 
             # make django_admin_log entry
 
             # make the edit to the person
-            # test = person_edit_form.save(commit=False)
-            #
-            # test.save()
             person_edit_form.save()
 
             return redirect('person_detail', person_id=person.id)

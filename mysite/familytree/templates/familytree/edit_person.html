@@ -37,7 +37,6 @@
       {% endif %}
       <input type="date" class="form-control" value="{{ person.birthdate | date:'m/d/Y' }}"  id="birthdate" name="birthdate">
 
-
       <label class="col-form-label mt-4" for="birthdate_note">Birthdate note (if only month/year are known):</label>
       <input type="text" class="form-control" value="{{ person.birthdate_note }}" id="birthdate_note" name="birthplace_note">
 
@@ -58,7 +57,7 @@
 
       <label class="col-form-label mt-4" for="deathdate">Death date:</label>
       {%  if person.deathdate %}
-        (current value is {{ person.birthdate | date:"m/d/Y" }})
+        (current value is {{ person.deathdate | date:"m/d/Y" }})
       {% endif %}
       <input type="date" class="form-control" value="{{ person.deathdate | date:'m/d/Y' }}"  id="deathdate" name="deathdate">
 
