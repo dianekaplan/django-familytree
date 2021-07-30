@@ -17,19 +17,19 @@
     <div class="form-group">
 
       <label class="col-form-label mt-4" for="first">First name:</label>
-      <input type="text" class="form-control" value="{{ person.first }}" id="first" name="first">
+      <input type="text" class="form-control" value="{{ person.first | default_if_none:''}}" id="first" name="first">
 
       <label class="col-form-label mt-4" for="nickname">Nick name:</label>
-      <input type="text" class="form-control" value="{{ person.nickname }}" id="nickname" name="nickname">
+      <input type="text" class="form-control" value="{{ person.nickname | default_if_none:''}}" id="nickname" name="nickname">
 
       <label class="col-form-label mt-4" for="middle">Middle name:</label>
-      <input type="text" class="form-control" value="{{ person.middle }}" id="middle" name="middle">
+      <input type="text" class="form-control" value="{{ person.middle | default_if_none:''}}" id="middle" name="middle">
 
       <label class="col-form-label mt-4" for="last">Last name:</label>
-      <input type="text" class="form-control" value="{{ person.last }}" id="last" name="last">
+      <input type="text" class="form-control" value="{{ person.last | default_if_none:''}}" id="last" name="last">
 
       <label class="col-form-label mt-4" for="maiden">Maiden name:</label>
-      <input type="text" class="form-control" value="{{ person.maiden }}" id="maiden" name="maiden">
+      <input type="text" class="form-control" value="{{ person.maiden | default_if_none:'' }}" id="maiden" name="maiden">
 
       <label class="col-form-label mt-4" for="birthdate">Birthdate:</label>
       {%  if person.birthdate %}
@@ -38,22 +38,22 @@
       <input type="date" class="form-control" value="{{ person.birthdate | date:'m/d/Y' }}"  id="birthdate" name="birthdate">
 
       <label class="col-form-label mt-4" for="birthdate_note">Birthdate note (if only month/year are known):</label>
-      <input type="text" class="form-control" value="{{ person.birthdate_note }}" id="birthdate_note" name="birthplace_note">
+      <input type="text" class="form-control" value="{{ person.birthdate_note | default_if_none:''}}" id="birthdate_note" name="birthplace_note">
 
       <label class="col-form-label mt-4" for="birthplace">Birthplace:</label>
-      <input type="text" class="form-control" value="{{ person.birthplace }}" id="birthplace" name="birthplace">
+      <input type="text" class="form-control" value="{{ person.birthplace | default_if_none:''}}" id="birthplace" name="birthplace">
 
       <label class="col-form-label mt-4" for="education">Education:</label>
-      <input type="text" class="form-control" value="{{ person.education }}" id="education" name="education">
+      <input type="text" class="form-control" value="{{ person.education | default_if_none:''}}" id="education" name="education">
 
       <label class="col-form-label mt-4" for="work">Work:</label>
-      <input type="text" class="form-control" value="{{ person.work }}" id="work" name="work">
+      <input type="text" class="form-control" value="{{ person.work | default_if_none:''}}" id="work" name="work">
 
       <label class="col-form-label mt-4" for="interests">Interests:</label>
-      <input type="text" class="form-control" value="{{ person.interests }}" id="interests" name="interests">
+      <input type="text" class="form-control" value="{{ person.interests | default_if_none:''}}" id="interests" name="interests">
 
       <label class="col-form-label mt-4" for="current_location">Current location:</label>
-      <input type="text" class="form-control" value="{{ person.current_location }}" id="current_location" name="current_location">
+      <input type="text" class="form-control" value="{{ person.current_location | default_if_none:''}}" id="current_location" name="current_location">
 
       <label class="col-form-label mt-4" for="deathdate">Death date:</label>
       {%  if person.deathdate %}
@@ -62,16 +62,16 @@
       <input type="date" class="form-control" value="{{ person.deathdate | date:'m/d/Y' }}"  id="deathdate" name="deathdate">
 
       <label class="col-form-label mt-4" for="deathdate_note">Deathdate note (if only month/year are known):</label>
-      <input type="text" class="form-control" value="{{ person.deathdate_note }}" id="deathdate_note" name="deathdate_note">
+      <input type="text" class="form-control" value="{{ person.deathdate_note | default_if_none:''}}" id="deathdate_note" name="deathdate_note">
 
       <label for="notes1" class="form-label mt-4">Notes field 1:</label>
-      <input class="form-control" value="{{ person.notes1 }}" id="notes1" name="notes1" rows="3"></input>
+      <input class="form-control" value="{{ person.notes1 | default_if_none:'' }}" id="notes1" name="notes1" rows="3"></input>
 
       <label for="notes2" class="form-label mt-4">Notes field 2:</label>
-      <input type="text" class="form-control" value="{{ person.notes2 }}" id="notes2" name="notes2" rows="3"></input>
+      <input type="text" class="form-control" value="{{ person.notes2 | default_if_none:'' }}" id="notes2" name="notes2" rows="3"></input>
 
       <label for="notes3" class="form-label mt-4">Notes field 3:</label>
-      <input type="text" class="form-control" value="{{ person.notes3 }}" id="notes3" name="notes3" rows="3"></>
+      <input type="text" class="form-control" value="{{ person.notes3 | default_if_none:''}}" id="notes3" name="notes3" rows="3"></>
 
     </div>
     </fieldset>
