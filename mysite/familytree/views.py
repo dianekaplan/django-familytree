@@ -3,9 +3,8 @@ from dateutil.relativedelta import relativedelta
 from django.core.mail import send_mail
 
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
-from django.contrib.admin.models import LogEntry, ContentType
+from django.contrib.admin.models import LogEntry, CHANGE, ContentType
 from django.contrib.auth.decorators import login_required
-# from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -48,8 +47,8 @@ def index(request):  # dashboard page
     browser = request.user_agent.browser.family
 
     # only include additions or updates, for family, person, story
-    display_update_types = [2, 4, 5]
     display_action_types = [1, 2]
+    display_update_types = [2, 4, 5]
     recent_logentries = LogEntry.objects.filter(content_type_id__in=display_update_types,
                                                 action_flag__in=display_action_types).order_by('-id')[:5]
 
@@ -311,7 +310,7 @@ def edit_person(request, person_id):
     if request.method == 'POST':
         if person_edit_form.is_valid():
 
-            # send an email to me
+            # send an email to the site admin
             email_data = {'user': editing_user, 'person': person}
             from_email = settings.ADMIN_EMAIL_SEND_FROM
             recipient_list = [settings.ADMIN_EMAIL_ADDRESS, ]
@@ -323,8 +322,13 @@ def edit_person(request, person_id):
             )
             send_mail(subject, html_message, from_email, recipient_list, fail_silently=False, )
 
-
             # make django_admin_log entry
+            LogEntry.objects.log_action(
+                user_id=editing_user.id,
+                content_type_id=ContentType.objects.get_for_model(person).pk,
+                object_id=person.id,
+                object_repr=person.display_name,
+                action_flag=CHANGE)
 
             # make the edit to the person
             person_edit_form.save()
