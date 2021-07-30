@@ -2,6 +2,7 @@ from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.contrib.admin.models import LogEntry
 
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
 
@@ -186,6 +187,14 @@ class Profile(models.Model): # This class holds additional info for user records
     class Meta(object):
         verbose_name_plural = 'Profiles'
         db_table = 'profiles'
+
+    def edits_made(self):
+        if self.person:
+            edits_made = LogEntry.objects.filter(user_id=self.user.id)
+            edits_made_count = len(edits_made)
+        else:
+            edits_made_count = False
+        return edits_made_count
 
     # @FIXME- redundancy: these functions work for displaying count on user_metrics.html
     def old_notes_written(self):

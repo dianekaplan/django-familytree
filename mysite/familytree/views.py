@@ -626,6 +626,8 @@ def user_metrics(request):
     profiles_who_made_notes_old = [x for x in profiles if x.notes_written('old')]
     profiles_who_made_notes_new = [x for x in profiles if x.notes_written('new')]
 
+    profiles_who_made_edits = [x for x in profiles if x.edits_made()]
+
     branch1_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[0])
     branch2_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[1])
     branch3_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[2])
@@ -638,7 +640,7 @@ def user_metrics(request):
                'last_login_laravel_site': last_login_laravel_site, 'last_login_django_site': last_login_django_site,
                'branch1_users': branch1_users, 'branch2_users': branch2_users, 'branch3_users': branch3_users,
                'branch4_users': branch4_users, 'existing_branches_list': existing_branches_list,
-               'media_server': media_server
+               'media_server': media_server, 'profiles_who_made_edits': profiles_who_made_edits
                }
 
     return render(request, 'familytree/user_metrics.html', context)
