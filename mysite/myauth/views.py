@@ -1,7 +1,5 @@
-from django.shortcuts import render
 from django.contrib.auth.views import LoginView as BaseLoginView
 from django.utils import timezone
-# from ..familytree.models import import Login
 from .models import Login
 
 

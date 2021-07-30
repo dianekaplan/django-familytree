@@ -24,7 +24,7 @@ past month's logins:
       <tr>
         <td>{{last_login_never | length}}</td>
         <td>{{last_login_django_site | length}}, {{last_login_laravel_site | length}}, {{last_login_old_site_only | length}}</td>
-        <td>{{profiles_who_made_notes_new | length}}, {{profiles_who_made_notes_old | length}}</td>
+        <td>{{profiles_who_made_edits | length }}, {{profiles_who_made_notes_new | length}}, {{profiles_who_made_notes_old | length}}</td>
       </tr>
       <tr>
 
@@ -62,22 +62,31 @@ past month's logins:
 
 
         <td>
-                Added notes (Django site):
-                <ul>
-                  {% for profile in profiles_who_made_notes_new %}
+            Made updates (Django site):
+            <ul>
+               {% for profile in profiles_who_made_edits %}
                     <li>
-                        {{profile.person.display_name}}: {{profile.new_notes_written}}
+                        {{ profile.person.display_name }}: {{ profile.edits_made }}
                     </li>
                   {% endfor %}
-                </ul>
-                Added notes (Laravel site):
-                <ul>
-                  {% for profile in profiles_who_made_notes_old %}
-                    <li>
-                        {{profile.person.display_name}}: {{profile.old_notes_written}}
-                    </li>
-                  {% endfor %}
-                </ul>
+            </ul>
+
+            Added notes (Django site):
+            <ul>
+                {% for profile in profiles_who_made_notes_new %}
+                <li>
+                    {{ profile.person.display_name }}: {{ profile.new_notes_written }}
+                </li>
+                {% endfor %}
+            </ul>
+            Added notes (Laravel site):
+            <ul>
+                {% for profile in profiles_who_made_notes_old %}
+                <li>
+                    {{profile.person.display_name}}: {{profile.old_notes_written}}
+                </li>
+                {% endfor %}
+            </ul>
         </td>
       </tr>
     </tbody>

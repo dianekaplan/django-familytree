@@ -1,15 +1,16 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from django.core.mail import send_mail
 
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
-from django.contrib.admin.models import LogEntry, ContentType
+from django.contrib.admin.models import LogEntry, CHANGE, ContentType
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
+from django.template.loader import render_to_string
 
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
-from .forms import NoteForm
+from .forms import NoteForm, EditPersonForm
 
 media_server = settings.MEDIA_SERVER
 LARAVEL_SITE_CREATION = settings.LARAVEL_SITE_CREATION
@@ -46,8 +47,8 @@ def index(request):  # dashboard page
     browser = request.user_agent.browser.family
 
     # only include additions or updates, for family, person, story
-    display_update_types = [2, 4, 5]
     display_action_types = [1, 2]
+    display_update_types = [2, 4, 5]
     recent_logentries = LogEntry.objects.filter(content_type_id__in=display_update_types,
                                                 action_flag__in=display_action_types).order_by('-id')[:5]
 
@@ -287,15 +288,58 @@ def add_person_note(request, person_id):
     }
 
     if request.method == 'POST':
-        # print("THIS WAS A POST: ", request.POST)
-        form = NoteForm(request.POST)
-        if form.is_valid():
-            form.save()
+        if note_form.is_valid():
+            note_form.save()
             return redirect('person_detail', person_id=person.id)
 
     if request.method == 'GET':
         return render(request, template_name, context)
 
+@login_required(login_url=login_url)
+def edit_person(request, person_id):
+    template_name = 'familytree/edit_person.html'
+    profile = get_display_profile(request).first()
+    editing_user = profile.user
+    person = get_object_or_404(Person, pk=person_id)  # person whose info will be updated
+    person_edit_form = EditPersonForm(request.POST, instance=person)
+
+    context = {
+        'person': person, 'editing_user': editing_user, 'media_server': media_server, 'form': person_edit_form
+    }
+
+    if request.method == 'POST':
+        if person_edit_form.is_valid():
+
+            # send an email to the site admin
+            email_data = {'user': editing_user, 'person': person}
+            from_email = settings.ADMIN_EMAIL_SEND_FROM
+            recipient_list = [settings.ADMIN_EMAIL_ADDRESS, ]
+            subject = render_to_string(
+                template_name='familytree/email/person_edit_subject.txt'
+            )
+            html_message = render_to_string(
+                'familytree/email/person_edit_message.html', email_data
+            )
+            send_mail(subject, html_message, from_email, recipient_list, fail_silently=False, )
+
+            # make django_admin_log entry
+            LogEntry.objects.log_action(
+                user_id=editing_user.id,
+                content_type_id=ContentType.objects.get_for_model(person).pk,
+                object_id=person.id,
+                object_repr=person.display_name,
+                action_flag=CHANGE)
+
+            # make the edit to the person
+            person_edit_form.save()
+
+            return redirect('person_detail', person_id=person.id)
+        else:
+            print("FORM NOT VALID")
+        return redirect('person_detail', person_id=person.id)
+
+    if request.method == 'GET':
+        return render(request, template_name, context)
 
 @login_required(login_url=login_url)
 def family_detail(request, family_id):
@@ -582,6 +626,8 @@ def user_metrics(request):
     profiles_who_made_notes_old = [x for x in profiles if x.notes_written('old')]
     profiles_who_made_notes_new = [x for x in profiles if x.notes_written('new')]
 
+    profiles_who_made_edits = [x for x in profiles if x.edits_made()]
+
     branch1_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[0])
     branch2_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[1])
     branch3_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[2])
@@ -594,7 +640,7 @@ def user_metrics(request):
                'last_login_laravel_site': last_login_laravel_site, 'last_login_django_site': last_login_django_site,
                'branch1_users': branch1_users, 'branch2_users': branch2_users, 'branch3_users': branch3_users,
                'branch4_users': branch4_users, 'existing_branches_list': existing_branches_list,
-               'media_server': media_server
+               'media_server': media_server, 'profiles_who_made_edits': profiles_who_made_edits
                }
 
     return render(request, 'familytree/user_metrics.html', context)
