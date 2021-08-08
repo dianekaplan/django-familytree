@@ -137,10 +137,10 @@ def index(request):  # dashboard page
 
     context = {'user': profile.user, 'birthday_people': birthday_people_sorted,  'anniversary_couples': anniversary_couples,
                'show_book': False, 'latest_pics': combined_image_list, 'latest_videos': combined_video_list,
-               'user_person': profile.person,
-               'profile': profile, 'accessible_branches': accessible_branches, 'today_birthday': today_birthday,
-               'media_server': media_server, 'recent_logentries': recent_logentries, 'recent_updates': recent_updates,
-               'user_is_guest': user_is_guest, 'browser': browser, 'latest_stories': combined_story_list}
+               'user_person': profile.person, 'profile': profile, 'accessible_branches': accessible_branches,
+               'today_birthday': today_birthday, 'media_server': media_server, 'recent_logentries': recent_logentries,
+               'recent_updates': recent_updates, 'user_is_guest': user_is_guest, 'browser': browser,
+               'latest_stories': combined_story_list}
 
     return render(request, 'familytree/dashboard.html', context)
 
@@ -213,6 +213,7 @@ def person_detail(request, person_id):
     profile = get_display_profile(request).first()
     person = get_object_or_404(Person, pk=person_id)
     user_is_guest = profile.guest_user
+    user_is_limited = profile.limited
     browser = request.user_agent.browser.family
 
     try:
@@ -275,7 +276,7 @@ def person_detail(request, person_id):
                             'notes': notes, 'videos': videos, 'featured_images': featured_images,
                             'audio_files': audio_files, 'user_person': profile.person, 'stories': stories,
                             'media_server': media_server, 'browser': browser, 'user': profile.user,
-                                                             'user_is_guest': user_is_guest })
+                            'user_is_guest': user_is_guest, 'user_is_limited': user_is_limited})
 
 @login_required(login_url=login_url)
 def add_person_note(request, person_id):
