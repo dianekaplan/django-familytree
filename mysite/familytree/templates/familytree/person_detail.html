@@ -29,7 +29,8 @@
             {% else %}
                 <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.last }}<br/>
             {% endif %}
-
+        
+            {% if not user_is_limited%}
             <b>Birthdate:</b>
             {% if person.birthdate %}
                 {{ person.birthdate }}
@@ -37,6 +38,7 @@
                {{ person.birthdate_note }}
             {% endif %}
             <br/>
+            {% endif %}
 
             <b>Born in:</b> {{ person.birthplace|default_if_none:"" }}<br/>
 
