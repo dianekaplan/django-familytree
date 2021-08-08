@@ -30,7 +30,7 @@
                 <b>Born:</b> {{ person.first }} {{ person.middle|default_if_none:"" }} {{ person.last }}<br/>
             {% endif %}
         
-            {% if not user_is_limited%}
+            {% if not user_is_limited or not person.living %}
             <b>Birthdate:</b>
             {% if person.birthdate %}
                 {{ person.birthdate }}
