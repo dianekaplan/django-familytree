@@ -7,6 +7,7 @@ from django.contrib.admin.models import LogEntry, CHANGE, ContentType
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.conf import settings
+from django.core.cache import cache
 from django.template.loader import render_to_string
 
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
@@ -15,7 +16,7 @@ from .forms import NoteForm, EditPersonForm
 media_server = settings.MEDIA_SERVER
 LARAVEL_SITE_CREATION = settings.LARAVEL_SITE_CREATION
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
-newest_generation_for_guest = 13 # guest users will not see any generations newer (higher) than this
+newest_generation_for_guest = 13  # guest users will not see any generations newer (higher) than this
 
 root_url = settings.ROOT_URL
 today = datetime.now()
@@ -40,11 +41,16 @@ branch_classes = {
 @login_required(login_url=login_url)
 def index(request):  # dashboard page
     profile = get_display_profile(request).first()
-    user = profile.user
-    this_person = profile.person
     user_is_guest = profile.guest_user
     accessible_branches = get_valid_branches(request)
     browser = request.user_agent.browser.family
+
+    # generate the outline view html ahead of time
+    cache_name = 'outline_' + str(profile.user)
+    outline_html = cache.get(cache_name)
+    if not outline_html:
+        outline_html = get_outline_html(accessible_branches, profile)
+
 
     # only include additions or updates, for family, person, story
     display_action_types = [1, 2]
@@ -129,8 +135,9 @@ def index(request):  # dashboard page
     except Story.DoesNotExist:
         combined_story_list = None
 
-    context = {'user': user, 'birthday_people': birthday_people_sorted,  'anniversary_couples': anniversary_couples,
-               'show_book': False, 'latest_pics': combined_image_list, 'latest_videos': combined_video_list, 'user_person': this_person,
+    context = {'user': profile.user, 'birthday_people': birthday_people_sorted,  'anniversary_couples': anniversary_couples,
+               'show_book': False, 'latest_pics': combined_image_list, 'latest_videos': combined_video_list,
+               'user_person': profile.person,
                'profile': profile, 'accessible_branches': accessible_branches, 'today_birthday': today_birthday,
                'media_server': media_server, 'recent_logentries': recent_logentries, 'recent_updates': recent_updates,
                'user_is_guest': user_is_guest, 'browser': browser, 'latest_stories': combined_story_list}
@@ -466,43 +473,46 @@ def story(request, story_id):
 @login_required(login_url=login_url)
 def outline(request):
     profile = get_display_profile(request).first()
-    user = profile.user
-    this_person = profile.person
     accessible_branches = get_valid_branches(request)
-    existing_branches = Branch.objects.all()
     user_is_guest = profile.guest_user
 
-    users_original_families = {}  # Dictionary with entries [branch name]: [original families in that branch]
-    total_results = {}  # giant dictionary for all descendants
-    total_results_html = {}
+    # Make a dictionary of original families by branch, for ex: [branch name]: [original families in that branch]
+    users_original_families = {}
+    for branch in accessible_branches:
+        name = branch.display_name
+        users_original_families[name] = Family.objects.filter(branches__display_name__contains=name,
+                                                              original_family=True)
 
-    for branch in existing_branches:
-        # For each branch this user has access for, we'll loop through the original families and:
-        # 1) make the dictionary of original families by branch
-        # 2) make the dictionary of descendants by branch
+    cache_name = 'outline_' + str(profile.user)
+    outline_html = cache.get(cache_name)
+    if not outline_html:
+        outline_html = get_outline_html(accessible_branches, profile)
 
-        if branch in accessible_branches:
-            name = branch.display_name
-            this_branch_results = []
-
-            # make the dictionary of original families by branch
-            orig_family_list = Family.objects.filter(branches__display_name__contains=name, original_family=True)
-            users_original_families[name] = orig_family_list
-
-            # make the dictionary of descendants by branch
-            for family in orig_family_list:
-                this_family_results = get_descendants(family, user_is_guest)
-                this_branch_results.append(this_family_results)
-            total_results[name] = this_branch_results
-
-            this_branch_html = make_list_into_html(this_branch_results)
-            total_results_html[name] = this_branch_html
-
-    context = {'accessible_branches': accessible_branches, 'user_person': this_person,
-               'family_dict': users_original_families, 'media_server': media_server,'show_book': True,
-               'total_results': total_results, 'total_results_html': total_results_html, 'user': user}
+    context = {'user_person': profile.person, 'family_dict': users_original_families, 'media_server': media_server,
+               'show_book': True, 'total_results_html': outline_html, 'user': profile.user}
 
     return render(request, 'familytree/outline.html', context)
+
+
+def get_outline_html(accessible_branches, profile):
+    total_results_html = {}
+    user_is_guest = profile.guest_user
+
+    # loop through the original families in each branch to make a dictionary of descendants
+    for branch in accessible_branches:
+        name = branch.display_name
+        this_branch_results = []
+
+        for family in Family.objects.filter(branches__display_name__contains=name, original_family=True):
+            this_family_results = get_descendants(family, user_is_guest)
+            this_branch_results.append(this_family_results)
+
+        this_branch_html = make_list_into_html(this_branch_results)
+        total_results_html[name] = this_branch_html
+
+    cache_name = 'outline_' + str(profile.user)
+    cache.set(cache_name, total_results_html, 60 * 30)  # save this for 30 minutes
+    return total_results_html
 
 
 def make_list_into_html(list):
