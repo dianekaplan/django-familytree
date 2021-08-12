@@ -33,8 +33,15 @@
 
             {% if not user_is_guest %}
             <li>{% include "familytree/_top_nav_face_link.html" with person=user_person%}</li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'password_reset' %}">Reset Password</a>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                 aria-expanded="false">Account</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'account' %}">My Updates</a>
+                <a class="dropdown-item" href="{% url 'password_reset' %}">Reset Password</a>
+                <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+              </div>
             </li>
             {% endif %}
 
@@ -49,9 +56,6 @@
             </li>
             {% endif %}
 
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'logout' %}">Log out</a>
-            </li>
           </ul>
         </div>
       </div>

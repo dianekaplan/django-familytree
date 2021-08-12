@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import Q
 from django.template.loader import render_to_string
 
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
@@ -591,9 +592,11 @@ def get_descendants(family, user_is_guest, results=None):
 def account(request):
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
+    notes_written = Note.objects.filter(author=profile.person.id)
+    updates_made = LogEntry.objects.filter(user_id=profile.user.id).filter(Q(content_type_id=2) | Q(content_type_id=4)).filter(action_flag=2)
 
     context = {'accessible_branches': accessible_branches, 'user_person': profile.person,
-                'media_server': media_server,}
+                  'media_server': media_server, 'notes_written': notes_written, 'updates_made': updates_made}
 
     return render(request, 'familytree/account.html', context)
 

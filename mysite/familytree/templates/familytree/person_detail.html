@@ -101,6 +101,7 @@
     {% if person.notes3 %} <div style="margin: 10px">{{ person.notes3 | safe}} </div>{% endif %}
 
     {% if notes %}
+    <h2>Notes: </h2>
         {% include "familytree/_notes_display.html" with notes=notes %}
     {% endif %}
 </div>

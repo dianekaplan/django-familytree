@@ -53,6 +53,7 @@
     {% if family.notes3 %} {{ family.notes3 | safe }} <br/>{% endif %}
 
     {% if notes %}
+     <h2>Notes: </h2>
         {% include "familytree/_notes_display.html" with notes=notes %}
     {% endif %}
  </div>
