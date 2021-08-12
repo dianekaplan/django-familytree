@@ -595,7 +595,7 @@ def account(request):
     notes_written = Note.objects.filter(author=profile.person.id)
     updates_made = LogEntry.objects.filter(user_id=profile.user.id).filter(Q(content_type_id=2) | Q(content_type_id=4)).filter(action_flag=2)
 
-    context = {'accessible_branches': accessible_branches, 'user_person': profile.person,
+    context = {'accessible_branches': accessible_branches, 'user_person': profile.person, 'user': profile.user,
                   'media_server': media_server, 'notes_written': notes_written, 'updates_made': updates_made}
 
     return render(request, 'familytree/account.html', context)
