@@ -29,8 +29,14 @@
             <br/>
         {% endfor %}
     {% else %}
-        (none yet)
+        {% if user_person.family %}
+            None yet. How about adding a memory from growing up in your family? <br/>
+            <a href="{% url 'family_detail' user_person.family.id %}">{{ user_person.family.display_name }}</a>
+        {% else %}
+            (none yet)
+        {% endif %}
     {% endif %}
+
 </div>
 <div style="margin-top: 20px; margin-bottom: 25px;">
 <h2>Updates made</h2>

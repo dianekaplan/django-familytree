@@ -298,6 +298,27 @@ def add_person_note(request, person_id):
     if request.method == 'GET':
         return render(request, template_name, context)
 
+
+@login_required(login_url=login_url)
+def add_family_note(request, family_id):
+    template_name = 'familytree/add_family_note.html'
+    profile = get_display_profile(request).first()
+    family = get_object_or_404(Family, pk=family_id)  # family note is about
+    note_form = NoteForm(request.POST)
+
+    context = {
+        'family': family, 'user_person': profile.person, 'media_server': media_server, 'note_form': note_form
+    }
+
+    if request.method == 'POST':
+        if note_form.is_valid():
+            note_form.save()
+            return redirect('family_detail', family_id=family.id)
+
+    if request.method == 'GET':
+        return render(request, template_name, context)
+
+
 @login_required(login_url=login_url)
 def edit_person(request, person_id):
     template_name = 'familytree/edit_person.html'
@@ -596,7 +617,7 @@ def account(request):
     updates_made = LogEntry.objects.filter(user_id=profile.user.id).filter(Q(content_type_id=2) | Q(content_type_id=4)).filter(action_flag=2)
 
     context = {'accessible_branches': accessible_branches, 'user_person': profile.person, 'user': profile.user,
-                  'media_server': media_server, 'notes_written': notes_written, 'updates_made': updates_made}
+               'media_server': media_server, 'notes_written': notes_written, 'updates_made': updates_made}
 
     return render(request, 'familytree/account.html', context)
 
