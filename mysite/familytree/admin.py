@@ -88,6 +88,8 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'person', 'login_count', 'logins')
     ordering = ('login_count', 'guest_user')
 
+    raw_id_fields = ('person',)
+
     def logins(self, instance):
         return instance.get_logins()
 
