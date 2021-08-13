@@ -47,6 +47,14 @@
     </div>
 </div>
 
+  <div style="float: left; width: 100%;">
+    {% if not user_is_guest %}
+    <img src="{% static 'familytree/pencil.png' %}" height="25" />
+        <a href="{% url 'add_family_note' family.id %}">
+    Add a note or memory</a>
+    {% endif %}
+    </div>
+
  <div style="float: left;width: 100%;">
     {% if family.notes1 %} {{ family.notes1 | safe }} <br/>{% endif %}
     {% if family.notes2 %} {{ family.notes2 | safe }} <br/>{% endif %}

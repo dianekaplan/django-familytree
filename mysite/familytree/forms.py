@@ -6,7 +6,7 @@ class NoteForm(ModelForm):
 
     class Meta:
         model = Note
-        fields = ['author_name', 'body', 'author', 'person']
+        fields = ['author_name', 'body', 'author', 'person', 'family']
 
 
 class EditPersonForm(ModelForm):

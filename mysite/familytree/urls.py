@@ -20,6 +20,9 @@ urlpatterns = [
     # ex: /add_person_note/5/
     path('add_person_note/<int:person_id>/', views.add_person_note, name='add_person_note'),
 
+    # ex: /add_family_note/5/
+    path('add_family_note/<int:family_id>/', views.add_family_note, name='add_family_note'),
+
     # ex: /edit_person/5/
     path('edit_person/<int:person_id>/', views.edit_person, name='edit_person'),
 
