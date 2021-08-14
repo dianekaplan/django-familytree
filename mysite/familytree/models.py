@@ -184,6 +184,7 @@ class Profile(models.Model): # This class holds additional info for user records
     shared_account = models.BooleanField(null=True, default=False)
     guest_user = models.BooleanField(default=False)
     limited = models.BooleanField(default=True)
+    timezone = models.CharField(null=True, max_length=100, default='US/Eastern')
 
     class Meta(object):
         verbose_name_plural = 'Profiles'
