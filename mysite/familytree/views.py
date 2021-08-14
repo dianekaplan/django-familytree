@@ -43,7 +43,7 @@ def index(request):  # dashboard page
     user_is_guest = profile.guest_user
     accessible_branches = get_valid_branches(request)
     browser = request.user_agent.browser.family
-    today = get_now_for_user(profile.user)
+    today = get_now_for_user(profile.timezone)
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
 
     # generate the outline view html ahead of time
@@ -625,7 +625,7 @@ def account(request):
 @login_required(login_url=login_url)
 def user_metrics(request):
     profile = get_display_profile(request).first()
-    today = get_now_for_user(profile.user)
+    today = get_now_for_user(profile.timezone)
     month_ago_date = today.date() - relativedelta(days=30)
 
     accessible_branches = get_valid_branches(request)
@@ -657,16 +657,16 @@ def user_metrics(request):
                'last_login_laravel_site': last_login_laravel_site, 'last_login_django_site': last_login_django_site,
                'branch1_users': branch1_users, 'branch2_users': branch2_users, 'branch3_users': branch3_users,
                'branch4_users': branch4_users, 'existing_branches_list': existing_branches_list,
-               'media_server': media_server, 'profiles_who_made_edits': profiles_who_made_edits
+               'media_server': media_server, 'profiles_who_made_edits': profiles_who_made_edits, 'user_timezone': profile.timezone
                }
 
     return render(request, 'familytree/user_metrics.html', context)
 
 
 # simple to start, then will add timezone
-def get_now_for_user(user):
+def get_now_for_user(timezone_string):
 
-    now = datetime.now()
+    now = datetime.now().astimezone(timezone(timezone_string))
 
     return now
 
