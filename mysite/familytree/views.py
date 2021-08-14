@@ -1,5 +1,6 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from pytz import timezone
 from django.core.mail import send_mail
 
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
@@ -20,9 +21,6 @@ DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
 newest_generation_for_guest = 13  # guest users will not see any generations newer (higher) than this
 
 root_url = settings.ROOT_URL
-today = datetime.now()
-guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
-month_ago_date = today.date() - relativedelta(days=30)
 
 branch1_name = Branch.objects.filter(id=1)
 branch2_name = Branch.objects.filter(id=2)
@@ -45,6 +43,8 @@ def index(request):  # dashboard page
     user_is_guest = profile.guest_user
     accessible_branches = get_valid_branches(request)
     browser = request.user_agent.browser.family
+    today = get_now_for_user(profile.user)
+    guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
 
     # generate the outline view html ahead of time
     cache_name = 'outline_' + str(profile.user)
@@ -625,6 +625,8 @@ def account(request):
 @login_required(login_url=login_url)
 def user_metrics(request):
     profile = get_display_profile(request).first()
+    today = get_now_for_user(profile.user)
+    month_ago_date = today.date() - relativedelta(days=30)
 
     accessible_branches = get_valid_branches(request)
     profiles = Profile.objects.all()
@@ -659,3 +661,12 @@ def user_metrics(request):
                }
 
     return render(request, 'familytree/user_metrics.html', context)
+
+
+# simple to start, then will add timezone
+def get_now_for_user(user):
+
+    now = datetime.now()
+
+    return now
+
