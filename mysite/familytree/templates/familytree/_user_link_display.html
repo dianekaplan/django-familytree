@@ -1,6 +1,9 @@
-            {% if profile.person.id %}
+{% load tz %}
+    {% timezone profile.timezone %}
+        {% if profile.person.id %}
             <li><a href="{% url 'person_detail' profile.person.id %}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>
              last login: {{ profile.user.last_login }}</li>
-            {% else %}
+        {% else %}
             <li>{{ profile.user }} last login: {{ profile.user.last_login }}</li>
-            {% endif %}
+        {% endif %}
+{% endtimezone %}
