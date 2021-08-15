@@ -663,10 +663,7 @@ def user_metrics(request):
     return render(request, 'familytree/user_metrics.html', context)
 
 
-# simple to start, then will add timezone
 def get_now_for_user(timezone_string):
-
     now = datetime.now().astimezone(timezone(timezone_string))
-
     return now
 
