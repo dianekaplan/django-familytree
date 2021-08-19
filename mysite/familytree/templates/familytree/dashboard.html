@@ -17,7 +17,7 @@
         <h2><a href="{% url 'image_index'  %}">Family album</a></h2>
         <h2><a href="{% url 'video_index'  %}">Home Movies</a></h2>
         <h2><a href="{% url 'outline'  %}">Outline View</a></h2>
-        {% if not user_is_guest %}
+        {% if profile.furthest_html %}
             <b>My furthest ancestors here:</b> <br/>{{ profile.furthest_html | safe}}<br/>
         {% endif %}
         </div>
