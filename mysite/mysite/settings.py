@@ -164,7 +164,7 @@ DATABASES = {
     },
     "source": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "backup_mar30_2021",  # postgres
+        "NAME": "laravel_backup_aug15",  # backup_july3_2021  backup_mar30_2021  postgres
         "USER": DB_USER,
         "PASSWORD": "test", # @TODO: remove this section now that import is done?
         "HOST": DB_HOST,
