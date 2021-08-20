@@ -157,8 +157,8 @@
 <div style="float: left; width: 100%;">
     {% if group_images %}
         <h2>Group pictures:</h2>
-        {% for listing in group_images %}
-          {% include "familytree/image_link.html" with image=listing.image %}
+        {% for image in group_images %}
+          {% include "familytree/image_link.html" with image=image %}
         {% endfor %}
     {% endif %}
 </div>

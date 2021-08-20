@@ -1,5 +1,6 @@
 from django.db import models
-from django.forms import ModelForm
+from django.db.models import Q
+# from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.admin.models import LogEntry
@@ -67,6 +68,36 @@ class Person(models.Model):
             person_story_records = None
         if person_story_records:
             return True
+
+    def families_made(self):
+        try:
+            wife_of = Family.objects.filter(wife=self.id)
+            husband_of = Family.objects.filter(husband=self.id)
+            families_made = wife_of | husband_of
+        except Family.DoesNotExist:
+            families_made = None
+        return families_made
+
+    def group_images(self):
+        group_images = Image.objects.none()
+
+        # add the ones from image_person
+        group_image_listings = ImagePerson.objects.filter(person_id=self.id).order_by('image__year')
+        for listing in group_image_listings:
+            this_image = Image.objects.filter(id=listing.image_id)
+            group_images = group_images | this_image
+
+        # add the ones for original family
+        if self.family:
+            group_images = group_images | Image.objects.filter(family=self.family)
+
+        # add the ones for families made
+        families_made = self.families_made()
+        if families_made:
+            for family in families_made:
+                group_images = group_images | Image.objects.filter(family=family)
+
+        return group_images.order_by('year').distinct()
 
     class Meta(object):
         verbose_name_plural = 'People'
