@@ -599,7 +599,7 @@ def get_descendants(family, user_is_guest, results=None):
                             next_results = get_descendants(new_family, user_is_guest, these_results)
                             these_results.extend([next_results])
     return these_results
-Q
+
 @login_required(login_url=login_url)
 def account(request):
     profile = get_display_profile(request).first()
