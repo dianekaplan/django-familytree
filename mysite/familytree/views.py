@@ -217,12 +217,8 @@ def person_detail(request, person_id):
     user_is_limited = profile.limited
     browser = request.user_agent.browser.family
 
-    try:
-        wife_of = Family.objects.filter(wife=person_id)
-        husband_of = Family.objects.filter(husband=person_id)
-        families_made = wife_of | husband_of
-    except Family.DoesNotExist:
-        families_made = None
+    families_made = person.families_made()
+    group_images = person.group_images()
 
     try:
         origin_family = person.family
@@ -251,11 +247,6 @@ def person_detail(request, person_id):
         videos = Video.objects.filter(person=person).order_by('year')
     except Video.DoesNotExist:
         videos = None
-
-    try:
-        group_images = ImagePerson.objects.filter(person_id=person_id).order_by('image__year')
-    except ImagePerson.DoesNotExist:
-        group_images = None
 
     try:
         notes = Note.objects.filter(person_id=person_id)
