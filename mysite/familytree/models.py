@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models import Q
-# from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.admin.models import LogEntry
