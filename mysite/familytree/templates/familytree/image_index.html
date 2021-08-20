@@ -5,9 +5,8 @@
 <h1>Family Album</h1>
 {% if image_list %}
     {% for image in image_list %}
-        {% include "familytree/image_link.html" with image=image %}
+        {% include "familytree/image_link.html" with image=image height=175 %}
     {% endfor %}
-
 {% else %}
     <p>No images are available.</p>
 {% endif %}
