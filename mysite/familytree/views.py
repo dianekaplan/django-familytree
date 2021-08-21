@@ -11,8 +11,6 @@ from django.core.mail import send_mail
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.template.loader import render_to_string
-from django.views.decorators.vary import vary_on_cookie
-from django.views.decorators.cache import cache_page
 
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
 from .forms import NoteForm, EditPersonForm
@@ -49,10 +47,16 @@ def index(request):  # dashboard page
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
 
     # generate the outline view html ahead of time
-    cache_name = 'outline_' + str(profile.user)
-    outline_html = cache.get(cache_name)
+    outline_cache_name = 'outline_' + str(profile.user)
+    outline_html = cache.get(outline_cache_name)
     if not outline_html:
-        outline_html = get_outline_html(accessible_branches, profile)
+        get_outline_html(accessible_branches, profile)
+
+    # get the family album ahead of time
+    image_cache_name = 'outline_' + str(profile.user)
+    sorted_list = cache.get(image_cache_name)
+    if not sorted_list:
+        get_image_index_stuff(accessible_branches, profile)
 
     # only include additions or updates, for family, person, story
     display_action_types = [1, 2]
@@ -406,15 +410,14 @@ def image_detail(request, image_id):
                                                             'media_server': media_server, 'user_is_guest': user_is_guest
                                                             })
 
-@cache_page(60 * 30)  # cache this view for 30 minutes
-@vary_on_cookie  # save it separately per user
+
 @login_required(login_url=login_url)
 def image_index(request):
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
 
-    cache_name = 'images_' + str(profile.user)
-    sorted_list = cache.get(cache_name)
+    image_cache_name = 'images_' + str(profile.user)
+    sorted_list = cache.get(image_cache_name)
     if not sorted_list:
         sorted_list = get_image_index_stuff(accessible_branches, profile)
 
@@ -430,8 +433,8 @@ def get_image_index_stuff(accessible_branches, profile):
         image_list = image_list.union(Image.objects.filter(branches__display_name__contains=name).order_by('year'))
     sorted_list = image_list.order_by('year')
 
-    cache_name = 'images_' + str(profile.user)
-    cache.set(cache_name, sorted_list, 60 * 30)  # save this for 30 minutes
+    image_cache_name = 'images_' + str(profile.user)
+    cache.set(image_cache_name, sorted_list, 60 * 30)  # save this for 30 minutes
     return sorted_list
 
 
@@ -494,8 +497,8 @@ def outline(request):
         users_original_families[name] = Family.objects.filter(branches__display_name__contains=name,
                                                               original_family=True)
 
-    cache_name = 'outline_' + str(profile.user)
-    outline_html = cache.get(cache_name)
+    outline_cache_name = 'outline_' + str(profile.user)
+    outline_html = cache.get(outline_cache_name)
     if not outline_html:
         outline_html = get_outline_html(accessible_branches, profile)
 
@@ -521,8 +524,8 @@ def get_outline_html(accessible_branches, profile):
         this_branch_html = make_list_into_html(this_branch_results)
         total_results_html[name] = this_branch_html
 
-    cache_name = 'outline_' + str(profile.user)
-    cache.set(cache_name, total_results_html, 60 * 30)  # save this for 30 minutes
+    outline_cache_name = 'outline_' + str(profile.user)
+    cache.set(outline_cache_name, total_results_html, 60 * 30)  # save this for 30 minutes
     return total_results_html
 
 

@@ -1,6 +1,9 @@
 {% extends 'familytree/base.html' %}
 {% block title %} - family album{% endblock title %}
 {% block content %}
+ {% load cache %}
+
+{% cache 1800 sidebar request.user.username %}
 
 <h1>Family Album</h1>
 {% if image_list %}
@@ -11,6 +14,8 @@
     <p>No images are available.</p>
 {% endif %}
 
+
+{% endcache %}
 {% endblock content %}
 
 
