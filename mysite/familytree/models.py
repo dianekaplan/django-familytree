@@ -192,8 +192,6 @@ class Image(models.Model):
         if this_image_person:
             pictured_list += this_image_person.display_name
 
-
-
         if image_people:  # if the image has both family and individuals configured, show people
             for person in image_people:
                 pictured_list += person.display_name
