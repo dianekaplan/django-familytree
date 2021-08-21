@@ -3,6 +3,9 @@
 {% block content %}
 {% load static %}
 
+{% load cache %}
+{% cache 1800 dashboard user %}
+
 {% if not user_is_guest %}
     <div style="margin: 10px">Welcome, {{ user_person.display_name }}! </div>
 {% endif %}
@@ -97,4 +100,5 @@
 
  </div>
 
+{% endcache %}
 {% endblock content %}
