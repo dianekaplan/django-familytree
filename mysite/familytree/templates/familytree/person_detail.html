@@ -149,7 +149,7 @@
     <div style="float: left; width: 100%;">
         <h2>Pictures of {{ person.first }}: </h2>
         {% for image in images %}
-            {% include "familytree/image_link.html" with image=image height=150 %}
+            {% include "familytree/image_link.html" with image=image height=150 show_hover=False %}
         {% endfor %}
     </div>
 {% endif %}
@@ -158,7 +158,7 @@
     {% if group_images %}
         <h2>Group pictures:</h2>
         {% for image in group_images %}
-          {% include "familytree/image_link.html" with image=image height=150 %}
+          {% include "familytree/image_link.html" with image=image height=150 show_hover=True %}
         {% endfor %}
     {% endif %}
 </div>
