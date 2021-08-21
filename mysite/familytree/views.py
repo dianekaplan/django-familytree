@@ -1,16 +1,18 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
-from django.core.mail import send_mail
 
-from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.contrib.admin.models import LogEntry, CHANGE, ContentType
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.conf import settings
 from django.core.cache import cache
+from django.core.mail import send_mail
 from django.db.models import Q
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.template.loader import render_to_string
+from django.views.decorators.vary import vary_on_cookie
+from django.views.decorators.cache import cache_page
 
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
 from .forms import NoteForm, EditPersonForm
@@ -51,7 +53,6 @@ def index(request):  # dashboard page
     outline_html = cache.get(cache_name)
     if not outline_html:
         outline_html = get_outline_html(accessible_branches, profile)
-
 
     # only include additions or updates, for family, person, story
     display_action_types = [1, 2]
@@ -405,21 +406,33 @@ def image_detail(request, image_id):
                                                             'media_server': media_server, 'user_is_guest': user_is_guest
                                                             })
 
-
+@cache_page(60 * 30)  # cache this view for 30 minutes
+@vary_on_cookie  # save it separately per user
 @login_required(login_url=login_url)
 def image_index(request):
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
-    image_list = Image.objects.none()
 
+    cache_name = 'images_' + str(profile.user)
+    sorted_list = cache.get(cache_name)
+    if not sorted_list:
+        sorted_list = get_image_index_stuff(accessible_branches, profile)
+
+    context = {'image_list': sorted_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
+                'user_person': profile.person, 'media_server' : media_server, 'user': profile.user}
+    return render(request, 'familytree/image_index.html', context)
+
+
+def get_image_index_stuff(accessible_branches, profile):
+    image_list = Image.objects.none()
     for branch in accessible_branches:
         name = branch.display_name
         image_list = image_list.union(Image.objects.filter(branches__display_name__contains=name).order_by('year'))
     sorted_list = image_list.order_by('year')
 
-    context = {'image_list': sorted_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
-                'user_person': profile.person, 'media_server' : media_server, 'user': profile.user}
-    return render(request, 'familytree/image_index.html', context)
+    cache_name = 'images_' + str(profile.user)
+    cache.set(cache_name, sorted_list, 60 * 30)  # save this for 30 minutes
+    return sorted_list
 
 
 @login_required(login_url=login_url)
