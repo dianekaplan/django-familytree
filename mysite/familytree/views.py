@@ -50,13 +50,13 @@ def index(request):  # dashboard page
     outline_cache_name = 'outline_' + str(profile.user)
     outline_html = cache.get(outline_cache_name)
     if not outline_html:
-        get_outline_html(accessible_branches, profile)
+        outline_html = get_outline_html(accessible_branches, profile)
 
     # get the family album ahead of time
-    image_cache_name = 'outline_' + str(profile.user)
+    image_cache_name = 'images_' + str(profile.user)
     sorted_list = cache.get(image_cache_name)
     if not sorted_list:
-        get_image_index_stuff(accessible_branches, profile)
+        sorted_list = get_image_index_stuff(accessible_branches, profile)
 
     # only include additions or updates, for family, person, story
     display_action_types = [1, 2]
@@ -433,9 +433,15 @@ def get_image_index_stuff(accessible_branches, profile):
         image_list = image_list.union(Image.objects.filter(branches__display_name__contains=name).order_by('year'))
     sorted_list = image_list.order_by('year')
 
+    # Save time on Family album page (aka image_index) by calling ahead for pictured_list. Elsewhere the template will retrieve it
+    family_album_data = []
+
+    for image in sorted_list:
+        family_album_data.append([image, image.pictured_list])
+
     image_cache_name = 'images_' + str(profile.user)
-    cache.set(image_cache_name, sorted_list, 60 * 30)  # save this for 30 minutes
-    return sorted_list
+    cache.set(image_cache_name, family_album_data, 60 * 30)  # save this for 30 minutes
+    return family_album_data
 
 
 @login_required(login_url=login_url)
