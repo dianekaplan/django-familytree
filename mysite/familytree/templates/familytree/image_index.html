@@ -18,7 +18,7 @@ function removeLoader(){
 }
 </script>
 
-{% cache 1800 album user %}
+{% cache 1800 album profile %}
 <h1>Family Album</h1>
 {% if image_list %}
     {% for image, pictured_list in image_list %}

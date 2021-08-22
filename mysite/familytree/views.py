@@ -54,9 +54,12 @@ def index(request):  # dashboard page
 
     # get the family album ahead of time
     image_cache_name = 'images_' + str(profile.user)
-    sorted_list = cache.get(image_cache_name)
-    if not sorted_list:
-        sorted_list = get_image_index_stuff(accessible_branches, profile)
+    family_album_data = cache.get(image_cache_name)
+    if not family_album_data:
+        print("image_cache not there")
+        family_album_data = get_image_index_stuff(accessible_branches, profile)
+    else:
+        print("did find image_cache")
 
     # only include additions or updates, for family, person, story
     display_action_types = [1, 2]
@@ -417,12 +420,15 @@ def image_index(request):
     accessible_branches = get_valid_branches(request)
 
     image_cache_name = 'images_' + str(profile.user)
-    sorted_list = cache.get(image_cache_name)
-    if not sorted_list:
-        sorted_list = get_image_index_stuff(accessible_branches, profile)
+    family_album_data = cache.get(image_cache_name)
+    if not family_album_data:
+        print("image_cache not there")
+        family_album_data = get_image_index_stuff(accessible_branches, profile)
+    else:
+        print("did find image_cache")
 
-    context = {'image_list': sorted_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
-                'user_person': profile.person, 'media_server': media_server, 'user': profile.user}
+    context = {'image_list': family_album_data, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
+                'profile': profile, 'user_person': profile.person, 'media_server': media_server, 'user': profile.user}
     return render(request, 'familytree/image_index.html', context)
 
 
@@ -440,6 +446,7 @@ def get_image_index_stuff(accessible_branches, profile):
         family_album_data.append([image, image.pictured_list])
 
     image_cache_name = 'images_' + str(profile.user)
+    print("setting image_cache")
     cache.set(image_cache_name, family_album_data, 60 * 30)  # save this for 30 minutes
     return family_album_data
 
