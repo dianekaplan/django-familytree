@@ -182,26 +182,26 @@ class Image(models.Model):
 
         return this_image_person, this_image_family, image_people
 
-    def pictured_list(self):
-        results = self.image_subjects()
-        this_image_person = results[0]
-        this_image_family = results[1]
-        image_people = results[2]
-        pictured_list = '<br/>'
-
-        if this_image_person:
-            pictured_list += this_image_person.display_name
-
-        if image_people:  # if the image has both family and individuals configured, show people
-            for person in image_people:
-                pictured_list += person.display_name
-                pictured_list += '<br/>'
-        elif this_image_family:
-            pictured_list += this_image_family.display_name
-
-        pictured_list = mark_safe(pictured_list)
-
-        return pictured_list
+    # def pictured_list(self):
+    #     results = self.image_subjects()
+    #     this_image_person = results[0]
+    #     this_image_family = results[1]
+    #     image_people = results[2]
+    #     pictured_list = '<br/>'
+    #
+    #     if this_image_person:
+    #         pictured_list += this_image_person.display_name
+    #
+    #     if image_people:  # if the image has both family and individuals configured, show people
+    #         for person in image_people:
+    #             pictured_list += person.display_name
+    #             pictured_list += '<br/>'
+    #     elif this_image_family:
+    #         pictured_list += this_image_family.display_name
+    #
+    #     pictured_list = mark_safe(pictured_list)
+    #
+    #     return pictured_list
 
     class Meta(object):
         verbose_name_plural = 'Images'
