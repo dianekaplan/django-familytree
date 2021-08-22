@@ -16,14 +16,13 @@ function removeLoader(){
       $( "#loadingDiv" ).remove(); //makes page more lightweight
   });
 }
-
 </script>
-{% cache 1800 album user %}
 
+{% cache 1800 album user %}
 <h1>Family Album</h1>
 {% if image_list %}
-    {% for image in image_list %}
-        {% include "familytree/image_link.html" with image=image height=150 show_hover=True %}
+    {% for image, pictured_list in image_list %}
+        {% include "familytree/image_link.html" with image=image height=150 show_hover=True pictured_list=pictured_list %}
     {% endfor %}
 {% else %}
     <p>No images are available.</p>

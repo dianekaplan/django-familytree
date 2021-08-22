@@ -183,10 +183,7 @@ class Image(models.Model):
         return this_image_person, this_image_family, image_people
 
     def pictured_list(self):
-        results = self.image_subjects()
-        this_image_person = results[0]
-        this_image_family = results[1]
-        image_people = results[2]
+        this_image_person, this_image_family, image_people  = self.image_subjects()
         pictured_list = '<br/>'
 
         if this_image_person:
