@@ -422,7 +422,7 @@ def image_index(request):
         sorted_list = get_image_index_stuff(accessible_branches, profile)
 
     context = {'image_list': sorted_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
-                'user_person': profile.person, 'media_server' : media_server, 'user': profile.user}
+                'user_person': profile.person, 'media_server': media_server, 'user': profile.user}
     return render(request, 'familytree/image_index.html', context)
 
 
