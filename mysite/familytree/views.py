@@ -15,6 +15,8 @@ from django.template.loader import render_to_string
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
 from .forms import NoteForm, EditPersonForm
 
+import threading
+
 media_server = settings.MEDIA_SERVER
 LARAVEL_SITE_CREATION = settings.LARAVEL_SITE_CREATION
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
@@ -55,9 +57,12 @@ def index(request):  # dashboard page
     # get the family album ahead of time
     image_cache_name = 'images_' + str(profile.user)
     family_album_data = cache.get(image_cache_name)
+    t1 = threading.Thread(target=get_image_index_data, args=(accessible_branches,profile))
+
     if not family_album_data:
         print("image_cache not there")
-        family_album_data = get_image_index_stuff(accessible_branches, profile)
+        # get_image_index_data(accessible_branches, profile)
+        t1.start()
     else:
         print("did find image_cache")
 
@@ -423,7 +428,7 @@ def image_index(request):
     family_album_data = cache.get(image_cache_name)
     if not family_album_data:
         print("image_cache not there")
-        family_album_data = get_image_index_stuff(accessible_branches, profile)
+        family_album_data = get_image_index_data(accessible_branches, profile)
     else:
         print("did find image_cache")
 
@@ -432,7 +437,7 @@ def image_index(request):
     return render(request, 'familytree/image_index.html', context)
 
 
-def get_image_index_stuff(accessible_branches, profile):
+def get_image_index_data(accessible_branches, profile):
     image_list = Image.objects.none()
     for branch in accessible_branches:
         name = branch.display_name
@@ -448,6 +453,7 @@ def get_image_index_stuff(accessible_branches, profile):
     image_cache_name = 'images_' + str(profile.user)
     print("setting image_cache")
     cache.set(image_cache_name, family_album_data, 60 * 30)  # save this for 30 minutes
+    print("image_cache is set")
     return family_album_data
 
 
