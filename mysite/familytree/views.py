@@ -51,22 +51,6 @@ def index(request):  # dashboard page
     today = get_now_for_user(profile.timezone)
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
 
-    # generate the outline view html ahead of time
-    # outline_cache_name = 'outline_' + str(profile.user)
-    # outline_html = cache.get(outline_cache_name)
-    # if not outline_html:
-    #     outline_html = get_outline_html(accessible_branches, profile)
-
-    # get the family album ahead of time
-    # image_cache_name = 'images_' + str(profile.user)
-    # family_album_data = cache.get(image_cache_name)
-
-    # if not family_album_data:
-    #     print("image_cache not there")
-    #     get_image_index_data(accessible_branches, profile)
-    # else:
-    #     print("did find image_cache")
-
     # only include additions or updates, for family, person, story
     display_action_types = [1, 2]
     display_update_types = [2, 4, 5]
