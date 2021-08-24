@@ -15,8 +15,6 @@ from django.template.loader import render_to_string
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
 from .forms import NoteForm, EditPersonForm
 
-import threading
-
 media_server = settings.MEDIA_SERVER
 LARAVEL_SITE_CREATION = settings.LARAVEL_SITE_CREATION
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
@@ -57,12 +55,10 @@ def index(request):  # dashboard page
     # get the family album ahead of time
     image_cache_name = 'images_' + str(profile.user)
     family_album_data = cache.get(image_cache_name)
-    t1 = threading.Thread(target=get_image_index_data, args=(accessible_branches,profile))
 
     if not family_album_data:
         print("image_cache not there")
-        # get_image_index_data(accessible_branches, profile)
-        t1.start()
+        get_image_index_data(accessible_branches, profile)
     else:
         print("did find image_cache")
 
