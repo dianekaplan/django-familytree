@@ -9,13 +9,16 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
 from .forms import NoteForm, EditPersonForm
 
-import threading
+# for receiver function to get album data
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
 
 media_server = settings.MEDIA_SERVER
 LARAVEL_SITE_CREATION = settings.LARAVEL_SITE_CREATION
@@ -47,24 +50,6 @@ def index(request):  # dashboard page
     browser = request.user_agent.browser.family
     today = get_now_for_user(profile.timezone)
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
-
-    # generate the outline view html ahead of time
-    outline_cache_name = 'outline_' + str(profile.user)
-    outline_html = cache.get(outline_cache_name)
-    if not outline_html:
-        outline_html = get_outline_html(accessible_branches, profile)
-
-    # get the family album ahead of time
-    image_cache_name = 'images_' + str(profile.user)
-    family_album_data = cache.get(image_cache_name)
-    t1 = threading.Thread(target=get_image_index_data, args=(accessible_branches,profile))
-
-    if not family_album_data:
-        print("image_cache not there")
-        # get_image_index_data(accessible_branches, profile)
-        t1.start()
-    else:
-        print("did find image_cache")
 
     # only include additions or updates, for family, person, story
     display_action_types = [1, 2]
@@ -451,10 +436,20 @@ def get_image_index_data(accessible_branches, profile):
         family_album_data.append([image, image.pictured_list])
 
     image_cache_name = 'images_' + str(profile.user)
-    print("setting image_cache")
     cache.set(image_cache_name, family_album_data, 60 * 30)  # save this for 30 minutes
     print("image_cache is set")
     return family_album_data
+
+
+#  receiver code to cache data as a user logs in
+@receiver(post_save, sender=User)
+def populate_album_and_outline_data(sender, instance, **kwargs):
+
+    profile_queryset = Profile.objects.filter(user=instance)
+    accessible_branches = Branch.objects.filter(profile__in=profile_queryset)
+
+    get_image_index_data(accessible_branches, profile_queryset.first())
+    get_outline_html(accessible_branches, profile_queryset.first())
 
 
 @login_required(login_url=login_url)
@@ -545,6 +540,7 @@ def get_outline_html(accessible_branches, profile):
 
     outline_cache_name = 'outline_' + str(profile.user)
     cache.set(outline_cache_name, total_results_html, 60 * 30)  # save this for 30 minutes
+    print("outline_cache is set")
     return total_results_html
 
 
