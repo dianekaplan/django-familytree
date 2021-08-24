@@ -4,6 +4,8 @@ from django.conf import settings
 from django.contrib.admin.models import LogEntry
 from django.utils.safestring import mark_safe
 
+# from .views import get_image_index_data
+
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
 
 class Branch(models.Model):
@@ -437,7 +439,6 @@ from django.db.models.signals import post_save
 
 from django.dispatch import receiver
 from django.template.loader import render_to_string
-from .models import Login
 
 
 @receiver(post_save, sender=User)
