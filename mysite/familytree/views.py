@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from django.conf import settings
 from django.core.cache import cache
 from django.core.mail import send_mail
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -406,6 +407,7 @@ def image_detail(request, image_id):
 
 @login_required(login_url=login_url)
 def image_index(request):
+    template = 'familytree/image_index.html'
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
 
@@ -417,9 +419,20 @@ def image_index(request):
     else:
         print("did find image_cache")
 
+    page = request.GET.get('page', 1)
+    paginator = Paginator(family_album_data, 50)
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
+
     context = {'image_list': family_album_data, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
-                'profile': profile, 'user_person': profile.person, 'media_server': media_server, 'user': profile.user}
-    return render(request, 'familytree/image_index.html', context)
+                'profile': profile, 'user_person': profile.person, 'media_server': media_server, 'user': profile.user,
+               'items': items}
+    return render(request, template, context)
+
 
 
 def get_image_index_data(accessible_branches, profile):

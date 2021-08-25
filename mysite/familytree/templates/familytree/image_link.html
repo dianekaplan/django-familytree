@@ -1,4 +1,4 @@
-{% if image.id %}  {#  shouldn't need this, but there were some records coming through without ID! #}
+ {% if image.id %}  {#  shouldn't need this, but there were some records coming through without ID! #}
 
     <div style="display: inline-block; margin-bottom:10px"; class="image_container">
         <a href="{% url 'image_detail' image.id  %}">
@@ -8,7 +8,6 @@
                 <img src="{{ media_server }}/image/upload/h_{{ height }},r_20/{{ image.big_name }}" class="image"/>
             {%  endif %}
 
-<!-- Family album passes pictured_list because it has too many pictures to call individually. Elsewhere, call from here-->
             {% if show_hover %}
                 <span class="overlay">
                     {% if show_hover %}
