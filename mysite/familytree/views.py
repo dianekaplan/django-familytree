@@ -420,7 +420,7 @@ def image_index(request):
         print("did find image_cache")
 
     page = request.GET.get('page', 1)
-    paginator = Paginator(family_album_data, 70)
+    paginator = Paginator(family_album_data, 50)
     try:
         items = paginator.page(page)
     except PageNotAnInteger:
