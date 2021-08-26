@@ -465,6 +465,14 @@ def populate_album_and_outline_data(sender, instance, **kwargs):
     get_outline_html(accessible_branches, profile_queryset.first())
 
 
+# @TODO: Would prefer to do this in myauth/views form_valid while logging in, but different app can't import Profile
+@receiver(post_save, sender=User)
+def increment_profile_login_count(sender, instance, **kwargs):
+    profile = Profile.objects.get(user=instance)
+    profile.login_count += 1
+    profile.save()
+
+
 @login_required(login_url=login_url)
 def video_detail(request, video_id):
     profile = get_display_profile(request).first()
