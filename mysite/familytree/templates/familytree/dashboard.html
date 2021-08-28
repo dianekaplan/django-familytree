@@ -10,7 +10,7 @@
 {% endif %}
 
 <div>
-    <div style="float: left;" class="col-4">
+    <div style="float: left;" class="col-3">
         <div class="circled_section">
         {% if not user_is_guest %}
             {% include "familytree/face_name_link.html" with person=user_person %}<br/>
@@ -37,7 +37,7 @@
     </div>
 </div>
 
-<div style="float: left;" class="circled_section col-3">
+<div style="float: left;" class="circled_section col-3.5">
     {%  if today_birthday %}
         <b>Today's birthdays:</b>
         {% for person in today_birthday %}
