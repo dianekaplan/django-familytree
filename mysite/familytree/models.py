@@ -361,12 +361,23 @@ class Video(models.Model):
         video_person_records = VideoPerson.objects.filter(video_id=self.id)
         video_people = set()
         for record in video_person_records:
-            person = Person.objects.filter(id = record.person_id)
+            person = Person.objects.filter(id = record.person_id).first()
             video_people.add(person)
         return video_people
 
+    def pictured_list(self):
+        video_subjects = self.video_subjects()
+        pictured_list = '<br/>'
+
+        if video_subjects:  # if the image has both family and individuals configured, show people
+            for person in video_subjects:
+                pictured_list += person.display_name
+                pictured_list += '<br/>'
+        pictured_list = mark_safe(pictured_list)
+
+        return pictured_list
+
     class Meta:
-        #managed = False
         db_table = 'videos'
 
     def __str__(self):
