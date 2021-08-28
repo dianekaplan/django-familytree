@@ -2,20 +2,6 @@
 {% block title %} - family album{% endblock title %}
 {% block content %}
 
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script>
-$(window).on('load', function(){
-  setTimeout(removeLoader, 0); //wait for page load PLUS 0 seconds.
-});
-function removeLoader(){
-    $( "#loadingDiv" ).fadeOut(500, function() {
-      // fadeOut complete. Remove the loading div
-      $( "#loadingDiv" ).remove(); //makes page more lightweight
-  });
-}
-</script>
-
 <h1>Family Album</h1>
 
 <div class="infinite-container">

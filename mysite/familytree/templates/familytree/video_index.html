@@ -5,7 +5,7 @@
 <h1>Home Movies</h1>
 {% if video_list %}
     {% for item in video_list %}
-        {% include "familytree/video_link.html" with video=item %}
+        {% include "familytree/video_link.html" with video=item show_hover=True %}
     {% endfor %}
 
 {% else %}

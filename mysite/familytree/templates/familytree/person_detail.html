@@ -126,7 +126,7 @@
         <h2>Videos: </h2>
         <div>
             {% for video in videos %}
-                {% include "familytree/video_link.html" with video=video %}
+                {% include "familytree/video_link.html" with video=video show_hover=True %}
             {% endfor %}
         </div>
     </div>
