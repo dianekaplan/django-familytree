@@ -1,27 +1,25 @@
 
 {%  if video.id %}  {# shouldn't need this, but just in case #}
-        <div style="display: inline-block;" class="image_container" >
+        <div style="display: inline-block; margin-bottom:10px" class="image_container" >
             <a href="{% url 'video_detail' video.id  %}">
-            {%  if browser == 'Safari' %}
-                <img src="{{ media_server }}video/upload/h_100,r_20/{{ video.name }}" />
-            {%  else %}
-                <video controls src="{{ media_server }}video/upload/h_100,r_20/{{ video.name }}"></video>
-            {%  endif %}
-            </a>
+                {%  if browser == 'Safari' %}
+                    <img src="{{ media_server }}video/upload/h_150,r_20/{{ video.name }}" />
+                {%  else %}
+                    <video controls src="{{ media_server }}video/upload/h_150,r_20/{{ video.name }}"></video>
+                {%  endif %}
+                {% if show_hover %}
+                    <span class="overlay">
+                        {% if show_hover %}
+                            <span class="text">{{video.pictured_list}}</span>
+                        {%  endif %}
+                    </span>
+                {%  endif %}
 
-            {% if show_hover %}
-                <span class="overlay">
-                    {% if show_hover %}
-                        <span class="text">Video has: {{video.pictured_list}}</span>
-                    {%  endif %}
-                </span>
-            {%  endif %}
-
-            <br/>
-                {%  if video.caption %}
-                {{ video.caption }}
-            {%  endif %}
-            ({{ video.year }})
+                <br/>
+                    {%  if video.caption %}
+                    {{ video.caption }}
+                {%  endif %}
+                ({{ video.year }})
             </a>
         </div>
 

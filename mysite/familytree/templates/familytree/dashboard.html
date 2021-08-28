@@ -83,7 +83,7 @@
        <b>Latest videos:</b> <br/>
        {%  if latest_videos %}
         {% for video in latest_videos %}
-            {% include "familytree/video_link.html" with video=video %}
+            {% include "familytree/video_link.html" with video=video show_hover=True %}
         {% endfor %}
     {% else %}
         (none)

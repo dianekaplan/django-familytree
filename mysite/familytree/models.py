@@ -367,7 +367,7 @@ class Video(models.Model):
 
     def pictured_list(self):
         video_subjects = self.video_subjects()
-        pictured_list = '<br/>'
+        pictured_list = ''
 
         if video_subjects:  # if the image has both family and individuals configured, show people
             for person in video_subjects:
