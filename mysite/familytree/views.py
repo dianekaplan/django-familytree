@@ -410,6 +410,7 @@ def image_index(request):
     template = 'familytree/image_index.html'
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
+    user_is_guest = profile.guest_user
 
     image_cache_name = 'images_' + str(profile.user)
     family_album_data = cache.get(image_cache_name)
@@ -430,7 +431,7 @@ def image_index(request):
 
     context = {'image_list': family_album_data, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
                 'profile': profile, 'user_person': profile.person, 'media_server': media_server, 'user': profile.user,
-               'items': items}
+               'items': items, 'user_is_guest': user_is_guest}
     return render(request, template, context)
 
 
@@ -498,6 +499,7 @@ def video_index(request):
     existing_branches = Branch.objects.all()
     video_list = Video.objects.none()
     browser = request.user_agent.browser.family
+    user_is_guest = profile.guest_user
 
     for branch in existing_branches:
         if branch in accessible_branches:
@@ -506,7 +508,8 @@ def video_index(request):
     sorted_list = video_list.order_by('year')
 
     context = { 'video_list': sorted_list, 'accessible_branches': accessible_branches, 'branch2_name': branch2_name,
-                'user_person': profile.person, 'media_server': media_server, 'browser': browser, 'user': profile.user}
+                'user_person': profile.person, 'media_server': media_server, 'browser': browser, 'user': profile.user,
+                'user_is_guest': user_is_guest}
     return render(request, 'familytree/video_index.html', context)
 
 
@@ -524,6 +527,7 @@ def story(request, story_id):
 def outline(request):
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
+    user_is_guest = profile.guest_user
 
     # Make a dictionary of original families by branch, for ex: [branch name]: [original families in that branch]
     users_original_families = {}
@@ -538,7 +542,7 @@ def outline(request):
         outline_html = get_outline_html(accessible_branches, profile)
 
     context = {'user_person': profile.person, 'family_dict': users_original_families, 'media_server': media_server,
-               'show_book': True, 'total_results_html': outline_html, 'user': profile.user}
+               'show_book': True, 'total_results_html': outline_html, 'user': profile.user, 'user_is_guest': user_is_guest}
 
     return render(request, 'familytree/outline.html', context)
 
@@ -598,9 +602,10 @@ def landing(request):
 def history(request):
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
+    user_is_guest = profile.guest_user
 
     context = {'accessible_branches': accessible_branches, 'user_person': profile.person,
-                'media_server': media_server,'profile': profile, 'user': profile.user}
+                'media_server': media_server,'profile': profile, 'user': profile.user, 'user_is_guest': user_is_guest}
     return render(request, 'familytree/history.html', context)
 
 
