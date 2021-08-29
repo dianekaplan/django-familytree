@@ -84,6 +84,7 @@ caption 	{font-size: 14pt; color: var(--caption-color);
     border: 5px solid var(--link-color);
     padding: 15px;
     margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .one_branch_display {
