@@ -460,18 +460,19 @@ def get_image_index_data(accessible_branches, profile):
 def populate_album_and_outline_data(sender, instance, **kwargs):
 
     profile_queryset = Profile.objects.filter(user=instance)
-    accessible_branches = Branch.objects.filter(profile__in=profile_queryset)
-
-    get_image_index_data(accessible_branches, profile_queryset.first())
-    get_outline_html(accessible_branches, profile_queryset.first())
+    if profile_queryset: # this is intended for user post_save of a login (not creation, where there isn't a profile yet)
+        accessible_branches = Branch.objects.filter(profile__in=profile_queryset)
+        get_image_index_data(accessible_branches, profile_queryset.first())
+        get_outline_html(accessible_branches, profile_queryset.first())
 
 
 # @TODO: Would prefer to do this in myauth/views form_valid while logging in, but different app can't import Profile
 @receiver(post_save, sender=User)
 def increment_profile_login_count(sender, instance, **kwargs):
-    profile = Profile.objects.get(user=instance)
-    profile.login_count += 1
-    profile.save()
+    profile = Profile.objects.filter(user=instance).first()
+    if profile:
+        profile.login_count += 1
+        profile.save()
 
 
 @login_required(login_url=login_url)
