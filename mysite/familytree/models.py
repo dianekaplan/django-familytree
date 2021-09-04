@@ -86,9 +86,13 @@ class Person(models.Model):
             this_image = Image.objects.filter(id=listing.image_id)
             group_images = group_images | this_image
 
-        # add the ones for original family
+        # add the ones for original family, if the image year >= person's birth year
         if self.family:
-            group_images = group_images | Image.objects.filter(family=self.family)
+            family_images = Image.objects.filter(family=self.family)
+
+            for image in family_images:
+                if self.birthyear and image.year_as_int() >= self.birthyear:
+                    group_images = group_images | Image.objects.filter(id=image.id)
 
         # add the ones for families made
         families_made = self.families_made()
@@ -199,6 +203,12 @@ class Image(models.Model):
         pictured_list = mark_safe(pictured_list)
 
         return pictured_list
+
+    def year_as_int(self):
+        year_as_int = 0
+        if len(self.year) == 4:
+            year_as_int = int(self.year)
+        return year_as_int
 
     class Meta(object):
         verbose_name_plural = 'Images'
