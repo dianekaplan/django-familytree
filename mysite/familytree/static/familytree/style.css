@@ -98,6 +98,7 @@ caption 	{font-size: 14pt; color: var(--caption-color);
 }
 
 .four_branch_display {
+  margin: 5px;
   width: 23%;
 }
 
