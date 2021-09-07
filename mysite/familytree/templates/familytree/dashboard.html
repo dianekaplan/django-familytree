@@ -15,10 +15,10 @@
         {% if not user_is_guest %}
             {% include "familytree/face_name_link.html" with person=user_person %}<br/>
         {% endif %}
-        <h2><a href="{% url 'history'  %}">My family history</a></h2>
-        <h2><a href="{% url 'image_index'  %}">Family album</a></h2>
-        <h2><a href="{% url 'video_index'  %}">Home Movies</a></h2>
-        <h2><a href="{% url 'outline'  %}">Outline View</a></h2>
+        <h2><a href="{% url 'history' %}">My family history</a></h2>
+        <h2><a href="{% url 'image_index' %}">Family album</a></h2>
+        <h2><a href="{% url 'video_index' %}">Home Movies</a></h2>
+        <h2><a href="{% url 'outline' %}">Outline View</a></h2>
         {% if profile.furthest_html %}
             <b>My furthest ancestors here:</b> <br/>{{ profile.furthest_html | safe}}<br/>
         {% endif %}
@@ -64,7 +64,7 @@
     </div>
 </div>
 
-<div style="float: left;" class="col-5">
+<div style="float: left;" class="col-4">
     <div  class="circled_section">
         <b>Latest pics:</b> <br/>
        {%  if latest_pics%}
