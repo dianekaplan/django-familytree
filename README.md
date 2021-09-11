@@ -1,23 +1,18 @@
 
-[BUILDING IN PROGRESS] Django family tree tool that can import data from a GEDCOM file (the 
-common geneology standard used on sites like ancestry.com). 
+Django family tree tool that can import data from a GEDCOM file (the 
+common geneology standard used on sites like ancestry.com), and allow you to: 
+- augment your tree with pictures, video/audio clips, stories, and notes
+- set up users with access to specific branches of the tree (so they see only the content for their own relatives)
+- summarize 'family history' for each branch of the family, to help pull together narratives to orient your users
 
-**Basic family tree (import once from gedcom)**
-Setup/data import: 
-- Set environment variables (local in .bash_profile, staging/prod in heroku): 
-export ENV_ROLE=development
-export FAMILY_LOCAL_DB_PASS=[your local db password]
-export EMAIL_HOST_PASSWORD=[your email host password]
-ROOT_URL (temporary?)
-SOURCE_DATABASE_PASSWORD
-SECRET_KEY
+**Overview**
+This tool provides a way to set up a more customized display for your family tree, pulling the people/families from your 
+GEDCOM file to set up the structure (you can also add them one at a time using the django admin), but where you then add 
+your own custom content and have control over the display. For now this assumes working knowledge of Django, as well as 
+having some media server to host your images. The instance of my family tree runs on Heroku, using the Cloudinary plugin
+to host images and video/audio files. 
 
-- save gedcom file in: mysite/familytree/management/commands/gedcom_files
-- from directory with manage.py, run: python3 manage.py importgedcom your_file.ged
-
-By default, all of your person/family records will display to all users
-
-**Add family branches**
+**Determine what 'branches' to set up for your family**
 Some relatives/users are only related to one part of the family, so I want to only show them people/images related to them.
 Define family branches in the admin UI as a way of (a) sorting people for clearer display and (b) showing each user the people 
 they're related to. I define 4 branches in my instance (one for each of my grandparents), which makes things easier to find: 
@@ -27,13 +22,12 @@ they're related to. I define 4 branches in my instance (one for each of my grand
 Setup: in the admin area, add up to 4 branches, then specify which branch(es) apply for all the various records: 
 people, family, images, and more. 
 
-**To import multiple times from gedcom**
-Background info about IDs: 
-- In a gedcom file, the INDI values associate people and family records to each other. However, these are only internal 
-to the specific file, and THESE IDs CAN CHANGE in subsequent gedcom exports from the same tool. 
-- A combination of import scripts populate unique IDs for the families (following this convention: https://www.ged-gen.com/help/hlpmisc-number.html)
- and people ("gedcom_UUID"), which we then populate
-in ancestry.com as an "also known as" fact, which maps to a FACT tag of type AKA in gedcom file. 
+**Have a way to map these records to those on your ancestry tree**
+After the initial GEDCOM import is done, you'll still be learning new things in your family tree and adding new people. 
+You need a way to map a person's record in this tree with the one in ancestry, and unfortunately the GEDCOM format
+doesn't provide unique IDs. This tool has scripts to generate unique IDs for every person, but we then need to add them 
+in to the corresponding records in ancestry.com. (That way subsequent imports recognize which people are already there 
+and don't need to be re-added).
 
 **Detailed setup and usage notes**
-https://github.com/dianekaplan/familytree-django
+https://github.com/dianekaplan/familytree-django/wiki
