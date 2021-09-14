@@ -321,6 +321,7 @@ class Story(models.Model):
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
     branches = models.ManyToManyField(Branch, blank=True)
+    dashboard_feature = models.BooleanField(null=True, default=True)
 
     class Meta(object):
         verbose_name_plural = 'Stories'
