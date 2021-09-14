@@ -24,7 +24,9 @@ past month's logins:
       <tr>
         <td>{{last_login_never | length}}</td>
         <td>{{last_login_django_site | length}}, {{last_login_laravel_site | length}}, {{last_login_old_site_only | length}}</td>
-        <td>{{profiles_who_made_edits | length }}, {{profiles_who_made_notes_new | length}}, {{profiles_who_made_notes_old | length}}</td>
+        <td>{{profiles_who_made_edits_new | length }}, {{profiles_who_made_notes_new | length}},
+            {{profiles_who_made_edits_old | length }},
+            {{profiles_who_made_notes_old | length}}</td>
       </tr>
       <tr>
 
@@ -64,7 +66,7 @@ past month's logins:
         <td>
             Made updates (Django site):
             <ul>
-               {% for profile in profiles_who_made_edits %}
+               {% for profile in profiles_who_made_edits_new %}
                     <li>
                         {{ profile.person.display_name }}: {{ profile.edits_made }}
                     </li>
@@ -79,6 +81,16 @@ past month's logins:
                 </li>
                 {% endfor %}
             </ul>
+
+            Made updates (Laravel site):
+            <ul>
+               {% for profile in profiles_who_made_edits_old %}
+                    <li>
+                        {{ profile.person.display_name }}: {{ profile.edits_made }}
+                    </li>
+                  {% endfor %}
+            </ul>
+
             Added notes (Laravel site):
             <ul>
                 {% for profile in profiles_who_made_notes_old %}
