@@ -35,7 +35,7 @@ class Person(models.Model):
     family = models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL) # person's origin family
     orig_fam_indi = models.CharField(max_length=20, null=True, blank=True, default='')
     sex = models.CharField(max_length=2, null=True, blank=True, default='')
-    origin = models.CharField(max_length=100, null=True, blank=True, default='') # big description of background, probably will remove
+    origin = models.CharField(max_length=100, null=True, blank=True, default='') # description of background
     face = models.CharField(max_length=25, null=True, blank=True, default='')
     current_location = models.CharField(max_length=75, null=True, blank=True, default='')
     work = models.CharField(max_length=300, null=True, blank=True, default='')
@@ -52,9 +52,9 @@ class Person(models.Model):
     notes1 = models.CharField(max_length=1200, null=True, blank=True, default='')
     notes2 = models.CharField(max_length=1200, null=True, blank=True, default='')
     notes3 = models.CharField(max_length=1200, null=True, blank=True, default='')
-    flag1 = models.CharField(max_length=10, null=True, blank=True, default='') # will probably get rid of these anyway
-    flag2 = models.CharField(max_length=10, null=True, blank=True, default='') # will probably get rid of these anyway
-    flag3 = models.CharField(max_length=10, null=True, blank=True, default='') # will probably get rid of these anyway
+    flag1 = models.CharField(max_length=10, null=True, blank=True, default='') # not using anymore
+    flag2 = models.CharField(max_length=10, null=True, blank=True, default='') # not using anymore
+    flag3 = models.CharField(max_length=10, null=True, blank=True, default='') # not using anymore
     reviewed = models.BooleanField(null=True, default=False)
     living = models.BooleanField(null=True, default=False)
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
@@ -150,10 +150,11 @@ class Family(models.Model):
 
 
 class Image(models.Model):
-    big_name = models.CharField(max_length=50, null=True, blank=True) # this field will always be there
+    big_name = models.CharField(max_length=50, null=True, blank=True) # this field will always be present
     med_name = models.CharField(max_length=50, null=True, blank=True) # optional file name for different medium sized image (rather than just resized)
     little_name = models.CharField(max_length=50, null=True, blank=True) # optional file name for zoomed-in thumbnail (rather than just resized)
     caption = models.CharField(max_length=50, null=True, blank=True)
+    notes = models.CharField(max_length=500, null=True, blank=True)
     branches = models.ManyToManyField(Branch, blank=True)
 
     year = models.CharField(max_length=20, null=True, blank=True)
