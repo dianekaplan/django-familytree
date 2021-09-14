@@ -160,6 +160,7 @@ class Image(models.Model):
     year = models.CharField(max_length=20, null=True, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='person')
     family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name='family')
+    parents_only = models.BooleanField(null=True, default=False)
     featured = models.IntegerField(null=True, default=False)
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
