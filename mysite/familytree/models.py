@@ -88,7 +88,7 @@ class Person(models.Model):
 
         # add the ones for original family, if the image year >= person's birth year
         if self.family:
-            family_images = Image.objects.filter(family=self.family)
+            family_images = Image.objects.filter(family=self.family).filter(parents_only=False)
 
             for image in family_images:
                 if self.birthyear and image.year_as_int() >= self.birthyear:
