@@ -262,29 +262,20 @@ class Profile(models.Model): # This class holds additional info for user records
             edit_counts = False
         return edit_counts
 
-
-    # @FIXME- redundancy: these functions work for displaying count on user_metrics.html
-    def old_notes_written(self):
+    def old_edits_made(self):
         if self.person:
-            all_notes = Note.objects.filter(author=self.person.id)
-            notes_written = [x for x in all_notes if x.created_at.date() < DJANGO_SITE_CREATION]
-            notes_written_count = len(notes_written) if notes_written else False
+            edits_made_count = self.edits_made('old')
         else:
-            notes_written_count = False
-        return notes_written_count
+            edits_made_count = False
+        return edits_made_count
 
-    def new_notes_written(self):
+    def new_edits_made(self):
         if self.person:
-            all_notes = Note.objects.filter(author=self.person.id)
-            notes_written = [x for x in all_notes if x.created_at.date() > DJANGO_SITE_CREATION]
-            notes_written_count = len(notes_written) if notes_written else False
+            edits_made_count = self.edits_made('new')
         else:
-            notes_written_count = False
-        return notes_written_count
+            edits_made_count = False
+        return edits_made_count
 
-
-    # @FIXME- redundancy: this function works for differentiating profiles with/without notes on views.py
-    # (the ones above include everyone even when their result is False)
     def notes_written(self, type):
         if self.person:
             all_notes = Note.objects.filter(author=self.person.id)
@@ -293,6 +284,20 @@ class Profile(models.Model): # This class holds additional info for user records
             elif type == 'new':
                 notes_written = [x for x in all_notes if x.created_at.date() > DJANGO_SITE_CREATION]
             notes_written_count = len(notes_written) if notes_written else False
+        else:
+            notes_written_count = False
+        return notes_written_count
+
+    def old_notes_written(self):
+        if self.person:
+            notes_written_count = self.notes_written('old')
+        else:
+            notes_written_count = False
+        return notes_written_count
+
+    def new_notes_written(self):
+        if self.person:
+            notes_written_count = self.notes_written('new')
         else:
             notes_written_count = False
         return notes_written_count
