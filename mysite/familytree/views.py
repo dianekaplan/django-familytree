@@ -692,7 +692,8 @@ def user_metrics(request):
     profiles_who_made_notes_old = [x for x in profiles if x.notes_written('old')]
     profiles_who_made_notes_new = [x for x in profiles if x.notes_written('new')]
 
-    profiles_who_made_edits = [x for x in profiles if x.edits_made()]
+    profiles_who_made_edits_old = [x for x in profiles if x.edits_made('old')]
+    profiles_who_made_edits_new = [x for x in profiles if x.edits_made('new')]
 
     branch1_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[0])
     branch2_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[1])
@@ -701,12 +702,14 @@ def user_metrics(request):
 
     context = {'accessible_branches': accessible_branches, 'user_person': profile.person,
                 'profiles': profiles, 'last_login_never': last_login_never, 'last_login_past_month': last_login_past_month,
-               'last_login_old_site_only': last_login_old_site_only, 'profiles_who_made_notes_old': profiles_who_made_notes_old,
+               'last_login_old_site_only': last_login_old_site_only,
+               'profiles_who_made_notes_old': profiles_who_made_notes_old,
                'profiles_who_made_notes_new': profiles_who_made_notes_new,
                'last_login_laravel_site': last_login_laravel_site, 'last_login_django_site': last_login_django_site,
                'branch1_users': branch1_users, 'branch2_users': branch2_users, 'branch3_users': branch3_users,
                'branch4_users': branch4_users, 'existing_branches_list': existing_branches_list,
-               'media_server': media_server, 'profiles_who_made_edits': profiles_who_made_edits, 'user_timezone': profile.timezone
+               'media_server': media_server, 'profiles_who_made_edits_new': profiles_who_made_edits_new,
+               'profiles_who_made_edits_old': profiles_who_made_edits_old, 'user_timezone': profile.timezone
                }
 
     return render(request, 'familytree/user_metrics.html', context)

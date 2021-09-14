@@ -250,20 +250,24 @@ class Profile(models.Model): # This class holds additional info for user records
         verbose_name_plural = 'Profiles'
         db_table = 'profiles'
 
-    def edits_made(self):
+    def edits_made(self, type=None):
         if self.person:
             edits_made = LogEntry.objects.filter(user_id=self.user.id)
-            edits_made_count = len(edits_made)
+            if type == 'old':
+                edits_made = [x for x in edits_made if x.action_time.date() < DJANGO_SITE_CREATION]
+            if type == 'new':
+                edits_made = [x for x in edits_made if x.action_time.date() >= DJANGO_SITE_CREATION]
+            edit_counts = len(edits_made)
         else:
-            edits_made_count = False
-        return edits_made_count
+            edit_counts = False
+        return edit_counts
+
 
     # @FIXME- redundancy: these functions work for displaying count on user_metrics.html
     def old_notes_written(self):
         if self.person:
             all_notes = Note.objects.filter(author=self.person.id)
-            notes_written = [x for x in all_notes if
-                             x.created_at.date() < DJANGO_SITE_CREATION]
+            notes_written = [x for x in all_notes if x.created_at.date() < DJANGO_SITE_CREATION]
             notes_written_count = len(notes_written) if notes_written else False
         else:
             notes_written_count = False
@@ -272,8 +276,7 @@ class Profile(models.Model): # This class holds additional info for user records
     def new_notes_written(self):
         if self.person:
             all_notes = Note.objects.filter(author=self.person.id)
-            notes_written = [x for x in all_notes if
-                             x.created_at.date() > DJANGO_SITE_CREATION]
+            notes_written = [x for x in all_notes if x.created_at.date() > DJANGO_SITE_CREATION]
             notes_written_count = len(notes_written) if notes_written else False
         else:
             notes_written_count = False
@@ -286,13 +289,10 @@ class Profile(models.Model): # This class holds additional info for user records
         if self.person:
             all_notes = Note.objects.filter(author=self.person.id)
             if type == 'old':
-                notes_written = [x for x in all_notes if
-                                      x.created_at.date() < DJANGO_SITE_CREATION]
+                notes_written = [x for x in all_notes if x.created_at.date() < DJANGO_SITE_CREATION]
             elif type == 'new':
-                notes_written = [x for x in all_notes if
-                                     x.created_at.date() > DJANGO_SITE_CREATION]
+                notes_written = [x for x in all_notes if x.created_at.date() > DJANGO_SITE_CREATION]
             notes_written_count = len(notes_written) if notes_written else False
-
         else:
             notes_written_count = False
         return notes_written_count
