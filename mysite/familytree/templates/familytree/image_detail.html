@@ -8,10 +8,13 @@
         <img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}"  style="max-width:100%;">
     </div>
     <div>
+        <b>{{ image.year }}</b>
         {% if image.caption %}
             <h3>{{ image.caption }}</h3>
         {% endif %}
-        {{ image.year }}
+        {% if image.notes %}
+            <p>{{ image.notes }}</p>
+        {% endif %}
     </div>
  </div>
 
