@@ -68,7 +68,7 @@ past month's logins:
             <ul>
                {% for profile in profiles_who_made_edits_new %}
                     <li>
-                        {{ profile.person.display_name }}: {{ profile.edits_made }}
+                        {{ profile.person.display_name }}: {{ profile.new_edits_made }}
                     </li>
                   {% endfor %}
             </ul>
@@ -86,7 +86,7 @@ past month's logins:
             <ul>
                {% for profile in profiles_who_made_edits_old %}
                     <li>
-                        {{ profile.person.display_name }}: {{ profile.edits_made }}
+                        {{ profile.person.display_name }}: {{ profile.old_edits_made }}
                     </li>
                   {% endfor %}
             </ul>
