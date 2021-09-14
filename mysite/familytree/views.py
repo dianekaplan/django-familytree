@@ -129,7 +129,7 @@ def index(request):  # dashboard page
     story_list = Story.objects.none()
     try:
         for branch in accessible_branches:
-            this_branch_stories = Story.objects.filter(branches__display_name__contains=branch.display_name).order_by('-id')
+            this_branch_stories = Story.objects.filter(branches__display_name__contains=branch.display_name).filter(dashboard_feature=True).order_by('-id')
             story_list = story_list | this_branch_stories
         combined_story_list = story_list.order_by('-id').distinct()[:10]
     except Story.DoesNotExist:
