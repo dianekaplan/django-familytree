@@ -31,7 +31,7 @@ class Person(models.Model):
     birthdate = models.DateField(null=True, blank=True)
     birthdate_note = models.CharField(max_length=55, null=True, blank=True, default='')
     birthyear = models.IntegerField(blank=True, null=True)
-    birthplace = models.CharField(max_length=60, null=True, blank=True, default='')
+    birthplace = models.CharField(max_length=80, null=True, blank=True, default='')
     family = models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL) # person's origin family
     orig_fam_indi = models.CharField(max_length=20, null=True, blank=True, default='')
     sex = models.CharField(max_length=2, null=True, blank=True, default='')
@@ -115,7 +115,7 @@ class Person(models.Model):
 
 class Family(models.Model):
     gedcom_indi = models.CharField(max_length=20, null=True, blank=True, default='')
-    display_name = models.CharField(max_length=60, blank=True)
+    display_name = models.CharField(max_length=75, blank=True)
     wife = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='partner1')
     husband = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name='partner2')
     wife_indi = models.CharField(max_length=20, null=True, blank=True, default='')
