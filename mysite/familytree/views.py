@@ -24,10 +24,10 @@ from django.contrib.auth.models import User
 media_server = settings.MEDIA_SERVER
 LARAVEL_SITE_CREATION = settings.LARAVEL_SITE_CREATION
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
-newest_generation_for_guest = 13  # guest users will not see any generations newer (higher) than this
-
+NEWEST_GENERATION_FOR_GUEST = settings.NEWEST_GENERATION_FOR_GUEST # guest users only see generations older than this
 root_url = settings.ROOT_URL
 
+# @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches.
 branch1_name = Branch.objects.filter(id=1)
 branch2_name = Branch.objects.filter(id=2)
 branch3_name = Branch.objects.filter(id=3)
@@ -153,7 +153,7 @@ def family_index(request):
     user_is_guest = Profile.objects.get(user=request.user).guest_user
     existing_branches_list = list(Branch.objects.all())
 
-    # @@TODO: specific to 4-branch setup, will want to be flexible for others
+    # @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches. plo00,m
     branch1_families = Family.objects.filter(branches__display_name__contains=existing_branches_list[0],
                                              show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
 
@@ -184,7 +184,7 @@ def person_index(request):
     user_is_guest = profile.guest_user
     existing_branches_list = list(Branch.objects.all())
 
-    # @@TODO: specific to 4-branch setup, will want to be flexible for others
+    # @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches.
     branch1_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[0], hidden=False,
                                            reviewed=True).order_by('last', 'first')
     branch2_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[1], hidden=False,
@@ -195,7 +195,7 @@ def person_index(request):
                                            reviewed=True).order_by('last', 'first')
 
     # person_list is used if there aren't defined branches yet
-    person_list = Person.objects.order_by('display_name') # add this to limit list displayed: [:125]
+    person_list = Person.objects.order_by('display_name')
     context = {'person_list': person_list,
                 'branch1_people': branch1_people, 'branch2_people': branch2_people,
                 'branch3_people': branch3_people, 'branch4_people': branch4_people, 'branch1_name': branch1_name,
@@ -269,6 +269,7 @@ def person_detail(request, person_id):
                             'media_server': media_server, 'browser': browser, 'user': profile.user,
                             'user_is_guest': user_is_guest, 'user_is_limited': user_is_limited})
 
+
 @login_required(login_url=login_url)
 def add_person_note(request, person_id):
     template_name = 'familytree/add_person_note.html'
@@ -323,7 +324,6 @@ def edit_person(request, person_id):
 
     if request.method == 'POST':
         if person_edit_form.is_valid():
-
             # send an email to the site admin
             email_data = {'user': editing_user, 'person': person}
             from_email = settings.ADMIN_EMAIL_SEND_FROM
@@ -404,7 +404,6 @@ def image_detail(request, image_id):
                                                             'media_server': media_server, 'user_is_guest': user_is_guest
                                                             })
 
-
 @login_required(login_url=login_url)
 def image_index(request):
     template = 'familytree/image_index.html'
@@ -435,17 +434,16 @@ def image_index(request):
     return render(request, template, context)
 
 
-
+# Save time on Family album page (aka image_index) by calling ahead for pictured_list.
+# Elsewhere the template will retrieve it from cache
 def get_image_index_data(accessible_branches, profile):
     image_list = Image.objects.none()
     for branch in accessible_branches:
         name = branch.display_name
         image_list = image_list.union(Image.objects.filter(branches__display_name__contains=name).order_by('year'))
+
     sorted_list = image_list.order_by('year')
-
-    # Save time on Family album page (aka image_index) by calling ahead for pictured_list. Elsewhere the template will retrieve it
     family_album_data = []
-
     for image in sorted_list:
         family_album_data.append([image, image.pictured_list])
 
@@ -670,7 +668,6 @@ def account(request):
 
     return render(request, 'familytree/account.html', context)
 
-# These metrics are specific to my usage/history
 @login_required(login_url=login_url)
 def user_metrics(request):
     profile = get_display_profile(request).first()
@@ -684,10 +681,18 @@ def user_metrics(request):
     last_login_never = [x for x in profiles if not x.last_login()]
     last_login_past_month = [x for x in profiles if x.last_login() and x.last_login().date() > month_ago_date]
 
+    # @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches.
+    branch1_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[0])
+    branch2_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[1])
+    branch3_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[2])
+    branch4_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[3])
+
+    # Custom code for my instance: I've had three generations of websites, so I differentiate between them
+    # A new instance would only need one count for logins, updates, and notes
+    last_login_django_site = [x for x in profiles if x.last_login() and x.last_login().date() >= DJANGO_SITE_CREATION]
     last_login_old_site_only = [x for x in profiles if x.last_login() and x.last_login().date() < LARAVEL_SITE_CREATION]
     last_login_laravel_site = [x for x in profiles if x.last_login() and LARAVEL_SITE_CREATION < x.last_login().date() <
                                DJANGO_SITE_CREATION]
-    last_login_django_site = [x for x in profiles if x.last_login() and x.last_login().date() >= DJANGO_SITE_CREATION]
 
     profiles_who_made_notes_old = [x for x in profiles if x.notes_written('old')]
     profiles_who_made_notes_new = [x for x in profiles if x.notes_written('new')]
@@ -695,21 +700,17 @@ def user_metrics(request):
     profiles_who_made_edits_old = [x for x in profiles if x.edits_made('old')]
     profiles_who_made_edits_new = [x for x in profiles if x.edits_made('new')]
 
-    branch1_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[0])
-    branch2_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[1])
-    branch3_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[2])
-    branch4_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[3])
-
     context = {'accessible_branches': accessible_branches, 'user_person': profile.person,
                 'profiles': profiles, 'last_login_never': last_login_never, 'last_login_past_month': last_login_past_month,
-               'last_login_old_site_only': last_login_old_site_only,
-               'profiles_who_made_notes_old': profiles_who_made_notes_old,
-               'profiles_who_made_notes_new': profiles_who_made_notes_new,
-               'last_login_laravel_site': last_login_laravel_site, 'last_login_django_site': last_login_django_site,
                'branch1_users': branch1_users, 'branch2_users': branch2_users, 'branch3_users': branch3_users,
                'branch4_users': branch4_users, 'existing_branches_list': existing_branches_list,
-               'media_server': media_server, 'profiles_who_made_edits_new': profiles_who_made_edits_new,
-               'profiles_who_made_edits_old': profiles_who_made_edits_old, 'user_timezone': profile.timezone
+               'media_server': media_server, 'user_timezone': profile.timezone,
+               'profiles_who_made_edits_new': profiles_who_made_edits_new,
+               'profiles_who_made_edits_old': profiles_who_made_edits_old,
+               'last_login_laravel_site': last_login_laravel_site, 'last_login_django_site': last_login_django_site,
+               'last_login_old_site_only': last_login_old_site_only,
+               'profiles_who_made_notes_old': profiles_who_made_notes_old,
+               'profiles_who_made_notes_new': profiles_who_made_notes_new
                }
 
     return render(request, 'familytree/user_metrics.html', context)
@@ -718,4 +719,3 @@ def user_metrics(request):
 def get_now_for_user(timezone_string):
     now = datetime.now().astimezone(timezone(timezone_string))
     return now
-
