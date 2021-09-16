@@ -172,7 +172,7 @@ def family_index(request):
                 'branch2_name': branch2_name, 'branch3_name': branch3_name, 'branch4_name': branch4_name,
                 'show_by_branch': show_by_branch, 'accessible_branches': accessible_branches, 'user_person': profile.person,
                 'media_server': media_server, 'branch_class': branch_classes[len(accessible_branches)],
-                'user_is_guest': user_is_guest, 'newest_generation_for_guest': newest_generation_for_guest, 'user': profile.user}
+                'user_is_guest': user_is_guest, 'newest_generation_for_guest': NEWEST_GENERATION_FOR_GUEST, 'user': profile.user}
 
     return render(request, 'familytree/family_index.html', context)
 
