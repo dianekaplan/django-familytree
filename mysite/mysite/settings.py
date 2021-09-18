@@ -17,7 +17,7 @@ from django.core.exceptions import ImproperlyConfigured
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # This setup is recommended here: https://www.ultimatedjango.com/learn-django/lessons/define-environments/side/
-# However when I use it and try running the server we get 500 error:  no such table: django_session
+# But when I use it and try running the server we get 500 error:  no such table: django_session
 #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Handling Key Import Errors
@@ -31,18 +31,12 @@ def get_env_variable(var_name):
 
 # Get ENV VARIABLES key
 ENV_ROLE = get_env_variable('ENV_ROLE')
-
 ROOT_URL = get_env_variable('ROOT_URL')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-
-# Extra places for collectstatic to find static files.
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static'),
-# )
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -66,7 +60,7 @@ if ENV_ROLE == 'development':
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = 'localhost'
-    DB_DATABASE = "migration_test5"
+    DB_DATABASE = "sept18_2021_backup"
     DB_USER = 'family'
     DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS')
     DB_OPTIONS = {'sslmode': 'allow'}
@@ -81,7 +75,7 @@ if ENV_ROLE == 'staging':
     DB_USER = get_env_variable('DB_USERNAME')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     DB_OPTIONS = {'sslmode': 'require'}
-    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove this now that import is done?
+    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove now that migration is done?
 
 if ENV_ROLE == 'prod':
     DEBUG = False
@@ -92,7 +86,7 @@ if ENV_ROLE == 'prod':
     DB_USER = get_env_variable('DB_USERNAME')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     DB_OPTIONS = {'sslmode': 'require'}
-    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove this now that import is done?
+    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove now that migration is done?
 
 ALLOWED_HOSTS = ['127.0.0.1', 'family-django-stage.herokuapp.com', 'family-django-prod.herokuapp.com', '.ourbigfamilytree.com']
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -149,14 +143,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": DB_DATABASE, #"migration_test5",
+        "NAME": DB_DATABASE,
         "USER": DB_USER, #'family',
         "PASSWORD": DB_PASSWORD,
         "HOST": DB_HOST,
@@ -165,16 +158,13 @@ DATABASES = {
     },
     "source": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "laravel_backup_aug15",  # backup_july3_2021  backup_mar30_2021  postgres
+        "NAME": "laravel_backup_aug15",
         "USER": DB_USER,
-        "PASSWORD": "test", # @TODO: remove this section now that import is done?
+        "PASSWORD": "test", # @TODO: remove now that migration is done?
         "HOST": DB_HOST,
         "PORT": "5432",
     }
 }
-
-# import dj_database_url
-# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # For unit tests we'll use sqlite
 import sys
@@ -187,7 +177,6 @@ if 'test' in sys.argv:
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -212,15 +201,10 @@ EMAIL_USE_TLS = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 LOGIN_REDIRECT_URL = 'dashboard'
