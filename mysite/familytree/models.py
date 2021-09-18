@@ -34,7 +34,7 @@ class Person(models.Model):
     birthplace = models.CharField(max_length=80, null=True, blank=True, default='')
     family = models.ForeignKey('Family', null=True, blank=True, on_delete=models.SET_NULL) # person's origin family
     orig_fam_indi = models.CharField(max_length=20, null=True, blank=True, default='')
-    sex = models.CharField(max_length=2, null=True, blank=True, default='')
+    sex = models.CharField(max_length=2, default='')
     origin = models.CharField(max_length=100, null=True, blank=True, default='') # description of background
     face = models.CharField(max_length=25, null=True, blank=True, default='')
     current_location = models.CharField(max_length=75, null=True, blank=True, default='')
