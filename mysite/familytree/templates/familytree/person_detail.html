@@ -47,7 +47,9 @@
                 <b>Grew up in family:</b>
                 <a href="{% url 'family_detail' origin_family.id %}">{{ origin_family.display_name }}</a><br/>
             {% endif %}
-            <b>National Origin:</b> {{ person.origin|default_if_none:"" }} <br/>
+            {% if person.origin %}
+                <b>National Origin:</b> {{ person.origin|default_if_none:"" }} <br/>
+            {% endif %}
     </div>
 
 
