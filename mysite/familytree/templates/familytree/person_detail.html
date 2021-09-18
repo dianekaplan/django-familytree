@@ -56,8 +56,6 @@
             {% for image in featured_images %}
                 {% include "familytree/featured_image.html" with image=image %}
             {% endfor %}
-        {% else %}
-            <img src="{% static 'familytree/Blank-Image-Placeholder.gif' %}" />
         {% endif %}
     </div>
 
