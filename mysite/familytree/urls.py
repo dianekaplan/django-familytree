@@ -17,11 +17,11 @@ urlpatterns = [
     # ex: /people/5/
      path('people/<int:person_id>/', views.person_detail, name='person_detail'),
 
-    # ex: /add_person_note/5/
-    path('add_person_note/<int:person_id>/', views.add_person_note, name='add_person_note'),
+    # ex: /add_note/person/5/
+    path('add_note/<str:object_type>/<int:object_id>/', views.add_note, name='add_person_note'),
 
-    # ex: /add_family_note/5/
-    path('add_family_note/<int:family_id>/', views.add_family_note, name='add_family_note'),
+    # ex: /add_note/family/5/
+    path('add_note/<str:object_type>/<int:object_id>/', views.add_note, name='add_family_note'),
 
     # ex: /edit_person/5/
     path('edit_person/<int:person_id>/', views.edit_person, name='edit_person'),

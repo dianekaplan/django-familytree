@@ -271,40 +271,31 @@ def person_detail(request, person_id):
 
 
 @login_required(login_url=login_url)
-def add_person_note(request, person_id):
-    template_name = 'familytree/add_person_note.html'
+def add_note(request, object_id, object_type):
     profile = get_display_profile(request).first()
-    person = get_object_or_404(Person, pk=person_id)  # person note is about
     note_form = NoteForm(request.POST)
+    template_name = None
 
     context = {
-        'person': person, 'user_person': profile.person, 'media_server': media_server, 'note_form': note_form
+        'user_person': profile.person, 'media_server': media_server, 'note_form': note_form
     }
+
+    if object_type == 'person':
+        template_name = 'familytree/add_person_note.html'
+        person = get_object_or_404(Person, pk=object_id)  # person note is about
+        context['person'] = person
+        page_name = 'person_detail'
+
+    if object_type == 'family':
+        template_name = 'familytree/add_family_note.html'
+        family = get_object_or_404(Family, pk=object_id)  # family note is about
+        context['family'] = family
+        page_name = 'family_detail'
 
     if request.method == 'POST':
         if note_form.is_valid():
             note_form.save()
-            return redirect('person_detail', person_id=person.id)
-
-    if request.method == 'GET':
-        return render(request, template_name, context)
-
-
-@login_required(login_url=login_url)
-def add_family_note(request, family_id):
-    template_name = 'familytree/add_family_note.html'
-    profile = get_display_profile(request).first()
-    family = get_object_or_404(Family, pk=family_id)  # family note is about
-    note_form = NoteForm(request.POST)
-
-    context = {
-        'family': family, 'user_person': profile.person, 'media_server': media_server, 'note_form': note_form
-    }
-
-    if request.method == 'POST':
-        if note_form.is_valid():
-            note_form.save()
-            return redirect('family_detail', family_id=family.id)
+            return redirect(page_name, object_id)
 
     if request.method == 'GET':
         return render(request, template_name, context)
