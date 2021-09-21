@@ -32,10 +32,7 @@
       <input type="text" class="form-control" value="{{ person.maiden | default_if_none:'' }}" id="maiden" name="maiden">
 
       <label class="col-form-label mt-4" for="birthdate">Birthdate:</label>
-      {%  if person.birthdate %}
-        (current value is {{ person.birthdate | date:"m/d/Y" }})
-      {% endif %}
-      <input type="date" class="form-control" value="{{ person.birthdate | date:'m/d/Y' }}"  id="birthdate" name="birthdate">
+        <input type="date" class="form-control" value="{{ person.birthdate | date:'Y-m-d' }}"  id="birthdate" name="birthdate">
 
       <label class="col-form-label mt-4" for="birthdate_note">Birthdate note (if only month/year are known):</label>
       <input type="text" class="form-control" value="{{ person.birthdate_note | default_if_none:''}}" id="birthdate_note" name="birthplace_note">
@@ -56,10 +53,8 @@
       <input type="text" class="form-control" value="{{ person.current_location | default_if_none:''}}" id="current_location" name="current_location">
 
       <label class="col-form-label mt-4" for="deathdate">Death date:</label>
-      {%  if person.deathdate %}
-        (current value is {{ person.deathdate | date:"m/d/Y" }})
-      {% endif %}
-      <input type="date" class="form-control" value="{{ person.deathdate | date:'m/d/Y' }}"  id="deathdate" name="deathdate">
+
+      <input type="date" class="form-control" value="{{ person.deathdate | date:'Y-m-d' }}"  id="deathdate" name="deathdate">
 
       <label class="col-form-label mt-4" for="deathdate_note">Deathdate note (if only month/year are known):</label>
       <input type="text" class="form-control" value="{{ person.deathdate_note | default_if_none:''}}" id="deathdate_note" name="deathdate_note">
