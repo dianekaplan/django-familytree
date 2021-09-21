@@ -337,7 +337,6 @@ def edit_person(request, person_id):
 
             # make the edit to the person
             person_edit_form.save()
-            print(person_edit_form)
 
             return redirect('person_detail', person_id=person.id)
         else:
