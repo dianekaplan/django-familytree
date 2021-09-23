@@ -4,7 +4,7 @@
 {% block content %}
 
 <div style="float: left; width: 80%;">
-    <div style="margin-bottom: 20px">
+    <div style="margin-bottom: 20px; margin-top: 20px; margin-right: 10px;">
         <img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}"  style="max-width:100%;">
     </div>
     <div>
@@ -18,7 +18,7 @@
     </div>
  </div>
 
- <div style="float: right; width: 20%; margin-top: 20px">
+ <div style="float: right; width: 20%; margin-top: 20px;">
     {% if image_person %}
      Go to person's page: <br/><br/>
             {% include "familytree/face_name_link.html" with person=image_person %}
