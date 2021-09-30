@@ -671,7 +671,7 @@ def user_metrics(request):
 
     last_login_never = [x for x in profiles if not x.last_login()]
     last_login_past_month = [x for x in profiles if x.last_login() and x.last_login().date() > month_ago_date]
-    last_login_past_month.sort(key=lambda x: x.last_login())
+    last_login_past_month.sort(reverse=True, key=lambda x: x.last_login())
 
     # @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches.
     branch1_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[0])
