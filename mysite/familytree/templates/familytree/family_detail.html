@@ -30,12 +30,12 @@
                 <a href="/admin/familytree/family/{{ family.id }}" target="_blank">Admin edit</a>
                 <br/>
         {% endif %}
-
         {% if family.marriage_date %}
             <b>Marriage date:</b> {{ family.marriage_date }}
         {% elif family.marriage_date_note %}
             <b>Marriage date:</b> {{ family.marriage_date_note }}
         {%  endif %}
+        &nbsp; <!-- keep the div even if neither are true -->
     </div>
     <div style="float: left;width: 38%;">
     {% if kids %}
