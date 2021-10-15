@@ -29,10 +29,8 @@
 }
 
 body	    {color: var(--text-color);
-
-
 			font-family: eurostile, arial, sans-serif;
-}
+            }
 
 img 	    {border: 0}
 
@@ -45,7 +43,9 @@ a:hover     { text-decoration: underline;
          	 color: var(--link-hover);
 }
 
-em   		{font-weight: bold; }
+em {
+  font-style: italic;
+}
 
 
 div    		{
@@ -64,14 +64,13 @@ ul      	{ font-size: 12pt; margin-left: 1em;}
 ul ul   	{ margin-left: 2em }
 
 p		    { font-size: 12pt;
-		    font-family: eurostile, arial, sans-serif;
 		    text-indent: 1em}
 
 h1		{font-size: 1.75em;}
 h2		{font-size: 1.5em;}
 
 caption 	{font-size: 14pt; color: var(--caption-color);
-		    font-family: eurostile, arial, sans-serif}
+            }
 
 .col-md-10 .line {
         background-color:lightgray;
