@@ -33,6 +33,12 @@ def get_env_variable(var_name):
 ENV_ROLE = get_env_variable('ENV_ROLE')
 ROOT_URL = get_env_variable('ROOT_URL')
 
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -104,9 +110,11 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     "myauth",
     'django_user_agents',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -139,8 +147,6 @@ TEMPLATES = [
     },
 ]
 
-# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
@@ -165,6 +171,8 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # For unit tests we'll use sqlite
 import sys

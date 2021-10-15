@@ -1,9 +1,9 @@
 python-gedcom
 django
 django-heroku
-django_user_agents
 gunicorn
 python-dateutil
-whitenoise
-
-psycopg2-binary
+django_user_agents # used to identify the visitor's browser (for safari workaround)
+whitenoise # used for static files
+django-debug-toolbar
+psycopg2-binary # PostgreSQL database adapter
