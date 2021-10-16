@@ -54,6 +54,7 @@ class FamilyStoryAdmin(admin.ModelAdmin):
     search_fields = ('story_id',)
     list_display = ('story_id', 'family_id', 'created_at')
     ordering = ('-created_at', 'story_id')
+    raw_id_fields = ('family',)
     pass
 
 
