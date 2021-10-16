@@ -108,18 +108,7 @@
     {% endif %}
 </div>
 <div style="float: left; width: 100%;">
-    {% if stories %}
-        {% for story in stories %}
-            <div style="display: inline-block;" >
-                <img src="{% static 'familytree/book.png' %}" height="50"/>
-            </div>
-            <div style="display: inline-block; width: 80%">
-                    <a href="{% url 'story' story.id %}">{{ story.description }}</a>: {{ story.intro }}...
-                    <a href="{% url 'story' story.id %}">Read More</a>
-            </div>
-            <br/>
-        {% endfor %}
-    {% endif %}
+    {% include "familytree/_stories_display.html" with stories=stories %}
 </div>
 
 

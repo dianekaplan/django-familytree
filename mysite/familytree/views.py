@@ -13,7 +13,7 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 
-from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile
+from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Video, Story, PersonStory, Audiofile, FamilyStory
 from .forms import NoteForm, EditPersonForm
 
 # for receiver function to get album data
@@ -372,9 +372,22 @@ def family_detail(request, family_id):
     except Image.DoesNotExist:
         images = None
 
+    try:
+        family_story_records = FamilyStory.objects.filter(family_id=family_id)
+    except FamilyStory.DoesNotExist:
+        family_story_records = None
+
+    if family_story_records:
+        stories = set()
+        for record in family_story_records:
+            this_story = Story.objects.get(id=record.story_id)
+            stories.add(this_story)
+    else:
+        stories = None
+
     return render(request, 'familytree/family_detail.html', {'family': family, 'kids': kids, 'notes': notes,
                                                              'show_book': True, 'featured_images': featured_images,
-                                                             'images': images, 'user': profile.user,
+                                                             'images': images, 'user': profile.user, 'stories': stories,
                                                              'user_person': profile.person, 'media_server': media_server,
                                                              'user_is_guest': user_is_guest})
 
