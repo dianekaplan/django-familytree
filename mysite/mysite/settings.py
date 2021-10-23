@@ -26,15 +26,20 @@ if any([arg in sys.argv for arg in ['jenkins', 'test']]):
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': 'mydatabase',
+            'USER': 'test',
+            'PASSWORD': 'test',
+            'HOST': 'test',
+            'PORT': '5432',
+            'DB_OPTIONS': {'sslmode': 'allow'},
         }
     }
     os.environ['ENV_ROLE'] = 'test'
     os.environ['ROOT_URL'] = 'test'
     os.environ['EMAIL_HOST_PASSWORD'] = 'test'
-    os.environ['DB_DATABASE'] = 'test'
-    os.environ['DB_HOST'] = 'test'
-    os.environ['DB_USERNAME'] = 'test'
-    os.environ['DATABASE_PASSWORD'] = 'test'
+    # os.environ['DB_DATABASE'] = 'test'
+    # os.environ['DB_HOST'] = 'test'
+    # os.environ['DB_USERNAME'] = 'test'
+    # os.environ['DATABASE_PASSWORD'] = 'test'
 
 
 # Handling Key Import Errors
