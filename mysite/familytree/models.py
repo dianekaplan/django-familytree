@@ -143,7 +143,7 @@ class Family(models.Model):
         db_table = 'families'
 
     def unreviewed_family(self):
-        return self.reviewed == False
+        return not self.reviewed
 
     def __str__(self):
         return self.display_name
