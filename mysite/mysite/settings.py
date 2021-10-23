@@ -29,6 +29,7 @@ def get_env_variable(var_name):
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
 
+
 # Get ENV VARIABLES key
 ENV_ROLE = get_env_variable('ENV_ROLE')
 ROOT_URL = get_env_variable('ROOT_URL')
@@ -61,6 +62,15 @@ DJANGO_SITE_CREATION = datetime.strptime('2021-07-14', '%Y-%m-%d').date()
 NEWEST_GENERATION_FOR_GUEST = 13
 ADMIN_EMAIL_SEND_FROM = 'diane@ourbigfamilytree.com'
 ADMIN_EMAIL_ADDRESS = 'dianekaplan@gmail.com'
+
+if ENV_ROLE == 'test':
+    DEBUG = True
+    TEMPLATE_DEBUG = DEBUG
+    # DB_HOST = 'localhost'
+    # DB_DATABASE = "sept18_2021_backup"
+    # DB_USER = 'family'
+    # DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS')
+    DB_OPTIONS = {'sslmode': 'allow'}
 
 if ENV_ROLE == 'development':
     DEBUG = True
