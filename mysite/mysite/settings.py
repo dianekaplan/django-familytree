@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # @FIXME: Workaround to populate (meaningless) values when github action runs tests
-if any([arg in sys.argv for arg in ['jenkins', 'test']]):
+if any([arg in sys.argv for arg in ['test']]):
     os.environ['ENV_ROLE'] = 'test'
     os.environ['ROOT_URL'] = 'test'
     os.environ['EMAIL_HOST_PASSWORD'] = 'test'
