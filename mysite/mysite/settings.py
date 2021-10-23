@@ -22,24 +22,35 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 if any([arg in sys.argv for arg in ['jenkins', 'test']]):
+    os.environ['ENV_ROLE'] = 'test'
+    os.environ['ROOT_URL'] = 'test'
+    os.environ['EMAIL_HOST_PASSWORD'] = 'test'
+    DB_DATABASE = 'test'
+    DB_USER = 'test'
+    DB_PASSWORD = 'test'
+    DB_HOST = 'test'
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'mydatabase',
-            'USER': 'test',
-            'PASSWORD': 'test',
-            'HOST': 'test',
+            'NAME': DB_DATABASE,
+            'USER': DB_USER,
+            'PASSWORD': DB_PASSWORD,
+            'HOST': DB_HOST,
             'PORT': '5432',
             'DB_OPTIONS': {'sslmode': 'allow'},
         }
     }
-    os.environ['ENV_ROLE'] = 'test'
-    os.environ['ROOT_URL'] = 'test'
-    os.environ['EMAIL_HOST_PASSWORD'] = 'test'
-    # os.environ['DB_DATABASE'] = 'test'
-    # os.environ['DB_HOST'] = 'test'
-    # os.environ['DB_USERNAME'] = 'test'
-    # os.environ['DATABASE_PASSWORD'] = 'test'
+
+
+
+    # os.environ['ENV_ROLE'] = 'test'
+    # os.environ['ROOT_URL'] = 'test'
+    # os.environ['EMAIL_HOST_PASSWORD'] = 'test'
+    # # os.environ['DB_DATABASE'] = 'test'
+    # # os.environ['DB_HOST'] = 'test'
+    # # os.environ['DB_USERNAME'] = 'test'
+    # # os.environ['DATABASE_PASSWORD'] = 'test'
 
 
 # Handling Key Import Errors
