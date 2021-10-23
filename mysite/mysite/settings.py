@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
+import os, sys
 from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -20,6 +20,31 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # But when I use it and try running the server we get 500 error:  no such table: django_session
 #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+
+# @FIXME: Workaround to populate (meaningless) values when github action runs tests
+if any([arg in sys.argv for arg in ['test']]):
+    os.environ['ENV_ROLE'] = 'test'
+    os.environ['ROOT_URL'] = 'test'
+    os.environ['EMAIL_HOST_PASSWORD'] = 'test'
+    DB_DATABASE = 'test'
+    DB_USER = 'test'
+    DB_PASSWORD = 'test'
+    DB_HOST = 'test'
+    DB_OPTIONS = {'sslmode': 'allow'}
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': DB_DATABASE,
+            'USER': DB_USER,
+            'PASSWORD': DB_PASSWORD,
+            'HOST': DB_HOST,
+            'PORT': '5432',
+            'DB_OPTIONS': DB_OPTIONS,
+        }
+    }
+
+
 # Handling Key Import Errors
 def get_env_variable(var_name):
     """ Get the environment variable or return exception """
@@ -28,6 +53,7 @@ def get_env_variable(var_name):
     except KeyError:
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
+
 
 # Get ENV VARIABLES key
 ENV_ROLE = get_env_variable('ENV_ROLE')
@@ -61,6 +87,7 @@ DJANGO_SITE_CREATION = datetime.strptime('2021-07-14', '%Y-%m-%d').date()
 NEWEST_GENERATION_FOR_GUEST = 13
 ADMIN_EMAIL_SEND_FROM = 'diane@ourbigfamilytree.com'
 ADMIN_EMAIL_ADDRESS = 'dianekaplan@gmail.com'
+
 
 if ENV_ROLE == 'development':
     DEBUG = True
