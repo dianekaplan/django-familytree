@@ -29,7 +29,7 @@ if any([arg in sys.argv for arg in ['jenkins', 'test']]):
     DB_USER = 'test'
     DB_PASSWORD = 'test'
     DB_HOST = 'test'
-    DB_OPTIONS = '{'sslmode': 'allow'}'
+    DB_OPTIONS = {'sslmode': 'allow'}
 
     DATABASES = {
         'default': {
