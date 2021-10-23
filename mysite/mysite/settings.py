@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
+import os, sys
 from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -19,6 +19,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # This setup is recommended here: https://www.ultimatedjango.com/learn-django/lessons/define-environments/side/
 # But when I use it and try running the server we get 500 error:  no such table: django_session
 #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+if any([arg in sys.argv for arg in ['jenkins', 'test']]):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'mydatabase',
+        }
+    }
+    ENV_ROLE = 'test'
+
 
 # Handling Key Import Errors
 def get_env_variable(var_name):
@@ -63,14 +74,6 @@ NEWEST_GENERATION_FOR_GUEST = 13
 ADMIN_EMAIL_SEND_FROM = 'diane@ourbigfamilytree.com'
 ADMIN_EMAIL_ADDRESS = 'dianekaplan@gmail.com'
 
-if ENV_ROLE == 'test':
-    DEBUG = True
-    TEMPLATE_DEBUG = DEBUG
-    # DB_HOST = 'localhost'
-    # DB_DATABASE = "sept18_2021_backup"
-    # DB_USER = 'family'
-    # DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS')
-    DB_OPTIONS = {'sslmode': 'allow'}
 
 if ENV_ROLE == 'development':
     DEBUG = True
