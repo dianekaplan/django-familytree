@@ -29,7 +29,7 @@ if any([arg in sys.argv for arg in ['jenkins', 'test']]):
         }
     }
     os.environ['ENV_ROLE'] = 'test'
-    os.environ['ROOT_URL'] = ''
+    os.environ['ROOT_URL'] = 'test'
 
 # Handling Key Import Errors
 def get_env_variable(var_name):
