@@ -29,6 +29,7 @@ if any([arg in sys.argv for arg in ['jenkins', 'test']]):
     DB_USER = 'test'
     DB_PASSWORD = 'test'
     DB_HOST = 'test'
+    DB_OPTIONS = '{'sslmode': 'allow'}'
 
     DATABASES = {
         'default': {
@@ -38,19 +39,9 @@ if any([arg in sys.argv for arg in ['jenkins', 'test']]):
             'PASSWORD': DB_PASSWORD,
             'HOST': DB_HOST,
             'PORT': '5432',
-            'DB_OPTIONS': {'sslmode': 'allow'},
+            'DB_OPTIONS': DB_OPTIONS,
         }
     }
-
-
-
-    # os.environ['ENV_ROLE'] = 'test'
-    # os.environ['ROOT_URL'] = 'test'
-    # os.environ['EMAIL_HOST_PASSWORD'] = 'test'
-    # # os.environ['DB_DATABASE'] = 'test'
-    # # os.environ['DB_HOST'] = 'test'
-    # # os.environ['DB_USERNAME'] = 'test'
-    # # os.environ['DATABASE_PASSWORD'] = 'test'
 
 
 # Handling Key Import Errors
