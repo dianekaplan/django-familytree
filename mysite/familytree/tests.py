@@ -1,34 +1,28 @@
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse, resolve
 from .models import Person, Family, Image, Branch, Profile
 from django.test import Client
 
-import os
-from unittest import TestCase, mock
 
-@mock.patch.dict(os.environ, {"ENV_ROLE": "test"})
 def create_person(display_name):
     """
     Create a person with the given display name
     """
     return Person.objects.create(display_name=display_name)
 
-@mock.patch.dict(os.environ, {"ENV_ROLE": "test"})
 def create_family(display_name, wife, husband):
     """
     Create a family with the given display name
     """
     return Family.objects.create(display_name=display_name, wife=wife, husband=husband)
 
-@mock.patch.dict(os.environ, {"ENV_ROLE": "test"})
 def create_image(big_name):
     """
     Create an image with the given name
     """
     return Image.objects.create(big_name=big_name)
 
-@mock.patch.dict(os.environ, {"ENV_ROLE": "test"})
 def create_branch(display_name):
     """
     Create a branch with the given name
@@ -50,6 +44,7 @@ class PersonModelTests(TestCase):
         self.person.sex = "F"
         self.person.save()
 
+    @override_settings(ENV_NAME="test")
     def test_fields(self):
         person = Person()
         person.display_name = "Jan Brady"
@@ -59,6 +54,7 @@ class PersonModelTests(TestCase):
         record = Person.objects.get(pk=person.id)
         self.assertEqual(record, person)
 
+    @override_settings(ENV_NAME="test")
     def test_default_stories(self):
         """
         default person returns None for stories
