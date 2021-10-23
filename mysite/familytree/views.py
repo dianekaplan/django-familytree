@@ -185,15 +185,29 @@ def person_index(request):
     existing_branches_list = list(Branch.objects.all())
 
     # @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches.
-    branch1_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[0], hidden=False,
+    try:
+        branch1_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[0], hidden=False,
                                            reviewed=True).order_by('last', 'first')
-    branch2_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[1], hidden=False,
-                                           reviewed=True).order_by('last', 'first')
-    branch3_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[2], hidden=False,
-                                           reviewed=True).order_by('last', 'first')
-    branch4_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[3], hidden=False,
-                                           reviewed=True).order_by('last', 'first')
+    except:
+        branch1_people = None
 
+    try:
+        branch2_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[1], hidden=False,
+                                           reviewed=True).order_by('last', 'first')
+    except:
+        branch2_people = None
+
+    try:
+        branch3_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[2], hidden=False,
+                                           reviewed=True).order_by('last', 'first')
+    except:
+        branch3_people = None
+
+    try:
+        branch4_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[3], hidden=False,
+                                           reviewed=True).order_by('last', 'first')
+    except:
+        branch4_people = None
     # person_list is used if there aren't defined branches yet
     person_list = Person.objects.order_by('display_name')
     context = {'person_list': person_list,

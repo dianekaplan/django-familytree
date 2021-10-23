@@ -1,7 +1,43 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse, resolve
-from .models import Person, Family, Image
-# from .views import person_index
+from .models import Person, Family, Image, Branch, Profile
+from django.test import Client
+
+
+def create_person(display_name):
+    """
+    Create a person with the given display name
+    """
+    return Person.objects.create(display_name=display_name)
+
+
+def create_family(display_name, wife, husband):
+    """
+    Create a family with the given display name
+    """
+    return Family.objects.create(display_name=display_name, wife=wife, husband=husband)
+
+
+def create_image(big_name):
+    """
+    Create an image with the given name
+    """
+    return Image.objects.create(big_name=big_name)
+
+
+def create_branch(display_name):
+    """
+    Create a branch with the given name
+    """
+    return Branch.objects.create(display_name=display_name)
+
+#
+# def create_profile(user):
+#     """
+#     Create a profile for the given user
+#     """
+#     return Profile.objects.create(user=user)
 
 
 class PersonModelTests(TestCase):
@@ -38,7 +74,6 @@ class PersonModelTests(TestCase):
         """
         self.assertEqual(len(self.person.group_images()), 0)
 
-
     def test_unreviewed_person(self):
         """
         unreviewed_person() returns True when reviewed flag is False (default), otherwise False
@@ -60,32 +95,6 @@ class FamilyModelTests(TestCase):
         self.assertIs(unreviewed_family.unreviewed_family(), True)
 
 
-class TestIndexViews(TestCase):
-
-    def test_index_views(self):
-        """
-        Test that index views load
-        """
-        # url = reverse('person_index')
-        # print(resolve(url))
-        # self.assertEqual(resolve(url).func,)
-
-        # response = self.client.get(reverse('person_index'))
-        # self.assertEqual(response.status_code, 302)
-        # self.assertContains(response, "No people are available.")
-
-        # response = self.client.get(reverse('family_index'))
-        # self.assertEqual(response.status_code, 200)
-        # self.assertContains(response, "No families are available.")
-        #
-        # response = self.client.get(reverse('image_index'))
-        # self.assertEqual(response.status_code, 200)
-        # self.assertContains(response, "No images are available.")
-        #
-        # response = self.client.get(reverse('dashboard'))
-        # self.assertEqual(response.status_code, 200)
-
-
 class TestDetailViews(TestCase):
 
     def test_person_detail_view(self):
@@ -105,8 +114,6 @@ class TestDetailViews(TestCase):
         this_family = create_family(display_name="The Bradys (Mike & Carol)", wife = wife, husband=husband)
         response = self.client.get(reverse('family_detail', args=(this_family.id,)))
         self.assertEqual(response.status_code, 302)
-        #
-
 
     def test_image_detail_view(self):
         """
@@ -116,20 +123,50 @@ class TestDetailViews(TestCase):
         response = self.client.get(reverse('image_detail', args=(this_image.id,)))
         self.assertEqual(response.status_code, 302)
 
-def create_person(display_name):
-    """
-    Create a person with the given display name
-    """
-    return Person.objects.create(display_name=display_name)
+class TestLoggedOutViews(TestCase):
 
-def create_family(display_name, wife, husband):
-    """
-    Create a family with the given display name
-    """
-    return Family.objects.create(display_name=display_name, wife=wife, husband=husband)
+    def test_landing_page(self):
+        response = self.client.get(reverse('landing'))
+        self.assertEqual(response.status_code, 200)
+    
 
-def create_image(big_name):
-    """
-    Create an image with the given name
-    """
-    return Image.objects.create(big_name=big_name)
+class TestIndexViews(TestCase):
+    def setUp(self):
+        branch1 = create_branch("BRANCH ONE")
+        branch2 = create_branch("BRANCH TWO")
+        branch3 = create_branch("BRANCH THREE")
+        branch4 = create_branch("BRANCH FOUR")
+
+        self.client = Client()
+        self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+
+        self.profile = Profile()
+        self.profile.user = self.user
+        self.profile.save()
+
+        first_branch = Branch.objects.filter(pk=1)
+        self.profile.branches.set(first_branch)
+        self.profile.save()
+
+
+    def test_index_views(self):
+        """
+        Test that index views load
+        """
+
+        self.client.login(username='john', password='johnpassword')
+        response = self.client.get(reverse('person_index'))
+        self.assertEqual(response.status_code, 200)
+        # self.assertContains(response, "No people are available.")
+
+        response = self.client.get(reverse('family_index'))
+        self.assertEqual(response.status_code, 200)
+        # self.assertContains(response, "No families are available.")
+
+        response = self.client.get(reverse('image_index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "No images are available.")
+
+        response = self.client.get(reverse('dashboard'))
+        self.assertEqual(response.status_code, 200)
+
