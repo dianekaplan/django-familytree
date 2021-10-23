@@ -28,7 +28,7 @@ if any([arg in sys.argv for arg in ['jenkins', 'test']]):
             'NAME': 'mydatabase',
         }
     }
-    os.environ.set('ENV_ROLE', 'test')
+    os.environ['ENV_ROLE'] = 'test'
 
 
 # Handling Key Import Errors
