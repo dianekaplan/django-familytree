@@ -52,9 +52,9 @@ def index(request):  # dashboard page
     today = get_now_for_user(profile.timezone)
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
 
-    # only include additions or updates, for family, person, story
+    # only include additions or updates, for family, person, story, notes
     display_action_types = [1, 2]
-    display_update_types = [2, 4, 5]
+    display_update_types = [2, 4, 5, 9]
     recent_logentries = LogEntry.objects.filter(content_type_id__in=display_update_types,
                                                 action_flag__in=display_action_types).order_by('-id')[:5]
 

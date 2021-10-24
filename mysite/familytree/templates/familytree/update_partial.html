@@ -15,6 +15,9 @@
                 <a href="{% url 'story' update.object_id %}">this story
                 <img src="{% static 'familytree/book.png' %}" height="30"/>
                 </a>
+        {% elif content_type == 'note' %}
+                note {{ update.object_id }}
+                </a>
         {% endif %}
 
         {{ timesince }}
