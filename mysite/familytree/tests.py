@@ -140,8 +140,12 @@ class TestOtherViews(TestCase):
         self.client = Client()
         self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
 
+        self.person = create_person(display_name="Marcia Brady")
+
         self.profile = Profile()
         self.profile.user = self.user
+        self.profile.guest_user = False
+        self.profile.person = self.person
         self.profile.save()
 
         first_branch = Branch.objects.filter(pk=1)
@@ -167,6 +171,16 @@ class TestOtherViews(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No images are available.")
 
+        response = self.client.get(reverse('video_index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "No videos are available.")
+
         response = self.client.get(reverse('dashboard'))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(reverse('outline'))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(reverse('account'))
         self.assertEqual(response.status_code, 200)
 
