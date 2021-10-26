@@ -130,7 +130,7 @@ class TestLoggedOutViews(TestCase):
         self.assertEqual(response.status_code, 200)
     
 
-class TestIndexViews(TestCase):
+class TestOtherViews(TestCase):
     def setUp(self):
         branch1 = create_branch("BRANCH ONE")
         branch2 = create_branch("BRANCH TWO")
@@ -149,7 +149,7 @@ class TestIndexViews(TestCase):
         self.profile.save()
 
 
-    def test_index_views(self):
+    def test_other_views(self):
         """
         Test that index views load
         """
