@@ -2,7 +2,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
 
-from django.contrib.admin.models import LogEntry, CHANGE, ContentType
+from django.contrib.admin.models import LogEntry, CHANGE, ADDITION, ContentType
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.conf import settings
@@ -289,9 +289,10 @@ def add_note(request, object_id, object_type):
     profile = get_display_profile(request).first()
     note_form = NoteForm(request.POST)
     template_name = None
+    editing_user = profile.user
 
     context = {
-        'user_person': profile.person, 'media_server': media_server, 'note_form': note_form
+        'user_person': profile.person, 'media_server': media_server, 'note_form': note_form, 'editing_user': editing_user
     }
 
     if object_type == 'person':
@@ -308,6 +309,16 @@ def add_note(request, object_id, object_type):
 
     if request.method == 'POST':
         if note_form.is_valid():
+            
+            # make django_admin_log entry
+            LogEntry.objects.log_action(
+                user_id=editing_user.id,
+                content_type_id=ContentType.objects.get_for_model(Note).pk,
+                object_id=(str(object_type) + ":" + str(object_id)),
+                object_repr=note_form['body'].value(),
+                action_flag=ADDITION,
+                change_message="Added note")
+
             note_form.save()
             return redirect(page_name, object_id)
 
