@@ -32,3 +32,9 @@ def get_time_ago(datetime):
     result = time[0] + " ago"
     return result
 
+@register.simple_tag
+def get_note_object(object_id):
+    result = object_id.split(":")
+    if len(result) == 1:
+        result = None
+    return result[1]

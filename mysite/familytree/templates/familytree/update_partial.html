@@ -16,8 +16,14 @@
                 <img src="{% static 'familytree/book.png' %}" height="30"/>
                 </a>
         {% elif content_type == 'note' %}
-                note {{ update.object_id }}
-                </a>
+                {% if 'person' in update.object_id or 'family' in update.object_id %}
+                        {% get_note_object update.object_id as result %}
+                        {% if 'person' in update.object_id %}
+                            note: <a href="{% url 'person_detail' result %}">{{ update.object_repr }}</a>
+                        {% elif 'family' in update.object_id %}
+                            note: <a href="{% url 'family_detail' result %}">{{ update.object_repr }}</a>
+                        {% endif %}
+                {% endif %}
         {% endif %}
 
         {{ timesince }}
