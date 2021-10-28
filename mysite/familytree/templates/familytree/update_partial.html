@@ -23,6 +23,8 @@
                         {% elif 'family' in update.object_id %}
                             note: <a href="{% url 'family_detail' result %}">{{ update.object_repr }}</a>
                         {% endif %}
+                {% else %}
+                        a note
                 {% endif %}
         {% endif %}
 
