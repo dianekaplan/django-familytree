@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from . import views
 from django.contrib.auth import views as auth_views
@@ -59,6 +59,6 @@ urlpatterns = [
     # ex: /user_metrics/
     path('user_metrics/', views.user_metrics, name='user_metrics'),
 
-    url('^', include('django.contrib.auth.urls')),  # paths for registration pages (password reset)
+    re_path('^', include('django.contrib.auth.urls')),  # paths for registration pages (password reset)
 
 ]
