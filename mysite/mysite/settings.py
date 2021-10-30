@@ -101,7 +101,7 @@ if ENV_ROLE == 'development':
     DB_USER = 'family'
     DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS')
     DB_OPTIONS = {'sslmode': 'allow'}
-    SOURCE_DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS') #@TODO: update these to be different
+    # SOURCE_DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS') #@TODO: update these to be different
 
 if ENV_ROLE == 'staging':
     DEBUG = True
@@ -112,7 +112,7 @@ if ENV_ROLE == 'staging':
     DB_USER = get_env_variable('DB_USERNAME')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     DB_OPTIONS = {'sslmode': 'require'}
-    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove now that migration is done?
+    # SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove now that migration is done?
 
 if ENV_ROLE == 'prod':
     DEBUG = False
@@ -123,7 +123,7 @@ if ENV_ROLE == 'prod':
     DB_USER = get_env_variable('DB_USERNAME')
     DB_PASSWORD = get_env_variable('DATABASE_PASSWORD')
     DB_OPTIONS = {'sslmode': 'require'}
-    SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove now that migration is done?
+    # SOURCE_DB_PASSWORD = get_env_variable('SOURCE_DATABASE_PASSWORD')  # @TODO: remove now that migration is done?
 
 ALLOWED_HOSTS = ['127.0.0.1', 'family-django-stage.herokuapp.com', 'family-django-prod.herokuapp.com', '.ourbigfamilytree.com']
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -193,14 +193,14 @@ DATABASES = {
         "PORT": "5432",
         "OPTIONS": DB_OPTIONS,
     },
-    "source": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "laravel_backup_aug15",
-        "USER": DB_USER,
-        "PASSWORD": "test", # @TODO: remove now that migration is done?
-        "HOST": DB_HOST,
-        "PORT": "5432",
-    }
+    # "source": {
+    #     "ENGINE": "django.db.backends.postgresql_psycopg2",
+    #     "NAME": "laravel_backup_aug15",
+    #     "USER": DB_USER,
+    #     "PASSWORD": "test", # @TODO: remove now that migration is done?
+    #     "HOST": DB_HOST,
+    #     "PORT": "5432",
+    # }
 }
 
 # TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
