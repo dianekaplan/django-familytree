@@ -153,18 +153,27 @@ def family_index(request):
     user_is_guest = Profile.objects.get(user=request.user).guest_user
     existing_branches_list = list(Branch.objects.all())
 
-    # @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches. plo00,m
-    branch1_families = Family.objects.filter(branches__display_name__contains=existing_branches_list[0],
-                                             show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
+    branch_count = len(existing_branches_list)
 
-    branch2_families = Family.objects.filter(branches__display_name__contains=existing_branches_list[1],
-                                             show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
+    if branch_count > 0:
+        branch1_families = set_branch_families(existing_branches_list, 0)
+    else:
+        branch1_families = None
 
-    branch3_families = Family.objects.filter(branches__display_name__contains=existing_branches_list[2],
-                                             show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
+    if branch_count > 1:
+        branch2_families = set_branch_families(existing_branches_list, 1)
+    else:
+        branch2_families = None
 
-    branch4_families = Family.objects.filter(branches__display_name__contains=existing_branches_list[3],
-                                             show_on_branch_view=True, reviewed=True).order_by('branch_seq', 'marriage_date')
+    if branch_count > 2:
+        branch3_families = set_branch_families(existing_branches_list, 2)
+    else:
+        branch3_families = None
+
+    if branch_count > 3:
+        branch4_families = set_branch_families(existing_branches_list, 3)
+    else:
+        branch4_families = None
 
     context = { 'family_list': family_list,
                 'branch1_families': branch1_families, 'branch2_families': branch2_families,
@@ -177,37 +186,42 @@ def family_index(request):
     return render(request, 'familytree/family_index.html', context)
 
 
+def set_branch_families(existing_branches_list, int):
+    families = Family.objects.filter(branches__display_name__contains=existing_branches_list[int],
+                                     show_on_branch_view=True, reviewed=True).order_by('branch_seq',
+                                                                                       'marriage_date')
+    return families
+
+
 @login_required(login_url=login_url)
 def person_index(request):
     accessible_branches = get_valid_branches(request)
     profile = get_display_profile(request).first()
     user_is_guest = profile.guest_user
     existing_branches_list = list(Branch.objects.all())
+    branch_count = len(existing_branches_list)
 
-    # @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches.
-    try:
-        branch1_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[0], hidden=False,
-                                           reviewed=True).order_by('last', 'first')
-    except:
+    if branch_count > 0:
+        branch1_people = set_branch_people(existing_branches_list, 0)
+    else:
         branch1_people = None
 
-    try:
-        branch2_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[1], hidden=False,
-                                           reviewed=True).order_by('last', 'first')
-    except:
+    if branch_count > 1:
+        branch2_people = set_branch_people(existing_branches_list, 1)
+    else:
         branch2_people = None
 
-    try:
-        branch3_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[2], hidden=False,
-                                           reviewed=True).order_by('last', 'first')
-    except:
+    if branch_count > 2:
+        branch3_people = set_branch_people(existing_branches_list, 2)
+    else:
         branch3_people = None
 
-    try:
-        branch4_people = Person.objects.filter(branches__display_name__contains=existing_branches_list[3], hidden=False,
-                                           reviewed=True).order_by('last', 'first')
-    except:
+    if branch_count > 3:
+        branch4_people = set_branch_people(existing_branches_list, 3)
+    else:
         branch4_people = None
+
+        
     # person_list is used if there aren't defined branches yet
     person_list = Person.objects.order_by('display_name')
     context = {'person_list': person_list,
@@ -220,6 +234,12 @@ def person_index(request):
                 'branch_class': branch_classes[len(accessible_branches)]
                 }
     return render(request, 'familytree/person_index.html', context)
+
+def set_branch_people(existing_branches_list, int):
+    people = Person.objects.filter(branches__display_name__contains=existing_branches_list[int], hidden=False,
+                                           reviewed=True).order_by('last', 'first')
+    return people
+
 
 
 @login_required(login_url=login_url)
