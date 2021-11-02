@@ -4,6 +4,17 @@ from django.forms import TextInput, Textarea
 from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, Story, PersonStory, Video, Audiofile, \
     VideoPerson, FamilyStory
 
+
+@admin.action(description='Mark selected items as reviewed')
+def make_reviewed(modeladmin, request, queryset):
+     queryset.update(reviewed=True)
+
+
+@admin.action(description='Mark selected items as shown on branch view')
+def set_show_on_branch_view(modeladmin, request, queryset):
+     queryset.update(show_on_branch_view=True)
+
+
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     search_fields = ('display_name', 'first', 'last')
@@ -11,6 +22,7 @@ class PersonAdmin(admin.ModelAdmin):
                     'show_on_landing_page', 'created_at', 'reviewed')
     ordering = ('-created_at', 'display_name')
     raw_id_fields = ('family',)
+    actions = [make_reviewed]
     pass
 
 
@@ -20,6 +32,7 @@ class FamilyAdmin(admin.ModelAdmin):
     list_display = ('display_name', 'direct_family_number','show_on_branch_view', 'branch_seq', 'created_at', 'reviewed')
     raw_id_fields = ('wife','husband',)
     ordering = ('-created_at', 'display_name')
+    actions = [make_reviewed,set_show_on_branch_view]
     pass
 
 
