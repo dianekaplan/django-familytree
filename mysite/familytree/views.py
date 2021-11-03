@@ -34,6 +34,8 @@ branch3_name = Branch.objects.filter(id=3)
 branch4_name = Branch.objects.filter(id=4)
 show_by_branch = True if branch1_name else False
 login_url = '/familytree/landing/'
+existing_branches_list = list(Branch.objects.all())
+branch_count = len(existing_branches_list)
 
 # pass style class name for index pages based on user's number of columns
 branch_classes = {
@@ -151,9 +153,6 @@ def family_index(request):
     family_list = Family.objects.order_by('display_name')
     accessible_branches = get_valid_branches(request)
     user_is_guest = Profile.objects.get(user=request.user).guest_user
-    existing_branches_list = list(Branch.objects.all())
-
-    branch_count = len(existing_branches_list)
 
     if branch_count > 0:
         branch1_families = set_branch_families(existing_branches_list, 0)
@@ -198,8 +197,6 @@ def person_index(request):
     accessible_branches = get_valid_branches(request)
     profile = get_display_profile(request).first()
     user_is_guest = profile.guest_user
-    existing_branches_list = list(Branch.objects.all())
-    branch_count = len(existing_branches_list)
 
     if branch_count > 0:
         branch1_people = set_branch_people(existing_branches_list, 0)
@@ -221,7 +218,7 @@ def person_index(request):
     else:
         branch4_people = None
 
-        
+
     # person_list is used if there aren't defined branches yet
     person_list = Person.objects.order_by('display_name')
     context = {'person_list': person_list,
@@ -731,11 +728,22 @@ def user_metrics(request):
     last_login_past_month = [x for x in profiles if x.last_login() and x.last_login().date() > month_ago_date]
     last_login_past_month.sort(reverse=True, key=lambda x: x.last_login())
 
-    # @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches.
-    branch1_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[0])
-    branch2_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[1])
-    branch3_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[2])
-    branch4_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[3])
+    if branch_count > 0:
+        branch1_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[0])
+    else:
+        branch1_users = None
+    if branch_count > 1:
+        branch2_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[1])
+    else:
+        branch2_users = None
+    if branch_count > 2:
+        branch3_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[2])
+    else:
+        branch3_users = None
+    if branch_count > 3:
+        branch4_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[3])
+    else:
+        branch4_users = None
 
     # Custom code for my instance: I've had three generations of websites, so I differentiate between them
     # A new instance would only need one count for logins, updates, and notes
