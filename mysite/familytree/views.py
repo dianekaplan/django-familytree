@@ -218,7 +218,6 @@ def person_index(request):
     else:
         branch4_people = None
 
-
     # person_list is used if there aren't defined branches yet
     person_list = Person.objects.order_by('display_name')
     context = {'person_list': person_list,
