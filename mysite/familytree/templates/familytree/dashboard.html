@@ -3,7 +3,7 @@
 {% block content %}
 {% load static %}
 
-{% if not user_is_guest %}
+{% if not user_is_guest and user_person.display_name %}
     <div style="margin: 10px">
         Welcome, {{ user_person.display_name }}!
     </div>
