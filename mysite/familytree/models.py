@@ -19,7 +19,7 @@ class Branch(models.Model):
 
 class Person(models.Model):
     gedcom_indi = models.CharField(max_length=20, null=True, blank=True, default='')
-    gedcom_uuid = models.CharField(max_length=200, null=True, blank=True, default='')
+    gedcom_uuid = models.CharField(max_length=200, null=True, blank=True, default=None)
     first = models.CharField(max_length=30, blank=True, default='')
     middle = models.CharField(max_length=20, null=True, blank=True, default='')
     last = models.CharField(max_length=20, blank=True, default='')
