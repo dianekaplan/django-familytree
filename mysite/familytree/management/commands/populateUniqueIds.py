@@ -114,7 +114,6 @@ class Command(BaseCommand):
                 spouse_pair = self.get_family_spouses(family)
                 for spouse in spouse_pair:
                     if spouse.gedcom_uuid:
-                        print("spouse has value: %s" % spouse.gedcom_uuid)
                         person.gedcom_uuid = spouse.gedcom_uuid + "SP" + person.first.replace(" ", "_")
                         person.save()
                         print("set value for " + person.display_name + ": " + person.gedcom_uuid)
