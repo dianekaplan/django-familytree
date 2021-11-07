@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from ...models import Person, Family
 from django.db.models import Q
+from django.db.models.functions import Length
 
 
 class Command(BaseCommand):
@@ -51,7 +52,7 @@ class Command(BaseCommand):
 
     def populate_outward_to_spouses(self):
         # grab the people with gedcom_uuid populated
-        populated_people = Person.objects.filter(gedcom_uuid__isnull=False)
+        populated_people = Person.objects.annotate(text_len=Length('gedcom_uuid')).filter(text_len__gt=0)
         for person in populated_people:
             their_families = self.get_person_families(person)
             spouse_count = 1
@@ -148,7 +149,7 @@ class Command(BaseCommand):
 
     def populate_the_rest(self):  # kids of people who married in, then upward
         # grab the people with gedcom_uuid NOT populated
-        people_missing_value = Person.objects.filter(gedcom_uuid__isnull=True)
+        people_missing_value = Person.objects.annotate(text_len=Length('gedcom_uuid')).filter(text_len__lt=1)
         still_missing = 0
         for person in people_missing_value:
             self.check_spouse_for_value(person)
