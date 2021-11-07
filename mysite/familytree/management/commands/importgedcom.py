@@ -211,7 +211,7 @@ class Command(BaseCommand):
             try:
                 orig_family = Family.objects.get(gedcom_indi=self.child_family_dict.get(entry))
             except:
-                print("REVIEW: check original family for " + str(entry))
+                print("REVIEW: check family for " + str(entry))
                 print("Gedcom file had child/family association where we didn't find family: " + self.child_family_dict.get(entry))
             else:
                 this_person.family = orig_family
