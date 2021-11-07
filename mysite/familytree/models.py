@@ -5,6 +5,7 @@ from django.contrib.admin.models import LogEntry
 from django.utils.safestring import mark_safe
 
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
+DEFAULT_TIME_ZONE = settings.DEFAULT_TIME_ZONE
 
 class Branch(models.Model):
     display_name = models.CharField(max_length=50, blank=True)
@@ -244,7 +245,7 @@ class Profile(models.Model): # This class holds additional info for user records
     shared_account = models.BooleanField(null=True, default=False)
     guest_user = models.BooleanField(default=False)
     limited = models.BooleanField(default=True)
-    timezone = models.CharField(null=True, max_length=100, default='US/Eastern')
+    timezone = models.CharField(null=True, max_length=100, default=DEFAULT_TIME_ZONE)
 
     class Meta(object):
         verbose_name_plural = 'Profiles'
