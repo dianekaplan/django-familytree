@@ -1,7 +1,7 @@
 
 Django family tree tool that can import data from a GEDCOM file (the 
 common geneology standard used on sites like ancestry.com), and allow you to: 
-- augment your tree with pictures, video/audio clips, stories, and notes
+- create a family tree you can augment with pictures, video/audio clips, stories, and notes
 - set up users with access to specific branches of the tree (so they see only the content for their own relatives)
 - summarize 'family history' for each branch of the family, to help pull together narratives to orient your users
 
@@ -28,6 +28,13 @@ You need a way to map a person's record in this tree with the one in ancestry, a
 doesn't provide unique IDs. This tool has scripts to generate unique IDs for every person, but we then need to add them 
 in to the corresponding records in ancestry.com. (That way subsequent imports recognize which people are already there 
 and don't need to be re-added).
+
+**Requirements**
+You'll need: 
+- a place to host your website (I use Heroku)
+- a database (I use postgres, via pgAdmin 4)
+- a media server if you want to use images (I use the Cloudinary add-on for Heroku)
+- an email host/account to send mails from (for password reset flow, etc)
 
 **Detailed setup and usage notes**
 https://github.com/dianekaplan/familytree-django/wiki
