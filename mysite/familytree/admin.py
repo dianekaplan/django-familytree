@@ -7,12 +7,12 @@ from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, S
 
 @admin.action(description='Mark selected items as reviewed')
 def make_reviewed(modeladmin, request, queryset):
-     queryset.update(reviewed=True)
+    queryset.update(reviewed=True)
 
 
 @admin.action(description='Mark selected items as shown on branch view')
 def set_show_on_branch_view(modeladmin, request, queryset):
-     queryset.update(show_on_branch_view=True)
+    queryset.update(show_on_branch_view=True)
 
 
 @admin.register(Person)
@@ -32,7 +32,7 @@ class FamilyAdmin(admin.ModelAdmin):
     list_display = ('display_name', 'direct_family_number','show_on_branch_view', 'branch_seq', 'created_at', 'reviewed')
     raw_id_fields = ('wife','husband',)
     ordering = ('-created_at', 'display_name')
-    actions = [make_reviewed,set_show_on_branch_view]
+    actions = [make_reviewed, set_show_on_branch_view]
     pass
 
 

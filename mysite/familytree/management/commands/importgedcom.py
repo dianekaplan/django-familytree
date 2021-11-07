@@ -49,7 +49,7 @@ class Command(BaseCommand):
                     self.handle_family(element)
 
             # now that we've saved all the people and families, populate orig_family on people records
-            self.add_orig_family_values(self.child_family_dict)
+            self.add_person_family_values(self.child_family_dict)
 
         else:
             raise CommandError('That gedcom file does not exist in the expected directory')
@@ -201,9 +201,8 @@ class Command(BaseCommand):
             existing_record.gedcom_indi = gedcom_indi
             existing_record.save()
 
-
     # Loop through dictionary
-    def add_orig_family_values(self, child_family_dict):
+    def add_person_family_values(self, child_family_dict):
         for entry in self.child_family_dict:
             try:
                 this_person = Person.objects.get(gedcom_indi=entry)
@@ -215,7 +214,7 @@ class Command(BaseCommand):
                 print("REVIEW: check original family for " + str(entry))
                 print("Gedcom file had child/family association where we didn't find family: " + self.child_family_dict.get(entry))
             else:
-                this_person.origin_family = orig_family
+                this_person.family = orig_family
                 this_person.save()
 
 

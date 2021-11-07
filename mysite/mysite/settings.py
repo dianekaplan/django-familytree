@@ -97,7 +97,7 @@ if ENV_ROLE == 'development':
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = 'localhost'
-    DB_DATABASE = "sept18_2021_backup"
+    DB_DATABASE = "oct30_2021_backup"
     DB_USER = 'family'
     DB_PASSWORD = get_env_variable('FAMILY_LOCAL_DB_PASS')
     DB_OPTIONS = {'sslmode': 'allow'}
