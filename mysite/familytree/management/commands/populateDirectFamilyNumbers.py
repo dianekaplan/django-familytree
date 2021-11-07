@@ -25,7 +25,7 @@ class Command(BaseCommand):
     # given a person, get the family they grew up in
     def get_person_family(self, person):
         try:
-            their_family = Family.objects.get(id=person.family_id)
+            their_family = Family.objects.get(id=person.family.id)
         except:
             pass
         else:
