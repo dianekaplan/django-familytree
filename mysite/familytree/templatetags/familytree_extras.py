@@ -5,6 +5,15 @@ register = template.Library()
 
 
 @register.simple_tag
+def template_exists(value):
+     try:
+         template.loader.get_template(value)
+         return True
+     except template.TemplateDoesNotExist:
+         return False
+
+
+@register.simple_tag
 def generation_class(generation_int):
     return "g" + str(generation_int)
 

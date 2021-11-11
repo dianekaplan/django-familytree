@@ -10,11 +10,19 @@
         {% if profile.connection_notes %}
                 <p>{{ profile.connection_notes }}</p>
         {%  endif %}
-    {% for branch in accessible_branches %}
-        {% get_history_filepath branch as filepath %}
-        <div class="circled_section">
-                {% include filepath %}
-        </div>
-    {% endfor %}
+
+        {% for branch in accessible_branches %}
+             {% get_history_filepath branch as filepath %}
+             {% template_exists filepath as result %}
+
+             <div class="circled_section">
+                 {% if result %}
+                    {% include filepath %}
+                 {% else %}
+                    {{branch}} history still to be written <br/>
+                    Add it here: {{filepath}}
+                 {% endif %}
+             </div>
+         {% endfor %}
 
 {% endblock content %}
