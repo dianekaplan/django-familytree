@@ -9,6 +9,9 @@ from .models import Person, Family, Image, ImagePerson, Note, Branch, Profile, S
 def make_reviewed(modeladmin, request, queryset):
     queryset.update(reviewed=True)
 
+@admin.action(description='Mark selected items as shown on branch view')
+def set_show_on_branch_view(modeladmin, request, queryset):
+    queryset.update(show_on_branch_view=True)
 
 @admin.action(description='Mark selected items as shown on branch view')
 def set_show_on_branch_view(modeladmin, request, queryset):

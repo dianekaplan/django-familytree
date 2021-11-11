@@ -185,6 +185,7 @@ def family_index(request):
     return render(request, 'familytree/family_index.html', context)
 
 
+
 def set_branch_families(existing_branches_list, int):
     families = Family.objects.filter(branches__display_name__contains=existing_branches_list[int],
                                      show_on_branch_view=True, reviewed=True).order_by('branch_seq',
