@@ -23,7 +23,7 @@
             <b>My furthest ancestors here:</b> <br/>{{ profile.furthest_html | safe}}<br/>
         {% endif %}
         </div>
-        
+
             <div  class="circled_section">
                 <b>Latest stories:</b> <br/>
                 {% if latest_stories %}
@@ -52,7 +52,7 @@
         {% endfor %}
         <br/>
     {% endif %}
-    
+
     <b>Birthdays this month:</b>
     {%  if birthday_people%}
         {% for person in birthday_people %}

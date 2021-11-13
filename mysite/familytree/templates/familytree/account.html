@@ -42,7 +42,7 @@
 <h2>Updates made</h2>
     {% if updates_made %}
         {% for update in updates_made %}
-            {{ update.action_time|date:'Y-m-d' }}: updated info for 
+            {{ update.action_time|date:'Y-m-d' }}: updated info for
             {% if update.content_type_id == 2 %}
                 <a href="{% url 'family_detail' update.object_id %}">{{update.object_repr}}</a>
             {% endif %}

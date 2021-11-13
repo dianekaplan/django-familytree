@@ -69,6 +69,3 @@ class Command(BaseCommand):
         root_family = kwargs['root family']
         print("CALLING populate_family_number_values")
         self.populate_family_number_values(root_family)
-
-
-

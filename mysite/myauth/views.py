@@ -10,5 +10,3 @@ class LoginView(BaseLoginView):
         Login.objects.create(user=self.request.user, created_at=timezone.now())
         # And then release
         return response
-
-
