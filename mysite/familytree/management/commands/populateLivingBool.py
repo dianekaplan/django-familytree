@@ -1,6 +1,8 @@
-from django.core.management.base import BaseCommand, CommandError
-from ...models import Person
 from datetime import date
+
+from django.core.management.base import BaseCommand, CommandError
+
+from ...models import Person
 
 
 class Command(BaseCommand):

@@ -1,11 +1,13 @@
+from pathlib import Path
+
 import dateutil.parser
 from django.core.management.base import BaseCommand, CommandError
-from gedcom.element.individual import IndividualElement
-from gedcom.element.family import FamilyElement
-from gedcom.parser import Parser
-from ...models import Person, Family
-from pathlib import Path
 from django.utils import timezone
+from gedcom.element.family import FamilyElement
+from gedcom.element.individual import IndividualElement
+from gedcom.parser import Parser
+
+from ...models import Family, Person
 
 
 class Command(BaseCommand):

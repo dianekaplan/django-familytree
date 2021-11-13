@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
-from ...models import Person, Family
+
+from ...models import Family, Person
 
 
 class Command(BaseCommand):

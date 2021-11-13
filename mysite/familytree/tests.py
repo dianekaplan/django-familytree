@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from django.test import TestCase, override_settings
-from django.urls import reverse, resolve
-from .models import Person, Family, Image, Branch, Profile
-from django.test import Client
+from django.test import Client, TestCase, override_settings
+from django.urls import resolve, reverse
+
+from .models import Branch, Family, Image, Person, Profile
 
 
 def create_person(display_name):

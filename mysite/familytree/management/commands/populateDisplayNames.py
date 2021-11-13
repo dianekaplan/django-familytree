@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
-from ...models import Person
 from django.utils import timezone
+
+from ...models import Person
 
 
 class Command(BaseCommand):

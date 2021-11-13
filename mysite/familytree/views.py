@@ -1,38 +1,38 @@
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from pytz import timezone
 
-from django.contrib.admin.models import LogEntry, CHANGE, ADDITION, ContentType
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
+from django.contrib.admin.models import ADDITION, CHANGE, ContentType, LogEntry
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.mail import send_mail
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404, redirect
-from django.template.loader import render_to_string
-
-from .models import (
-    Person,
-    Family,
-    Image,
-    ImagePerson,
-    Note,
-    Branch,
-    Profile,
-    Video,
-    Story,
-    PersonStory,
-    Audiofile,
-    FamilyStory,
-)
-from .forms import NoteForm, EditPersonForm
 
 # for receiver function to get album data
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
+from pytz import timezone
+
+from .forms import EditPersonForm, NoteForm
+from .models import (
+    Audiofile,
+    Branch,
+    Family,
+    FamilyStory,
+    Image,
+    ImagePerson,
+    Note,
+    Person,
+    PersonStory,
+    Profile,
+    Story,
+    Video,
+)
 
 media_server = settings.MEDIA_SERVER
 LARAVEL_SITE_CREATION = settings.LARAVEL_SITE_CREATION

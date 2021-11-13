@@ -1,20 +1,21 @@
 from django.contrib import admin
 from django.db import models
-from django.forms import TextInput, Textarea
+from django.forms import Textarea, TextInput
+
 from .models import (
-    Person,
+    Audiofile,
+    Branch,
     Family,
+    FamilyStory,
     Image,
     ImagePerson,
     Note,
-    Branch,
+    Person,
+    PersonStory,
     Profile,
     Story,
-    PersonStory,
     Video,
-    Audiofile,
     VideoPerson,
-    FamilyStory,
 )
 
 
