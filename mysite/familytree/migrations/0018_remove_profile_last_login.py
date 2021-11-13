@@ -5,13 +5,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0017_profile_guest_user'),
-    ]
+    dependencies = [("familytree", "0017_profile_guest_user")]
 
-    operations = [
-        migrations.RemoveField(
-            model_name='profile',
-            name='last_login',
-        ),
-    ]
+    operations = [migrations.RemoveField(model_name="profile", name="last_login")]

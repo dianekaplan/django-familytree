@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0025_alter_note_date'),
-    ]
+    dependencies = [("familytree", "0025_alter_note_date")]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='limited',
+            model_name="profile",
+            name="limited",
             field=models.BooleanField(default=True),
-        ),
+        )
     ]

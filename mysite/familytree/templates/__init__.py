@@ -1,1 +1,1 @@
-default_app_config = 'familytree.apps.FamilytreeConfig'
+default_app_config = "familytree.apps.FamilytreeConfig"

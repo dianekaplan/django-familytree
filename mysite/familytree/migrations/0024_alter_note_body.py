@@ -5,14 +5,10 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0023_story_branches'),
-    ]
+    dependencies = [("familytree", "0023_story_branches")]
 
     operations = [
         migrations.AlterField(
-            model_name='note',
-            name='body',
-            field=models.CharField(max_length=3000),
-        ),
+            model_name="note", name="body", field=models.CharField(max_length=3000)
+        )
     ]

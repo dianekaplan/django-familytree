@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0028_image_notes'),
-    ]
+    dependencies = [("familytree", "0028_image_notes")]
 
     operations = [
         migrations.AddField(
-            model_name='image',
-            name='parents_only',
+            model_name="image",
+            name="parents_only",
             field=models.BooleanField(default=False, null=True),
-        ),
+        )
     ]

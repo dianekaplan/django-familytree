@@ -6,11 +6,11 @@ register = template.Library()
 
 @register.simple_tag
 def template_exists(value):
-     try:
-         template.loader.get_template(value)
-         return True
-     except template.TemplateDoesNotExist:
-         return False
+    try:
+        template.loader.get_template(value)
+        return True
+    except template.TemplateDoesNotExist:
+        return False
 
 
 @register.simple_tag
@@ -40,6 +40,7 @@ def get_time_ago(datetime):
     time = str(timesince(datetime)).split(",")
     result = time[0] + " ago"
     return result
+
 
 @register.simple_tag
 def get_note_object(object_id):

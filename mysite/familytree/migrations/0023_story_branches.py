@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0022_alter_family_display_name'),
-    ]
+    dependencies = [("familytree", "0022_alter_family_display_name")]
 
     operations = [
         migrations.AddField(
-            model_name='story',
-            name='branches',
-            field=models.ManyToManyField(blank=True, to='familytree.Branch'),
-        ),
+            model_name="story",
+            name="branches",
+            field=models.ManyToManyField(blank=True, to="familytree.Branch"),
+        )
     ]
