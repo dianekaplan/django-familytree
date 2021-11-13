@@ -2,6 +2,7 @@ python-gedcom
 django
 django-heroku
 gunicorn
+pre-commit
 python-dateutil
 django_user_agents # used to identify the visitor's browser (for safari workaround)
 whitenoise # used for static files
