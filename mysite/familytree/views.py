@@ -325,7 +325,7 @@ def add_note(request, object_id, object_type):
 
     if request.method == 'POST':
         if note_form.is_valid():
-            
+
             # make django_admin_log entry
             LogEntry.objects.log_action(
                 user_id=editing_user.id,

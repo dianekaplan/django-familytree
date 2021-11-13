@@ -173,5 +173,3 @@ class Command(BaseCommand):
         self.populate_outward_to_siblings()
         print("CALLING populate_the_rest")
         self.populate_the_rest()
-
-

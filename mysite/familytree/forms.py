@@ -16,4 +16,3 @@ class EditPersonForm(ModelForm):
         fields = ['first', 'nickname', 'last', 'maiden', 'middle', 'birthdate', 'birthdate_note', 'birthplace',
                   'education', 'work', 'interests', 'current_location', 'notes1', 'notes2', 'notes3', 'deathdate',
                   'deathdate_note']
-

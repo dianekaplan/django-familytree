@@ -128,7 +128,7 @@ class TestLoggedOutViews(TestCase):
     def test_landing_page(self):
         response = self.client.get(reverse('landing'))
         self.assertEqual(response.status_code, 200)
-    
+
 
 class TestOtherViews(TestCase):
     def setUp(self):
@@ -183,4 +183,3 @@ class TestOtherViews(TestCase):
 
         response = self.client.get(reverse('account'))
         self.assertEqual(response.status_code, 200)
-
