@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0027_profile_timezone'),
-    ]
+    dependencies = [("familytree", "0027_profile_timezone")]
 
     operations = [
         migrations.AddField(
-            model_name='image',
-            name='notes',
+            model_name="image",
+            name="notes",
             field=models.CharField(blank=True, max_length=500, null=True),
-        ),
+        )
     ]

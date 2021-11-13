@@ -5,14 +5,10 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0018_remove_profile_last_login'),
-    ]
+    dependencies = [("familytree", "0018_remove_profile_last_login")]
 
     operations = [
         migrations.RenameField(
-            model_name='profile',
-            old_name='logins',
-            new_name='login_count',
-        ),
+            model_name="profile", old_name="logins", new_name="login_count"
+        )
     ]

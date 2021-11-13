@@ -6,23 +6,45 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0007_videoperson_description'),
-    ]
+    dependencies = [("familytree", "0007_videoperson_description")]
 
     operations = [
         migrations.CreateModel(
-            name='FamilyStory',
+            name="FamilyStory",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(blank=True, null=True)),
-                ('updated_at', models.DateTimeField(blank=True, null=True)),
-                ('family', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='familytree.family')),
-                ('story', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='familytree.story')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(blank=True, null=True)),
+                ("updated_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "family",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="familytree.family",
+                    ),
+                ),
+                (
+                    "story",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="familytree.story",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'FamilyStory records',
-                'db_table': 'family_story',
+                "verbose_name_plural": "FamilyStory records",
+                "db_table": "family_story",
             },
-        ),
+        )
     ]

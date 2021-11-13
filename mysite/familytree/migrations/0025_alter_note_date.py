@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0024_alter_note_body'),
-    ]
+    dependencies = [("familytree", "0024_alter_note_body")]
 
     operations = [
         migrations.AlterField(
-            model_name='note',
-            name='date',
+            model_name="note",
+            name="date",
             field=models.DateField(auto_now_add=True, null=True),
-        ),
+        )
     ]

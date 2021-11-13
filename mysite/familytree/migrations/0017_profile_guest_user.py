@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0016_note_external_author'),
-    ]
+    dependencies = [("familytree", "0016_note_external_author")]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='guest_user',
+            model_name="profile",
+            name="guest_user",
             field=models.BooleanField(default=False),
-        ),
+        )
     ]

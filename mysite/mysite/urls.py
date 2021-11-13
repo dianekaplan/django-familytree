@@ -22,9 +22,9 @@ from django.views.generic import RedirectView
 admin.site.enable_nav_sidebar = False
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/familytree/')),
-    path('familytree/', include('familytree.urls')),
-    path('admin/', admin.site.urls, name='admin'),
-    path('accounts/', include('myauth.urls')),
-    path('__debug__/', include(debug_toolbar.urls)),
+    path("", RedirectView.as_view(url="/familytree/")),
+    path("familytree/", include("familytree.urls")),
+    path("admin/", admin.site.urls, name="admin"),
+    path("accounts/", include("myauth.urls")),
+    path("__debug__/", include(debug_toolbar.urls)),
 ]

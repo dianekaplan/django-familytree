@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0009_alter_videoperson_table'),
-    ]
+    dependencies = [("familytree", "0009_alter_videoperson_table")]
 
     operations = [
         migrations.AlterField(
-            model_name='videoperson',
-            name='created_at',
+            model_name="videoperson",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
-        ),
+        )
     ]

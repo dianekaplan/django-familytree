@@ -5,57 +5,19 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0004_person_birthyear'),
-    ]
+    dependencies = [("familytree", "0004_person_birthyear")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='family',
-            name='husband_line',
-        ),
-        migrations.RemoveField(
-            model_name='family',
-            name='kaplan_line',
-        ),
-        migrations.RemoveField(
-            model_name='family',
-            name='keem_line',
-        ),
-        migrations.RemoveField(
-            model_name='family',
-            name='kemler_line',
-        ),
-        migrations.RemoveField(
-            model_name='image',
-            name='husband_line',
-        ),
-        migrations.RemoveField(
-            model_name='image',
-            name='kaplan_line',
-        ),
-        migrations.RemoveField(
-            model_name='image',
-            name='keem_line',
-        ),
-        migrations.RemoveField(
-            model_name='image',
-            name='kemler_line',
-        ),
-        migrations.RemoveField(
-            model_name='person',
-            name='husband_line',
-        ),
-        migrations.RemoveField(
-            model_name='person',
-            name='kaplan_line',
-        ),
-        migrations.RemoveField(
-            model_name='person',
-            name='keem_line',
-        ),
-        migrations.RemoveField(
-            model_name='person',
-            name='kemler_line',
-        ),
+        migrations.RemoveField(model_name="family", name="husband_line"),
+        migrations.RemoveField(model_name="family", name="kaplan_line"),
+        migrations.RemoveField(model_name="family", name="keem_line"),
+        migrations.RemoveField(model_name="family", name="kemler_line"),
+        migrations.RemoveField(model_name="image", name="husband_line"),
+        migrations.RemoveField(model_name="image", name="kaplan_line"),
+        migrations.RemoveField(model_name="image", name="keem_line"),
+        migrations.RemoveField(model_name="image", name="kemler_line"),
+        migrations.RemoveField(model_name="person", name="husband_line"),
+        migrations.RemoveField(model_name="person", name="kaplan_line"),
+        migrations.RemoveField(model_name="person", name="keem_line"),
+        migrations.RemoveField(model_name="person", name="kemler_line"),
     ]

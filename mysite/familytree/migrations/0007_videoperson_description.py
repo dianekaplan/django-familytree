@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0006_videoperson'),
-    ]
+    dependencies = [("familytree", "0006_videoperson")]
 
     operations = [
         migrations.AddField(
-            model_name='videoperson',
-            name='description',
+            model_name="videoperson",
+            name="description",
             field=models.CharField(blank=True, max_length=255, null=True),
-        ),
+        )
     ]

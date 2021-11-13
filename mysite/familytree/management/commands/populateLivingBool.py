@@ -4,7 +4,7 @@ from datetime import date
 
 
 class Command(BaseCommand):
-    help = 'Populates living bool: true if birth year within 100 years and deathdate fields are empty'
+    help = "Populates living bool: true if birth year within 100 years and deathdate fields are empty"
 
     def handle(self, *args, **options):
         people = Person.objects.all()
@@ -12,14 +12,14 @@ class Command(BaseCommand):
 
         print("People we know were born within 100 years (will set to living): ")
         for person in people:
-            this_display_name = ''
+            this_display_name = ""
             if person.nickname:
                 this_display_name = person.nickname.strip() + " " + person.last.strip()
             else:
                 this_display_name = person.first.strip() + " " + person.last.strip()
 
-            if not person.deathdate_note  and not person.deathdate :
-                birthdate_info = ''
+            if not person.deathdate_note and not person.deathdate:
+                birthdate_info = ""
                 current_year_as_int = int(today.year)
                 birthyear_as_int = 0
 

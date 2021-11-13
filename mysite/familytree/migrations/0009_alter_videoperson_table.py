@@ -5,13 +5,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0008_familystory'),
-    ]
+    dependencies = [("familytree", "0008_familystory")]
 
-    operations = [
-        migrations.AlterModelTable(
-            name='videoperson',
-            table='person_video',
-        ),
-    ]
+    operations = [migrations.AlterModelTable(name="videoperson", table="person_video")]

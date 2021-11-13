@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0021_auto_20210711_1016'),
-    ]
+    dependencies = [("familytree", "0021_auto_20210711_1016")]
 
     operations = [
         migrations.AlterField(
-            model_name='family',
-            name='display_name',
+            model_name="family",
+            name="display_name",
             field=models.CharField(blank=True, max_length=60),
-        ),
+        )
     ]

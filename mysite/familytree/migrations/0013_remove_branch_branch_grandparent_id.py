@@ -5,13 +5,8 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0012_branch_branch_grandparent_id'),
-    ]
+    dependencies = [("familytree", "0012_branch_branch_grandparent_id")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='branch',
-            name='branch_grandparent_id',
-        ),
+        migrations.RemoveField(model_name="branch", name="branch_grandparent_id")
     ]

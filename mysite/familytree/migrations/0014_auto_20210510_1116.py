@@ -5,52 +5,48 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('familytree', '0013_remove_branch_branch_grandparent_id'),
-    ]
+    dependencies = [("familytree", "0013_remove_branch_branch_grandparent_id")]
 
     operations = [
         migrations.AlterField(
-            model_name='audiofile',
-            name='branches',
-            field=models.ManyToManyField(blank=True, to='familytree.Branch'),
+            model_name="audiofile",
+            name="branches",
+            field=models.ManyToManyField(blank=True, to="familytree.Branch"),
         ),
         migrations.AlterField(
-            model_name='audiofile',
-            name='person',
-            field=models.ManyToManyField(blank=True, to='familytree.Person'),
+            model_name="audiofile",
+            name="person",
+            field=models.ManyToManyField(blank=True, to="familytree.Person"),
         ),
         migrations.AlterField(
-            model_name='family',
-            name='branches',
-            field=models.ManyToManyField(blank=True, to='familytree.Branch'),
+            model_name="family",
+            name="branches",
+            field=models.ManyToManyField(blank=True, to="familytree.Branch"),
         ),
         migrations.AlterField(
-            model_name='image',
-            name='branches',
-            field=models.ManyToManyField(blank=True, to='familytree.Branch'),
+            model_name="image",
+            name="branches",
+            field=models.ManyToManyField(blank=True, to="familytree.Branch"),
         ),
         migrations.AlterField(
-            model_name='person',
-            name='branches',
-            field=models.ManyToManyField(blank=True, to='familytree.Branch'),
+            model_name="person",
+            name="branches",
+            field=models.ManyToManyField(blank=True, to="familytree.Branch"),
         ),
         migrations.AlterField(
-            model_name='video',
-            name='branches',
-            field=models.ManyToManyField(blank=True, to='familytree.Branch'),
+            model_name="video",
+            name="branches",
+            field=models.ManyToManyField(blank=True, to="familytree.Branch"),
         ),
         migrations.AlterField(
-            model_name='video',
-            name='family',
-            field=models.ManyToManyField(blank=True, to='familytree.Family'),
+            model_name="video",
+            name="family",
+            field=models.ManyToManyField(blank=True, to="familytree.Family"),
         ),
         migrations.AlterField(
-            model_name='video',
-            name='person',
-            field=models.ManyToManyField(blank=True, to='familytree.Person'),
+            model_name="video",
+            name="person",
+            field=models.ManyToManyField(blank=True, to="familytree.Person"),
         ),
-        migrations.DeleteModel(
-            name='Login',
-        ),
+        migrations.DeleteModel(name="Login"),
     ]
