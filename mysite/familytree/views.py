@@ -71,7 +71,7 @@ def index(request):  # dashboard page
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
 
     template = (
-        "familytree/mobile_dashboard.html"
+        "familytree/dashboard_mobile.html"
         if show_mobile
         else "familytree/dashboard.html"
     )
