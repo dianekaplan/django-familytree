@@ -70,7 +70,11 @@ def index(request):  # dashboard page
     today = get_now_for_user(profile.timezone)
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
 
-    template = "familytree/dashboard.html"
+    template = (
+        "familytree/mobile_dashboard.html"
+        if show_mobile
+        else "familytree/dashboard.html"
+    )
 
     # only include additions or updates, for family, person, story, notes
     display_action_types = [1, 2]
