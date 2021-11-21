@@ -66,8 +66,11 @@ def index(request):  # dashboard page
     user_is_guest = profile.guest_user
     accessible_branches = get_valid_branches(request)
     browser = request.user_agent.browser.family
+    show_mobile = request.user_agent.is_mobile
     today = get_now_for_user(profile.timezone)
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
+
+    template = "familytree/dashboard.html"
 
     # only include additions or updates, for family, person, story, notes
     display_action_types = [1, 2]
@@ -196,7 +199,7 @@ def index(request):  # dashboard page
         "latest_stories": combined_story_list,
     }
 
-    return render(request, "familytree/dashboard.html", context)
+    return render(request, template, context)
 
 
 @login_required(login_url=login_url)
