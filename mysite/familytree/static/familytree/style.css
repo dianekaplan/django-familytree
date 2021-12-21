@@ -47,15 +47,6 @@ em {
   font-style: italic;
 }
 
-
-div    		{
-            /*float: left;*/
-            /*margin-left: 5em; */
-            /*margin-right: 6em;*/
-		    /*font-size: 14pt;*/
-		    /*padding: 1em*/
-}
-
 .thin		{ border-width: thin }
 .groove 	{ border-style: groove }
 
@@ -85,6 +76,10 @@ caption 	{font-size: 14pt; color: var(--caption-color);
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.mobile {
+   font-size: 16pt;
+ }
 
 .one_branch_display {
   margin: 30px;
