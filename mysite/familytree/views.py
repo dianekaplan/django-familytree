@@ -828,17 +828,22 @@ def make_list_into_html(list):
 
 
 def landing(request):
+    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     landing_page_people = Person.objects.filter(
         living=False, show_on_landing_page=True
     ).order_by("last", "first")
     email_to = settings.ADMIN_EMAIL_ADDRESS
+
+    template = (
+        "familytree/landing_mobile.html" if show_mobile else "familytree/landing.html"
+    )
 
     context = {
         "landing_page_people": landing_page_people,
         "media_server": media_server,
         "email_to": email_to,
     }
-    return render(request, "familytree/landing.html", context)
+    return render(request, template, context)
 
 
 @login_required(login_url=login_url)
