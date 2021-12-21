@@ -66,7 +66,7 @@ def index(request):  # dashboard page
     user_is_guest = profile.guest_user
     accessible_branches = get_valid_branches(request)
     browser = request.user_agent.browser.family
-    show_mobile = request.user_agent.is_mobile
+    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     today = get_now_for_user(profile.timezone)
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
 
