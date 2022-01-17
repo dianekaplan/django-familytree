@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     self.populate_children_values(child)
 
     def populate_downward_from_families(self):
-        # grab all family objects where gedcom_uuid is populated
+        # grab all family objects where direct_family_number is populated
         families = Family.objects.filter(direct_family_number__isnull=False).order_by(
             "direct_family_number"
         )
@@ -205,9 +205,7 @@ class Command(BaseCommand):
 
     def populate_the_rest(self):  # kids of people who married in, then upward
         # grab the people with gedcom_uuid NOT populated
-        people_missing_value = Person.objects.annotate(
-            text_len=Length("gedcom_uuid")
-        ).filter(text_len__lt=1)
+        people_missing_value = Person.objects.filter(gedcom_uuid__isnull=True)
         still_missing = 0
         for person in people_missing_value:
             self.check_spouse_for_value(person)
