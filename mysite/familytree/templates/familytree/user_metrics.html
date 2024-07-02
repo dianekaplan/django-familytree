@@ -2,7 +2,7 @@
 {% block title %} - user metrics{% endblock title %}
 {% block content %}
 
-past month's logins:
+Past month's logins:
         <ul>
         {% for profile in last_login_past_month %}
             {% include "familytree/_user_link_display.html" with profile=profile %}
@@ -165,7 +165,7 @@ past month's logins:
 
 
 
-Users needing password change (have logged in, but still have original default password)
+Users needing password change (they have logged in, but still have original default password)
 
 
 
