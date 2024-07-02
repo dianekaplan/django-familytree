@@ -105,7 +105,7 @@ if ENV_ROLE == "development":
     DB_DATABASE = "oct30_2021_backup"
     DB_USER = "family"
     DB_PASSWORD = get_env_variable("FAMILY_LOCAL_DB_PASS")
-    DB_OPTIONS = {"sslmode": "allow"}
+    DB_OPTIONS = {"sslmode": "require"}
 
 if ENV_ROLE == "staging":
     DEBUG = True
