@@ -102,10 +102,10 @@ if ENV_ROLE == "development":
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = "localhost"
-    DB_DATABASE = "oct30_2021_backup"
-    DB_USER = "family"
-    DB_PASSWORD = get_env_variable("FAMILY_LOCAL_DB_PASS")
-    DB_OPTIONS = {"sslmode": "require"}
+    DB_DATABASE =  "aug27_2024_backup"
+    DB_USER = None
+    DB_PASSWORD = None
+    DB_OPTIONS = {"sslmode": "allow"}
 
 if ENV_ROLE == "staging":
     DEBUG = True
@@ -194,7 +194,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": DB_DATABASE,
-        "USER": DB_USER,  #'family',
+        "USER": DB_USER,
         "PASSWORD": DB_PASSWORD,
         "HOST": DB_HOST,
         "PORT": "5432",
