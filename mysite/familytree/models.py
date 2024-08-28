@@ -3,10 +3,11 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.safestring import mark_safe
+from mysite.settings import get_env_variable
 
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
 DEFAULT_TIME_ZONE = settings.DEFAULT_TIME_ZONE
-
+ENV_ROLE = get_env_variable("ENV_ROLE")
 
 class Branch(models.Model):
     display_name = models.CharField(max_length=50, blank=True)
@@ -572,6 +573,7 @@ from django.template.loader import render_to_string
 @receiver(post_save, sender=User)
 def send_login_email(sender, instance, **kwargs):
 
+    in_local_dev = True if ENV_ROLE == "development" else False
     email_data = {"user": instance}
     from_email = settings.ADMIN_EMAIL_SEND_FROM
     recipient_list = [settings.ADMIN_EMAIL_ADDRESS]
@@ -579,4 +581,4 @@ def send_login_email(sender, instance, **kwargs):
     html_message = render_to_string(
         "familytree/email/login_email_message.html", email_data
     )
-    send_mail(subject, html_message, from_email, recipient_list, fail_silently=False)
+    send_mail(subject, html_message, from_email, recipient_list, fail_silently=in_local_dev)
