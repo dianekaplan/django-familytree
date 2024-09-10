@@ -681,10 +681,12 @@ def increment_profile_login_count(sender, instance, **kwargs):
 
 @login_required(login_url=login_url)
 def video_detail(request, video_id):
+    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     profile = get_display_profile(request).first()
     video = get_object_or_404(Video, pk=video_id)
     video_people = Video.video_subjects(video)
     user_is_guest = profile.guest_user
+    height = 200 if show_mobile else 400
 
     cloud_name = media_server.split("/")[3]
     public_id = video.name
@@ -703,6 +705,7 @@ def video_detail(request, video_id):
             "video_url": video_url,
             "show_book": True,
             "user_is_guest": user_is_guest,
+            "height": height,
         },
     )
 
