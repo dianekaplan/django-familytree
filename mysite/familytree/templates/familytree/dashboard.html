@@ -54,7 +54,7 @@
     {% endif %}
 
     <b>Birthdays this month:</b>
-    {%  if birthday_people%}
+    {%  if birthday_people %}
         {% for person in birthday_people %}
             <li style="list-style-type:none;"> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
         {% endfor %}
@@ -77,7 +77,7 @@
     </div>
     <div class="circled_section">
        <b>Latest videos:</b> <br/>
-       {%  if latest_videos %}
+       {% if latest_videos %}
         {% for video in latest_videos %}
             {% include "familytree/video_link.html" with video=video show_hover=True %}
         {% endfor %}

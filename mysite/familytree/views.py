@@ -327,6 +327,7 @@ def set_branch_people(existing_branches_list, int):
 
 @login_required(login_url=login_url)
 def person_detail(request, person_id):
+    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     profile = get_display_profile(request).first()
     person = get_object_or_404(Person, pk=person_id)
     user_is_guest = profile.guest_user
@@ -401,6 +402,7 @@ def person_detail(request, person_id):
             "user": profile.user,
             "user_is_guest": user_is_guest,
             "user_is_limited": user_is_limited,
+            "show_mobile": show_mobile,
         },
     )
 
