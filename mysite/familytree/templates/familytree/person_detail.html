@@ -3,6 +3,8 @@
 {% block title %} - {{ person.display_name }}{% endblock title %}
 {% block content %}
 
+{% if show_mobile %}<div class="mobile">{% endif %}
+
 <div>
     <div style="float: left; width: 100%;">
         {%  if person.display_name %}
@@ -153,5 +155,7 @@
         {% endfor %}
     {% endif %}
 </div>
+
+{% if show_mobile %}</div>{% endif %}
 
 {% endblock content %}
