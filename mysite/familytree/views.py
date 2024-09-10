@@ -844,7 +844,6 @@ def landing(request):
         "landing_page_people": landing_page_people,
         "media_server": media_server,
         "email_to": email_to,
-        "show_mobile": show_mobile,
     }
     return render(request, template, context)
 
