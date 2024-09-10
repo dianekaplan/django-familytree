@@ -4,15 +4,17 @@
 
 <div style="float: left; width: 65%;">
     <div style="margin-bottom: 20px">
-        <iframe
+        <video controls src="{{ media_server }}video/upload/h_600,r_20/{{ video.name }}"></video>
+
+        <!-- @@FIXME: this iframe stopped working after upgrading heroku stack, I'd liked having the controls -->
+        <!-- <iframe
             src= {{video_url}}
             width="800"
             height="500"
             allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
             allowfullscreen
             frameborder="0"
-        ></iframe>
-
+        ></iframe> -->
     </div>
     <div>
         {{ video.year }}
