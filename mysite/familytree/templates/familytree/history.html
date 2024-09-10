@@ -7,6 +7,8 @@
 
     <h2>Family history: </h2>
 
+    {% if show_mobile %}<div class="mobile">{% endif %}
+
         {% if profile.connection_notes %}
                 <p>{{ profile.connection_notes }}</p>
         {%  endif %}
@@ -25,4 +27,5 @@
              </div>
          {% endfor %}
 
+    {% if show_mobile %}</div>{% endif %}
 {% endblock content %}

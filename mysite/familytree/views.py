@@ -509,6 +509,7 @@ def edit_person(request, person_id):
 
 @login_required(login_url=login_url)
 def family_detail(request, family_id):
+    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     family = get_object_or_404(Family, pk=family_id)
     profile = get_display_profile(request).first()
     user_is_guest = profile.guest_user
@@ -565,6 +566,7 @@ def family_detail(request, family_id):
             "user_person": profile.person,
             "media_server": media_server,
             "user_is_guest": user_is_guest,
+            "show_mobile": show_mobile,
         },
     )
 
@@ -739,6 +741,7 @@ def video_index(request):
 
 @login_required(login_url=login_url)
 def story(request, story_id):
+    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     profile = get_display_profile(request).first()
     user_person = profile.person
     story = get_object_or_404(Story, pk=story_id)
@@ -746,12 +749,14 @@ def story(request, story_id):
     return render(
         request,
         "familytree/story.html",
-        {"story": story, "media_server": media_server, "user_person": user_person},
+        {"story": story, "media_server": media_server, "user_person": user_person, 
+        "show_mobile": show_mobile, },
     )
 
 
 @login_required(login_url=login_url)
 def outline(request):
+    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
     user_is_guest = profile.guest_user
@@ -777,6 +782,7 @@ def outline(request):
         "total_results_html": outline_html,
         "user": profile.user,
         "user_is_guest": user_is_guest,
+        "show_mobile": show_mobile,
     }
 
     return render(request, "familytree/outline.html", context)
@@ -850,6 +856,7 @@ def landing(request):
 
 @login_required(login_url=login_url)
 def history(request):
+    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
     user_is_guest = profile.guest_user
@@ -861,6 +868,7 @@ def history(request):
         "profile": profile,
         "user": profile.user,
         "user_is_guest": user_is_guest,
+        "show_mobile": show_mobile,
     }
     return render(request, "familytree/history.html", context)
 
