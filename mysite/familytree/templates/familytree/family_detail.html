@@ -5,6 +5,8 @@
 
 <h3>{{ family.display_name }}</h3>
 
+{% if show_mobile %}<div class="mobile">{% endif %}
+
 <div style="float: left; width: 31%;">
     {% include "familytree/face_name_link.html" with person=family.wife %}
 </div>
@@ -83,5 +85,6 @@
     {% endif %}
  </div>
 
+ {% if show_mobile %}</div>{% endif %}
 
 {% endblock content %}
