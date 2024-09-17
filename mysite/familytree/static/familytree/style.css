@@ -28,18 +28,19 @@
   font-size: 1em;
 }
 
-body	    {color: var(--text-color);
+body	{color: var(--text-color);
+      font-size: 12px;
 			font-family: eurostile, arial, sans-serif;
             }
 
-img 	    {border: 0}
+img 	{border: 0}
 
-a           { font-size: 1em;
-            text-decoration: underline;
+a      { font-size: 1em;
+          text-decoration: underline;
 		    color: var(--link-color);
 }
 
-a:hover     { text-decoration: underline;
+a:hover { text-decoration: underline;
          	 color: var(--link-hover);
 }
 
@@ -50,17 +51,17 @@ em {
 .thin		{ border-width: thin }
 .groove 	{ border-style: groove }
 
-ul      	{ font-size: 12pt; margin-left: 1em;}
+ul      	{ font-size: 1em; margin-left: 1em;}
 
 ul ul   	{ margin-left: 2em }
 
-p		    { font-size: 12pt;
+p		    { font-size: 1em;
 		    text-indent: 1em}
 
 h1		{font-size: 1.75em;}
 h2		{font-size: 1.5em;}
 
-caption 	{font-size: 14pt; color: var(--caption-color);
+caption 	{font-size: 1em; color: var(--caption-color);
             }
 
 .col-md-10 .line {
@@ -129,6 +130,8 @@ caption 	{font-size: 14pt; color: var(--caption-color);
       width: 1370px;
     } } */
 
+
+
 .container-fluid {
   margin-right: auto;
   margin-left: auto;
@@ -142,20 +145,20 @@ caption 	{font-size: 14pt; color: var(--caption-color);
     clear: both; }
 
 /* family generation display colors */
-.g3 { font-size: 12pt; text-decoration: underline;  color: #8b8378; }
-.g4 { font-size: 12pt; text-decoration: underline;  color: #FFCC66; }
-.g5 { font-size: 12pt; text-decoration: underline;  color: #FF66CC; }
-.g6 { font-size: 12pt; text-decoration: underline;  color: #99CC66; }
-.g7 { font-size: 12pt; text-decoration: underline;  color: #000066; }
-.g8 { font-size: 12pt; text-decoration: underline;  color: #663300; }
-.g9 { font-size: 12pt; text-decoration: underline;  color: #8A5C8A; }
-.g10 { font-size: 12pt; text-decoration: underline;  color: #75A3A3; }
-.g11 { font-size: 12pt; text-decoration: underline;  color: #000000; }
-.g12 { font-size: 12pt; text-decoration: underline;  color: #8A5C5C; }
-.g13 { font-size: 12pt; text-decoration: underline;  color: #006699; }
-.g14 { font-size: 12pt; text-decoration: underline;  color: #CC9933; }
-.g15 { font-size: 12pt; text-decoration: underline;  color: #5C8A73; }
-.g16 { font-size: 12pt; text-decoration: underline;  color: #CC99B3; }
+.g3 { font-size: 1em; text-decoration: underline;  color: #8b8378; }
+.g4 { font-size: 1em; text-decoration: underline;  color: #FFCC66; }
+.g5 { font-size: 1em; text-decoration: underline;  color: #FF66CC; }
+.g6 { font-size: 1em; text-decoration: underline;  color: #99CC66; }
+.g7 { font-size: 1em; text-decoration: underline;  color: #000066; }
+.g8 { font-size: 1em; text-decoration: underline;  color: #663300; }
+.g9 { font-size: 1em; text-decoration: underline;  color: #8A5C8A; }
+.g10 { font-size: 1em; text-decoration: underline;  color: #75A3A3; }
+.g11 { font-size: 1em; text-decoration: underline;  color: #000000; }
+.g12 { font-size: 1em; text-decoration: underline;  color: #8A5C5C; }
+.g13 { font-size: 1em; text-decoration: underline;  color: #006699; }
+.g14 { font-size: 1em; text-decoration: underline;  color: #CC9933; }
+.g15 { font-size: 1em; text-decoration: underline;  color: #5C8A73; }
+.g16 { font-size: 1em; text-decoration: underline;  color: #CC99B3; }
 
 /*Styles for image gallery hover text:*/
 .image_container {
@@ -187,7 +190,7 @@ caption 	{font-size: 14pt; color: var(--caption-color);
 
 .text {
   color: white;
-  font-size: 12px;
+  font-size: 1em;
   position: absolute;
   top: 50%;
   left: 50%;
