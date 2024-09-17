@@ -78,9 +78,9 @@ caption 	{font-size: 1em; color: var(--caption-color);
     margin-bottom: 10px;
 }
 
-/* .mobile {
+.mobile {
    font-size: 20pt;
- } */
+ }
 
 .one_branch_display {
   margin: 30px;
