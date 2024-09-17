@@ -78,9 +78,9 @@ caption 	{font-size: 1em; color: var(--caption-color);
     margin-bottom: 10px;
 }
 
-.mobile {
+/* .mobile {
    font-size: 20pt;
- }
+ } */
 
 .one_branch_display {
   margin: 30px;
@@ -110,6 +110,15 @@ caption 	{font-size: 1em; color: var(--caption-color);
     display: table; }
   .container:after {
     clear: both; }
+
+
+  /* Increase the font size on mobile devices */
+   @media only screen and (max-width: 600px) {
+    body {
+    font-size: 20px;
+  }}
+
+
 
   /* Restrict the container width on larger screens */ 
   /* @@TODO: remember why I added this (preventing green circles too wide?) */ 
