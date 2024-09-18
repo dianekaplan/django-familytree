@@ -95,7 +95,8 @@ DJANGO_SITE_CREATION = datetime.strptime("2021-07-14", "%Y-%m-%d").date()
 NEWEST_GENERATION_FOR_GUEST = 13
 ADMIN_EMAIL_SEND_FROM = "diane@ourbigfamilytree.com"
 ADMIN_EMAIL_ADDRESS = "dianekaplan@gmail.com"
-DEFAULT_TIME_ZONE = "US/Eastern"
+# DEFAULT_TIME_ZONE = "US/Eastern"
+DEFAULT_TIME_ZONE = "America/New_York"
 
 
 if ENV_ROLE == "development":
