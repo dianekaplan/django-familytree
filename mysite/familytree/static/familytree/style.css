@@ -1,8 +1,5 @@
 :root {
-  --text-color: #663300;
   --link-color: #99CC66;
-  --link-hover: #23527c;
-  --caption-color: #888888;
   --header-color: #666869;
   --header-hover: #131213;
 }
@@ -27,49 +24,13 @@
   font-size: 1em;
 }
 
-/* body	{color: var(--text-color);
-      font-size: 12px;
-			font-family: eurostile, arial, sans-serif;
-            }
-
-img 	{border: 0}
-
-a      { font-size: 1em;
-          text-decoration: underline;
-		    color: var(--link-color);
+body	{
+      font-size: 16px;
 }
-
-a:hover { text-decoration: underline;
-         	 color: var(--link-hover);
-}
-
-em {
-  font-style: italic;
-} */
 
 p		    { font-size: 1em;
-  text-indent: 1em}
+		    text-indent: 1em}
 
-/* .thin		{ border-width: thin }
-.groove 	{ border-style: groove }
-
-ul      	{ font-size: 1em; margin-left: 1em;}
-
-ul ul   	{ margin-left: 2em }
-
-
-
-h1		{font-size: 1.75em;}
-h2		{font-size: 1.5em;} */
-
-caption 	{font-size: 1em; color: var(--caption-color);
-            }
-
-/* .col-md-10 .line {
-        background-color:lightgray;
-        height:0px;
-        width:100%;
-    } */
 
 .circled_section {
     border-radius: 25px;
@@ -78,10 +39,6 @@ caption 	{font-size: 1em; color: var(--caption-color);
     margin-top: 10px;
     margin-bottom: 10px;
 }
-
-/* .mobile {
-   font-size: 20pt;
- } */
 
 .one_branch_display {
   margin: 30px;
@@ -98,7 +55,7 @@ caption 	{font-size: 1em; color: var(--caption-color);
   width: 23%;
 }
 
-/* .container {
+.container {
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
@@ -113,18 +70,17 @@ caption 	{font-size: 1em; color: var(--caption-color);
     clear: both; }
 
 
+  /* Workaround to increase font size on mobile (can remove when media query is working) */
+  .mobile {
+      font-size: 20pt;
+    }
 
-.container-fluid {
-  margin-right: auto;
-  margin-left: auto;
-  padding-left: 15px;
-  padding-right: 15px; }
-  .container-fluid:before,
-  .container-fluid:after {
-    content: " ";
-    display: table; }
-  .container-fluid:after {
-    clear: both; } */
+  /* Increase the font size on mobile devices */
+   @media only screen and (max-width: 600px) {
+    body {
+    font-size: 20px;
+  }}
+
 
 /* family generation display colors */
 .g3 { font-size: 1em; text-decoration: underline;  color: #8b8378; }
@@ -181,9 +137,3 @@ caption 	{font-size: 1em; color: var(--caption-color);
   transform: translate(-50%, -50%);
   text-align: center;
 }
-
-  /* Use larger base font-size on mobile devices */
-  @media (max-width:600px) {
-    body {
-    font-size: 20pt;
-  }}
