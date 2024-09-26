@@ -75,11 +75,11 @@ p		    { font-size: 1em;
       font-size: 20pt;
     }
 
-  /* Increase the font size on mobile devices */
-   @media only screen and (max-width: 600px) {
+  /* Increase the font size on mobile devices @@FIXME: not taking effect yet, something is inteferring */
+   /* @media only screen and (max-width: 600px) {
     body {
     font-size: 20px;
-  }}
+  }} */
 
 
 /* family generation display colors */
