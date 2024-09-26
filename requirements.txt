@@ -9,3 +9,4 @@ whitenoise # used for static files
 django-debug-toolbar
 psycopg2-binary # PostgreSQL database adapter
 pytz
+tzdata # temp, to check tz issue
