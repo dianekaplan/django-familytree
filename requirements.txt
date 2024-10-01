@@ -8,5 +8,6 @@ django_user_agents # used to identify the visitor's browser (for safari workarou
 whitenoise # used for static files
 django-debug-toolbar
 psycopg2-binary # PostgreSQL database adapter
+pytest
 pytz
 tzdata # added to fix tz recognition issue on user metrics page
