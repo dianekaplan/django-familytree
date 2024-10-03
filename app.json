@@ -1,0 +1,9 @@
+{
+  "environments": {
+    "test": {
+      "scripts": {
+        "test": "python3 mysite/manage.py test familytree"
+      }
+    }
+  }
+}
