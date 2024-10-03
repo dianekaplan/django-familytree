@@ -135,5 +135,11 @@ class TestOtherViews(TestCase):
         response = self.client.get(reverse("outline"))
         self.assertEqual(response.status_code, 200)
 
+        response = self.client.get(reverse("history"))
+        self.assertEqual(response.status_code, 200)
+
         response = self.client.get(reverse("account"))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(reverse("user_metrics"))
         self.assertEqual(response.status_code, 200)
