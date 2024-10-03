@@ -113,6 +113,10 @@ class TestOtherViews(TestCase):
         """
 
         self.client.login(username="john", password="johnpassword")
+
+        response = self.client.get(reverse("dashboard"))
+        self.assertEqual(response.status_code, 200)
+
         response = self.client.get(reverse("person_index"))
         self.assertEqual(response.status_code, 200)
         # self.assertContains(response, "No people are available.")
@@ -128,9 +132,6 @@ class TestOtherViews(TestCase):
         response = self.client.get(reverse("video_index"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No videos are available.")
-
-        response = self.client.get(reverse("dashboard"))
-        self.assertEqual(response.status_code, 200)
 
         response = self.client.get(reverse("outline"))
         self.assertEqual(response.status_code, 200)
