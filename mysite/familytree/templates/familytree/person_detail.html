@@ -131,7 +131,7 @@
         <h2>Audio links: </h2>
         <div>
             {% for file in audio_files %}
-                {{ file.summary}}
+            {{ file.recording_date}}: {{ file.summary}}
                 <a href="{{ media_server }}/video/upload/{{ file.filename }}">click here</a><br/>
             {% endfor %}
         </div>
