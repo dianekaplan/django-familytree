@@ -45,6 +45,9 @@ urlpatterns = [
     path("history/", views.history, name="history"),
     # ex: /stories/4/
     path("stories/<int:story_id>/", views.story, name="story"),
+    # ex: /stories/
+    path("stories/", views.story_index, name="stories"),
+
     # ex: /account/
     path("account/", views.account, name="account"),
     # ex: /user_metrics/

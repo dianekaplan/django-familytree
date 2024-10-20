@@ -265,6 +265,15 @@ def set_branch_families(existing_branches_list, int):
     return families
 
 
+def set_branch_stories(existing_branches_list, int):
+    stories = Story.objects.filter(
+        branches__display_name__contains=existing_branches_list[int],
+        dashboard_feature=True,
+    ).order_by("intro")
+    return stories
+
+
+
 @login_required(login_url=login_url)
 def person_index(request):
     accessible_branches = get_valid_branches(request)
@@ -708,6 +717,71 @@ def video_detail(request, video_id):
             "height": height,
         },
     )
+
+@login_required(login_url=login_url)
+def story_index(request):
+    profile = get_display_profile(request).first()
+    accessible_branches = get_valid_branches(request)
+    existing_branches = Branch.objects.all()
+    story_list = Story.objects.none()
+    browser = request.user_agent.browser.family
+    user_is_guest = profile.guest_user
+
+
+    try:
+        for branch in accessible_branches:
+            this_branch_stories = (
+                Story.objects.filter(
+                    branches__display_name__contains=branch.display_name
+                )
+                .filter(dashboard_feature=True)
+                .order_by("-id")
+            )
+            story_list = story_list | this_branch_stories
+        combined_story_list = story_list.order_by("-id").distinct()[:30]
+    except Story.DoesNotExist:
+        combined_story_list = None
+
+
+    if branch_count > 0:
+        branch1_stories = set_branch_stories(existing_branches_list, 0)
+    else:
+        branch1_stories = None
+
+    if branch_count > 1:
+        branch2_stories = set_branch_stories(existing_branches_list, 1)
+    else:
+        branch2_stories = None
+
+    if branch_count > 2:
+        branch3_stories = set_branch_stories(existing_branches_list, 2)
+    else:
+        branch3_stories = None
+
+    if branch_count > 3:
+        branch4_stories = set_branch_stories(existing_branches_list, 3)
+    else:
+        branch4_stories = None
+
+
+    context = {
+        "story_list": combined_story_list,
+        "accessible_branches": accessible_branches,
+        "branch2_name": branch2_name,
+        "user_person": profile.person,
+        "branch1_stories": branch1_stories,
+        "branch2_stories": branch2_stories,
+        "branch3_stories": branch3_stories,
+        "branch4_stories": branch4_stories,
+        "branch1_name": branch1_name,
+        "branch2_name": branch2_name,
+        "branch3_name": branch3_name,
+        "branch4_name": branch4_name,
+        "browser": browser,
+        "user": profile.user,
+        "user_is_guest": user_is_guest,
+    }
+    return render(request, "familytree/story_index.html", context)
 
 
 @login_required(login_url=login_url)

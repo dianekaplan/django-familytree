@@ -1,0 +1,39 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - stories{% endblock title %}
+{% block content %}
+{% load static %}
+
+<h1>Family Stories</h1>
+
+
+{% if branch1_stories and branch1_name.first in accessible_branches  %}
+    <div class="circled_section">
+        <h2>{{branch1_name.first}} stories</h2>
+        {% include "familytree/_stories_display.html" with stories=branch1_stories %}
+    </div>
+{% endif %}
+
+{% if branch2_stories and branch2_name.first in accessible_branches  %}
+    <div class="circled_section">
+        <h2>{{branch2_name.first}} stories</h2>
+        {% include "familytree/_stories_display.html" with stories=branch2_stories %}
+    </div>
+{% endif %}
+
+{% if branch3_stories and branch3_name.first in accessible_branches  %}
+    <div class="circled_section">
+        <h2>{{branch3_name.first}} stories</h2>
+        {% include "familytree/_stories_display.html" with stories=branch3_stories %}
+    </div>
+{% endif %}
+
+{% if branch4_stories and branch4_name.first in accessible_branches  %}
+    <div class="circled_section">
+        <h2>{{branch4_name.first}} stories</h2>
+        {% include "familytree/_stories_display.html" with stories=branch4_stories %}
+    </div>
+{% endif %}
+
+
+
+{% endblock content %}
