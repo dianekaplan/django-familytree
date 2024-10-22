@@ -1,0 +1,32 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - keyword search{% endblock title %}
+{% block content %}
+
+<h1>Keyword search</h1>
+{{user_person.display_name}} has access to branches: 
+{% for branch in accessible_branches %}
+    {{branch.display_name}}
+{% endfor %}
+
+{% if term %}
+    Search term was: {{term}}
+{% else %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+    <fieldset>
+        <legend>Preliminary search, good luck!</legend>
+        <div class="form-group">
+        <label for="id_search_field" class="form-label mt-4">Search for:</label>
+        <textarea class="form-control" id="id_search_field" name="search_field" required></textarea>
+        </div>
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </fieldset>
+    </form>
+
+{% endif %}
+
+
+{% endblock content %}

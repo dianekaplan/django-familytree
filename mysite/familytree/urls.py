@@ -52,6 +52,9 @@ urlpatterns = [
     path("account/", views.account, name="account"),
     # ex: /user_metrics/
     path("user_metrics/", views.user_metrics, name="user_metrics"),
+    # ex: /keyword_search/
+    path("keyword_search/", views.keyword_search, name="keyword_search"),
+
     re_path(
         "^", include("django.contrib.auth.urls")
     ),  # paths for registration pages (password reset)

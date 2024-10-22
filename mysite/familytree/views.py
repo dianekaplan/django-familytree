@@ -1119,6 +1119,28 @@ def user_metrics(request):
     return render(request, "familytree/user_metrics.html", context)
 
 
+@login_required(login_url=login_url)
+def keyword_search(request): 
+    profile = get_display_profile(request).first()
+
+    term = request.GET.get('term')
+    template_name = keyword_search
+
+    accessible_branches = get_valid_branches(request)
+    existing_branches_list = list(Branch.objects.all())
+
+    # if request.method == "GET":
+    #     return render(request, template_name, context)
+    context = {
+        "accessible_branches": accessible_branches,
+        "user_person": profile.person,
+        "media_server": media_server,
+        "term": term,
+    }
+
+    return render(request, "familytree/keyword_search.html", context)
+
+
 def get_now_for_user(timezone_string):
     now = datetime.now().astimezone(timezone(timezone_string))
     return now
