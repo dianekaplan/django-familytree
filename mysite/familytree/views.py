@@ -101,7 +101,6 @@ def index(request):  # dashboard page
             "familytree | ", ""
         )
         change_type = "added" if update.action_flag == 1 else "updated"
-        updated_story = Story.objects.get(id=update.object_id)
         combination = [update, user_person, content_type, change_type, updated_person, updated_story ]
         recent_updates.append(combination)
 
