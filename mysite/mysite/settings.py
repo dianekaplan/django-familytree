@@ -96,7 +96,6 @@ NEWEST_GENERATION_FOR_GUEST = 13
 ADMIN_EMAIL_SEND_FROM = "diane@ourbigfamilytree.com"
 ADMIN_EMAIL_ADDRESS = "dianekaplan@gmail.com"
 DEFAULT_TIME_ZONE = "US/Eastern"
-DEFAULT_FROM_EMAIL = 'dianekaplan@gmail.com'
 
 
 if ENV_ROLE == "development":
