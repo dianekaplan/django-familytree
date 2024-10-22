@@ -41,12 +41,19 @@
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="{% url 'account' %}">My Updates</a>
                 <a class="dropdown-item" href="{% url 'password_reset' %}">Reset Password</a>
-                <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+
+                <form id="logout-form" action="{% url 'logout' %}" method="post">
+                  <a class="dropdown-item" href="#" onclick="document.getElementById('logout-form').submit(); return false;">Log out</a>
+                  {% csrf_token %}
+              </form>
               </div>
             </li>
             {% else %}
               <li class="nav-item">
-                <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+                <form id="logout-form" action="{% url 'logout' %}" method="post">
+                  <a class="dropdown-item" href="#" onclick="document.getElementById('logout-form').submit(); return false;">Log out</a>
+                  {% csrf_token %}
+              </form>
               </li>
             {% endif %}
 
