@@ -88,7 +88,7 @@
     {% if not user_is_guest %}
     <div class="circled_section">
         <b>Latest updates:</b><br/>
-        {% for update, person, content_type, change_type, updated_person in recent_updates %}
+        {% for update, person, content_type, change_type, updated_person, updated_story in recent_updates %}
            {% include "familytree/update_partial.html"%}
         {% endfor %}
     </div>
