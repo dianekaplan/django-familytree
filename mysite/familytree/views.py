@@ -731,7 +731,6 @@ def story_index(request):
     browser = request.user_agent.browser.family
     user_is_guest = profile.guest_user
 
-
     try:
         for branch in accessible_branches:
             this_branch_stories = (
@@ -782,6 +781,7 @@ def story_index(request):
         "branch3_name": branch3_name,
         "branch4_name": branch4_name,
         "browser": browser,
+        "media_server": media_server,
         "user": profile.user,
         "user_is_guest": user_is_guest,
     }
