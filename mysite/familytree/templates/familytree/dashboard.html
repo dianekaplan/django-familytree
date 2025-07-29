@@ -69,7 +69,7 @@
         <b>Latest pics:</b> <br/>
        {%  if latest_pics%}
         {% for image in latest_pics %}
-            {% include "familytree/image_link.html" with image=image height=100 show_hover=False %}
+            {% include "familytree/image_link.html" with image=image height=100 show_hover=True %}
         {% endfor %}
     {% else %}
         (none)
