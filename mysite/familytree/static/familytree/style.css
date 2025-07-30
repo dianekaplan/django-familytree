@@ -74,11 +74,20 @@ p		    { font-size: 1em;
     clear: both; }
 
 
-/* Increase the font size on mobile devices */
+/* Adjust font on mobile devices */
 @media screen and (max-width: 600px) {
-  body {
-  font-size: 20px;
-}}
+.container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+body {
+  font-size: 16px;
+}
+.navbar li{
+  font-size: .85em;
+}
+}
 
 
 /* family generation display colors */

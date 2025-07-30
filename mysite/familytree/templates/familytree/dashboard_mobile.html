@@ -57,11 +57,9 @@
     <div style="float: left;" class="circled_section col-6">
         {% if today_birthday %}
             <b>Today's birthdays:</b>
-            <ul>
             {% for person in today_birthday %}
                 <li style="list-style-type:none;"> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
             {% endfor %}
-            </ul>
         {% endif %}
 
         {% if anniversary_couples %}
@@ -74,11 +72,9 @@
 
         <b>Birthdays this month:</b>
         {% if birthday_people%}
-        <ul>
             {% for person in birthday_people %}
                 <li style="list-style-type:none;"> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
             {% endfor %}
-        </ul>
         {% else %}
             (none)
         {% endif %}
