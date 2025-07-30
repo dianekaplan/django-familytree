@@ -7,8 +7,6 @@
 
 <h1>{{ story.description }}</h1>
 
-{% if show_mobile %}<div class="mobile">{% endif %}
-
     {% if story.image %}
         <img src="{{ media_server }}/image/upload/r_20/{{ story.image }}" height="500"/>
     {%  endif %}
@@ -17,7 +15,5 @@
 {% if story.source %}
     <p>source: {{ story.source }}</p>
 {% endif %}
-
-{% if show_mobile %}</div>{% endif %}
 
 {% endblock content %}
