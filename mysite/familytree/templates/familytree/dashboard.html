@@ -1,5 +1,4 @@
 {% extends 'familytree/base.html' %}
-{% block title %}{% endblock title %}
 {% block content %}
 {% load static %}
 
@@ -40,9 +39,11 @@
 <div style="float: left;" class="circled_section col-3.5">
     {%  if today_birthday %}
         <b>Today's birthdays:</b>
+        <ul>
         {% for person in today_birthday %}
             <li style="list-style-type:none;"> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
         {% endfor %}
+        </ul>
     {% endif %}
 
     {% if anniversary_couples %}
