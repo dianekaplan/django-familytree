@@ -1,6 +1,6 @@
  {% if image.id %}  {#  shouldn't need this, but there were some records coming through without ID! #}
 
-    <div style="display: inline-block; margin-bottom:10px"; class="image_container">
+    <div style="display: inline-block; margin-bottom:10px;" class="image_container">
         <a href="{% url 'image_detail' image.id  %}">
             {%  if image.little_name %}
                 <img src="{{ media_server }}/image/upload/h_{{ height }},r_20/{{ image.little_name }}" class="image"/>
@@ -10,13 +10,11 @@
 
             {% if show_hover %}
                 <span class="overlay" style="border-radius: 20px;">
-                    {% if show_hover %}
                         {% if pictured_list %}
                         <span class="text">{{pictured_list}}</span>
                         {%  else %}
                         <span class="text">{{image.pictured_list}}</span>
                         {%  endif %}
-                    {%  endif %}
                 </span>
             {%  endif %}
 
