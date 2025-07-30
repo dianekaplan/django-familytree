@@ -20,9 +20,13 @@
     color: var(--header-hover) !important;
   text-decoration: none;
 }
+/* .navbar body {
+  font-size: 16px !important;
+} */
 .navbar-brand {
   font-size: 1em;
 }
+
 
 body	{
       font-size: 16px;
@@ -73,7 +77,7 @@ p		    { font-size: 1em;
 /* Increase the font size on mobile devices */
 @media screen and (max-width: 600px) {
   body {
-  font-size: 20pt;
+  font-size: 20px;
 }}
 
 
