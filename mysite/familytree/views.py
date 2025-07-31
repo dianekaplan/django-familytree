@@ -69,6 +69,7 @@ def index(request):  # dashboard page
     show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     today = get_now_for_user(profile.timezone)
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
+    picture_limit = 5 if show_mobile else 10
 
     template = (
         "familytree/dashboard_mobile.html"
@@ -153,7 +154,7 @@ def index(request):  # dashboard page
                 branches__display_name__contains=branch.display_name
             ).order_by("-id")
             image_list = image_list | latest_pics
-        combined_image_list = image_list.order_by("-id").distinct()[:10]
+        combined_image_list = image_list.order_by("-id").distinct()[:picture_limit]
     except Image.DoesNotExist:
         combined_image_list = None
 
