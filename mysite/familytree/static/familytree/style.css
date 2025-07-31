@@ -40,6 +40,7 @@ ul.no-indent {
   padding-left: 0;
   margin-left: 0;
   list-style-position: inside; /* keeps bullets inside the content box */
+  margin-bottom: 0;
 }
 
 .circled_section {

@@ -29,7 +29,11 @@
     <body>
 
     {# Top nav #}
-    {% include "familytree/top_nav.html" with user_person=user_person %}
+    {% if is_mobile %}
+        {% include "familytree/top_nav_mobile.html" with user_person=user_person %}
+    {% else %}
+        {% include "familytree/top_nav.html" with user_person=user_person %}
+    {% endif %}
 
     {# Page content#}
     <div class="container">

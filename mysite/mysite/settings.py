@@ -180,6 +180,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "familytree.context_processors.include_login_form",
+                "familytree.context_processors.get_user_agent_info",
             ]
         },
     }
