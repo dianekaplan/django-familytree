@@ -152,3 +152,14 @@ body {
   transform: translate(-50%, -50%);
   text-align: center;
 }
+
+#center_parents {
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  text-align: center;
+}
+#center_parents img {
+  vertical-align: middle;
+}
