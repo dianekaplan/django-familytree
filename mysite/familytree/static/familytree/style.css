@@ -25,13 +25,9 @@ h3 {
     color: var(--header-hover) !important;
   text-decoration: none;
 }
-/* .navbar body {
-  font-size: 16px !important;
-} */
 .navbar-brand {
   font-size: 1em;
 }
-
 
 body	{
       font-size: 16px;
