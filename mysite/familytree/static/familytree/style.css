@@ -66,6 +66,11 @@ ul.no-indent {
   width: 23%;
 }
 
+.mobile_index_page_display {
+  margin: 15px;
+  width: 90%;
+}
+
 .container {
   margin-right: auto;
   margin-left: auto;

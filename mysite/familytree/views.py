@@ -52,12 +52,23 @@ login_url = "/familytree/landing/"
 existing_branches_list = list(Branch.objects.all())
 branch_count = len(existing_branches_list)
 
-# pass style class name for index pages based on user's number of columns
-branch_classes = {
+
+
+def get_branch_class(accessible_branches, request): 
+    # pass style class name for index pages based on user's number of columns
+    branch_classes = {
     1: "one_branch_display",
     2: "two_branch_display",
     4: "four_branch_display",
-}
+    }
+    result = branch_classes[accessible_branches]
+
+    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
+    if show_mobile: 
+        result = "mobile_index_page_display"
+
+    return result
+
 
 
 @login_required(login_url=login_url)
@@ -252,7 +263,7 @@ def family_index(request):
         "accessible_branches": accessible_branches,
         "user_person": profile.person,
         "media_server": media_server,
-        "branch_class": branch_classes[len(accessible_branches)],
+        "branch_class": get_branch_class(len(accessible_branches), request),
         "user_is_guest": user_is_guest,
         "newest_generation_for_guest": NEWEST_GENERATION_FOR_GUEST,
         "user": profile.user,
@@ -325,7 +336,7 @@ def person_index(request):
         "user_person": profile.person,
         "media_server": media_server,
         "user": profile.user,
-        "branch_class": branch_classes[len(accessible_branches)],
+        "branch_class": get_branch_class(len(accessible_branches), request),
     }
     return render(request, "familytree/person_index.html", context)
 

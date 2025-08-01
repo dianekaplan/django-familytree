@@ -12,7 +12,7 @@
 {% endif %}
 
 
-{%  if list_type == "family" %}
+{% if list_type == "family" %}
     {% for family in family_list %}
         {% if not user_is_guest or family.branch_seq <= newest_generation_for_guest %}
             {% generation_class family.branch_seq as classname %}
