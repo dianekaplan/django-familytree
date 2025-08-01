@@ -1,11 +1,11 @@
 {% load static %}
 
-<h2> <a href="{% url 'person_detail' 75 %}">
+<h3> <a href="{% url 'person_detail' 75 %}">
         <img src= "{{ media_server }}/image/upload/h_51,r_20/75bob.jpg" /></a>
-    Bob Husband's family: </h2>
+    Bob Husband's family: </h3>
 
 
-<h3>The Husband & Wilcox side:</h3>
+<h4>The Husband & Wilcox side:</h4>
         <ul>
                 <li><a href="{% url 'family_detail' 292 %}">Leander Wilcox and Amanda Penhallow</a>
                         were born (and later married) in Chautauqua county New York, both with several generations going
@@ -34,7 +34,7 @@
         </ul>
 
 
-<h3>The Fitzpatrick & Manning side:</h3>
+<h4>The Fitzpatrick & Manning side:</h4>
         <ul>
                 <li><a href="{% url 'person_detail' 764 %}">Jane Wardman/O'Brien</a> was born in Ireland <img src="{% static 'familytree/flags/ie.gif' %}"/>
                         and immigrated to the US, settling in Buffalo, NY. She married

@@ -4,6 +4,11 @@
   --header-hover: #131213;
 }
 
+
+h3 {
+  font-size: 18px;
+}
+
 .navbar li{
   display: inline-block;
   vertical-align: text-top;
