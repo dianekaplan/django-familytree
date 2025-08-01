@@ -5,25 +5,15 @@
 
 <h3>{{ family.display_name }}</h3>
 
-{% if show_mobile %}<div class="mobile">{% endif %}
-
-<div style="float: left; width: 31%;">
-    {% include "familytree/face_name_link.html" with person=family.wife %}
-</div>
-
-<div style="float: left; vertical-align: bottom; width: 38%;">
-{% if featured_images %}
-    {% for image in featured_images %}
-        {% include "familytree/featured_image.html" with image=image %}
-    {% endfor %}
+{# top partial #}
+{% if is_mobile %}
+    {% include "familytree/_family_detail_top_mobile.html" %}
 {% else %}
-    <img src="{% static 'familytree/Blank-Image-Placeholder.gif' %}" height="75" />
+    {% include "familytree/_family_detail_top.html" %}
 {% endif %}
-</div>
 
-<div style="float: left; width: 31%;">
-    {% include "familytree/face_name_link.html" with person=family.husband %}
-</div>
+
+
 
 <div style="float: left;width: 100%;">
     <div style="float: left;width: 31%;">
@@ -44,7 +34,7 @@
         <b>Kids:</b><br/>
         <ul>
         {% for kid in kids %}
-            {% include "familytree/face_name_link.html" with person=kid %}<br/>
+            {% include "familytree/_face_name_link.html" with person=kid %}<br/>
         {% endfor %}
         </ul>
     {% endif %}
@@ -84,7 +74,5 @@
     </ul>
     {% endif %}
  </div>
-
- {% if show_mobile %}</div>{% endif %}
 
 {% endblock content %}

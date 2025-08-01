@@ -5,7 +5,6 @@
 
     <h2>The original families for your branch(es) are: </h2>
 
-    {% if show_mobile %}<div class="mobile">{% endif %}
     <ul>
     {% for branch, families in family_dict.items %}
         {% for family in families %}
@@ -25,5 +24,4 @@
         </div>
     {% endfor %}
 
-    {% if show_mobile %}</div>{% endif %}
 {% endblock content %}

@@ -52,12 +52,23 @@ login_url = "/familytree/landing/"
 existing_branches_list = list(Branch.objects.all())
 branch_count = len(existing_branches_list)
 
-# pass style class name for index pages based on user's number of columns
-branch_classes = {
+
+
+def get_branch_class(accessible_branches, request): 
+    # pass style class name for index pages based on user's number of columns
+    branch_classes = {
     1: "one_branch_display",
     2: "two_branch_display",
     4: "four_branch_display",
-}
+    }
+    result = branch_classes[accessible_branches]
+
+    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
+    if show_mobile: 
+        result = "mobile_index_page_display"
+
+    return result
+
 
 
 @login_required(login_url=login_url)
@@ -69,6 +80,7 @@ def index(request):  # dashboard page
     show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     today = get_now_for_user(profile.timezone)
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
+    picture_limit = 5 if show_mobile else 10
 
     template = (
         "familytree/dashboard_mobile.html"
@@ -153,7 +165,7 @@ def index(request):  # dashboard page
                 branches__display_name__contains=branch.display_name
             ).order_by("-id")
             image_list = image_list | latest_pics
-        combined_image_list = image_list.order_by("-id").distinct()[:10]
+        combined_image_list = image_list.order_by("-id").distinct()[:picture_limit]
     except Image.DoesNotExist:
         combined_image_list = None
 
@@ -251,7 +263,7 @@ def family_index(request):
         "accessible_branches": accessible_branches,
         "user_person": profile.person,
         "media_server": media_server,
-        "branch_class": branch_classes[len(accessible_branches)],
+        "branch_class": get_branch_class(len(accessible_branches), request),
         "user_is_guest": user_is_guest,
         "newest_generation_for_guest": NEWEST_GENERATION_FOR_GUEST,
         "user": profile.user,
@@ -324,7 +336,7 @@ def person_index(request):
         "user_person": profile.person,
         "media_server": media_server,
         "user": profile.user,
-        "branch_class": branch_classes[len(accessible_branches)],
+        "branch_class": get_branch_class(len(accessible_branches), request),
     }
     return render(request, "familytree/person_index.html", context)
 
@@ -340,7 +352,6 @@ def set_branch_people(existing_branches_list, int):
 
 @login_required(login_url=login_url)
 def person_detail(request, person_id):
-    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     profile = get_display_profile(request).first()
     person = get_object_or_404(Person, pk=person_id)
     user_is_guest = profile.guest_user
@@ -415,7 +426,6 @@ def person_detail(request, person_id):
             "user": profile.user,
             "user_is_guest": user_is_guest,
             "user_is_limited": user_is_limited,
-            "show_mobile": show_mobile,
         },
     )
 
@@ -522,7 +532,6 @@ def edit_person(request, person_id):
 
 @login_required(login_url=login_url)
 def family_detail(request, family_id):
-    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     family = get_object_or_404(Family, pk=family_id)
     profile = get_display_profile(request).first()
     user_is_guest = profile.guest_user
@@ -579,7 +588,6 @@ def family_detail(request, family_id):
             "user_person": profile.person,
             "media_server": media_server,
             "user_is_guest": user_is_guest,
-            "show_mobile": show_mobile,
         },
     )
 
@@ -822,7 +830,6 @@ def video_index(request):
 
 @login_required(login_url=login_url)
 def story(request, story_id):
-    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     profile = get_display_profile(request).first()
     user_person = profile.person
     story = get_object_or_404(Story, pk=story_id)
@@ -830,14 +837,12 @@ def story(request, story_id):
     return render(
         request,
         "familytree/story.html",
-        {"story": story, "media_server": media_server, "user_person": user_person, 
-        "show_mobile": show_mobile, },
+        {"story": story, "media_server": media_server, "user_person": user_person, },
     )
 
 
 @login_required(login_url=login_url)
 def outline(request):
-    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
     user_is_guest = profile.guest_user
@@ -863,7 +868,6 @@ def outline(request):
         "total_results_html": outline_html,
         "user": profile.user,
         "user_is_guest": user_is_guest,
-        "show_mobile": show_mobile,
     }
 
     return render(request, "familytree/outline.html", context)
@@ -937,7 +941,6 @@ def landing(request):
 
 @login_required(login_url=login_url)
 def history(request):
-    show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
     user_is_guest = profile.guest_user
@@ -949,7 +952,6 @@ def history(request):
         "profile": profile,
         "user": profile.user,
         "user_is_guest": user_is_guest,
-        "show_mobile": show_mobile,
     }
     return render(request, "familytree/history.html", context)
 

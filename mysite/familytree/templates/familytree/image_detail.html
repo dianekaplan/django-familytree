@@ -8,10 +8,10 @@
         <img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}"  style="max-width:100%;">
     </div>
     <div>
-        <b>{{ image.year }}</b>
         {% if image.caption %}
             <h3>{{ image.caption }}</h3>
         {% endif %}
+        <b>{{ image.year }}</b>
         {% if image.notes %}
             <p>{{ image.notes }}</p>
         {% endif %}
@@ -21,7 +21,7 @@
  <div style="float: right; width: 20%; margin-top: 20px;">
     {% if image_person %}
      Go to person's page: <br/><br/>
-            {% include "familytree/face_name_link.html" with person=image_person %}
+            {% include "familytree/_face_name_link.html" with person=image_person %}
         <br/>
     {%  endif %}
 
@@ -32,9 +32,9 @@
 <br/>
 
     {% if image_people %}
-     <h2>This picture contains:</h2>
+     <h3>This picture contains:</h3>
         {% for person in image_people %}
-            {% include "familytree/face_name_link.html" with person=person %} <br/>
+            {% include "familytree/_face_name_link.html" with person=person %} <br/>
         {% endfor %}
     {%  endif %}
  </div>

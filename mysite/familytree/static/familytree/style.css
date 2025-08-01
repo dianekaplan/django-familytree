@@ -4,6 +4,11 @@
   --header-hover: #131213;
 }
 
+
+h3 {
+  font-size: 18px;
+}
+
 .navbar li{
   display: inline-block;
   vertical-align: text-top;
@@ -32,6 +37,13 @@ p		    { font-size: 1em;
 		    text-indent: 1em}
 
 
+ul.no-indent {
+  padding-left: 0;
+  margin-left: 0;
+  list-style-position: inside; /* keeps bullets inside the content box */
+  margin-bottom: 0;
+}
+
 .circled_section {
     border-radius: 25px;
     border: 5px solid var(--link-color);
@@ -55,6 +67,11 @@ p		    { font-size: 1em;
   width: 23%;
 }
 
+.mobile_index_page_display {
+  margin: 15px;
+  width: 90%;
+}
+
 .container {
   margin-right: auto;
   margin-left: auto;
@@ -70,16 +87,20 @@ p		    { font-size: 1em;
     clear: both; }
 
 
-  /* Workaround to increase font size on mobile (can remove when media query is working) */
-  .mobile {
-      font-size: 20pt;
-    }
+/* Adjust font on mobile devices */
+@media screen and (max-width: 600px) {
+.container {
+  padding-left: 0px;
+  padding-right: 0px;
+  }
 
-  /* Increase the font size on mobile devices @@FIXME: not taking effect yet, something is inteferring */
-   /* @media only screen and (max-width: 600px) {
-    body {
-    font-size: 20px;
-  }} */
+body {
+  font-size: 16px;
+}
+.navbar li{
+  font-size: .85em;
+}
+}
 
 
 /* family generation display colors */
@@ -136,4 +157,15 @@ p		    { font-size: 1em;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   text-align: center;
+}
+
+#center_parents {
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  text-align: center;
+}
+#center_parents img {
+  vertical-align: middle;
 }
