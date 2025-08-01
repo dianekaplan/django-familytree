@@ -26,7 +26,7 @@
     {% if person_list %}
         <ul>
         {% for person in person_list %}
-            {% include "familytree/face_name_link.html" with person=person %} <br/>
+            {% include "familytree/_face_name_link.html" with person=person %} <br/>
         {% endfor %}
         </ul>
     {% else %}

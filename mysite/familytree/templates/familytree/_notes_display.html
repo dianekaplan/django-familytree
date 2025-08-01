@@ -5,7 +5,7 @@
                         {{ note.author_name }}:
                     {% endif %}
                 {% else %}
-                    {% include "familytree/face_name_link.html" with person=note.author %}:
+                    {% include "familytree/_face_name_link.html" with person=note.author %}:
                 {% endif %}
               {% if note.date %}
                     <br/>({{ note.date }})

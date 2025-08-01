@@ -30,7 +30,7 @@ Diane Kaplan (Massachusetts, USA)
 {% if landing_page_people %}
     <ul>
     {% for person in landing_page_people %}
-        {% include "familytree/face_name_link.html" with person=person %}
+        {% include "familytree/_face_name_link.html" with person=person %}
     {% endfor %}
     </ul>
 {% else %}

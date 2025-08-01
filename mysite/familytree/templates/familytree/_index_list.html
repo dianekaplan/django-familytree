@@ -6,7 +6,7 @@
 {%  if list_type == "person" %}
     {% for person in person_list %}
        {% if not user_is_guest or not person.living %}
-            {% include "familytree/face_name_link.html" with person=person %} <br/>
+            {% include "familytree/_face_name_link.html" with person=person %} <br/>
         {% endif %}
     {% endfor %}
 {% endif %}

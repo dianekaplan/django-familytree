@@ -21,7 +21,7 @@
  <div style="float: right; width: 20%; margin-top: 20px;">
     {% if image_person %}
      Go to person's page: <br/><br/>
-            {% include "familytree/face_name_link.html" with person=image_person %}
+            {% include "familytree/_face_name_link.html" with person=image_person %}
         <br/>
     {%  endif %}
 
@@ -34,7 +34,7 @@
     {% if image_people %}
      <h2>This picture contains:</h2>
         {% for person in image_people %}
-            {% include "familytree/face_name_link.html" with person=person %} <br/>
+            {% include "familytree/_face_name_link.html" with person=person %} <br/>
         {% endfor %}
     {%  endif %}
  </div>

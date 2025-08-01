@@ -14,7 +14,7 @@
          {% for note in notes_written %}
             <div style="display: inline-block; margin: 10px;" >
                  {% if note.person %}
-                    {% include "familytree/face_name_link.html" with person=note.person %}
+                    {% include "familytree/_face_name_link.html" with person=note.person %}
                 {% endif %}
                 {% if note.family %}
                     <a href="{% url 'family_detail' note.family.id %}">{{ note.family.display_name }}</a>
@@ -54,7 +54,7 @@
         {% endfor %}
     {% else %}
         None yet. Get started on your page (click 'Update this info'):<br/>
-        {% include "familytree/face_name_link.html" with person=user_person %}
+        {% include "familytree/_face_name_link.html" with person=user_person %}
     {% endif %}
 </div>
 {% endblock content %}

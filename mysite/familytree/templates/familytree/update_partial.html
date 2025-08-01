@@ -8,7 +8,7 @@
         {{change_type}}
 
         {% if updated_person %}
-                {% include "familytree/face_name_link.html" with person=updated_person %}
+                {% include "familytree/_face_name_link.html" with person=updated_person %}
         {% elif updated_story %}
                 <a href="{% url 'story' updated_story.id %}">this story
                 <img src="{% static 'familytree/book.png' %}" height="30"/>

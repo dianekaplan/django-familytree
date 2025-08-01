@@ -9,7 +9,7 @@
     </div>
 
 <div style="float: left; width: 100%;" id="center_parents">
-    {% include "familytree/face_name_link.html" with person=family.wife %}
+    {% include "familytree/_face_name_link.html" with person=family.wife %}
     <img src="{% static 'familytree/Blank-Image-Placeholder.gif' %}" height="75" />
-    {% include "familytree/face_name_link.html" with person=family.husband %}
+    {% include "familytree/_face_name_link.html" with person=family.husband %}
 </div>

@@ -11,7 +11,7 @@
     
     <div style="float: left;" class="circled_section" col-12">
             {% if not user_is_guest %}
-                {% include "familytree/face_name_link.html" with person=user_person %}<br/>
+                {% include "familytree/_face_name_link.html" with person=user_person %}<br/>
             {% endif %}
             {% if profile.furthest_html %}
                 <b>My furthest ancestors here:</b> <br/>{{ profile.furthest_html | safe}}<br/>
@@ -23,7 +23,7 @@
             <b>Today's birthdays:</b>
             <ul class="no-indent">
             {% for person in today_birthday %}
-                <li style="list-style-type:none;"> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
+                <li style="list-style-type:none;"> {% include "familytree/_face_name_link.html" with person=person %} {{person.birthdate}}</li>
             {% endfor %}
             </ul>
     </div>
@@ -79,7 +79,7 @@
         <b>Birthdays this month:</b>
         {% if birthday_people%}
             {% for person in birthday_people %}
-                <li style="list-style-type:none;"> {% include "familytree/face_name_link.html" with person=person %} {{person.birthdate}}</li>
+                <li style="list-style-type:none;"> {% include "familytree/_face_name_link.html" with person=person %} {{person.birthdate}}</li>
             {% endfor %}
         {% else %}
             (none)
