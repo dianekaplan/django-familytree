@@ -5,10 +5,14 @@
 }
 
 
-h3 {
-  font-size: 20px;
+h1 {
+  font-size: 24px;
 }
-h4 {
+h2 {
+  font-size: 22px;
+}
+
+h3 {
   font-size: 18px;
 }
 

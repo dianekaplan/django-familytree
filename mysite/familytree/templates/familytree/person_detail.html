@@ -35,7 +35,7 @@
     {% if person.notes3 %} <div style="margin: 10px">{{ person.notes3 | safe}} </div>{% endif %}
 
     {% if notes %}
-    <h2>Notes: </h2>
+    <h3>Notes: </h3>
         {% include "familytree/_notes_display.html" with notes=notes %}
     {% endif %}
 </div>
@@ -46,7 +46,7 @@
 
 {% if videos %}
     <div style="float: left; width: 100%;">
-        <h2>Videos: </h2>
+        <h3>Videos: </h3>
         <div>
             {% for video in videos %}
                 {% include "familytree/video_link.html" with video=video show_hover=True %}
@@ -58,7 +58,7 @@
 
 {% if audio_files %}
     <div style="float: left; width: 100%;">
-        <h2>Audio links: </h2>
+        <h3>Audio links: </h3>
         <div>
             {% for file in audio_files %}
             {{ file.summary}}
@@ -71,7 +71,7 @@
 
 {% if images %}
     <div style="float: left; width: 100%;">
-        <h2>Pictures of {{ person.first }}: </h2>
+        <h3>Pictures of {{ person.first }}: </h3>
         {% for image in images %}
             {% include "familytree/image_link.html" with image=image height=150 show_hover=False %}
         {% endfor %}
@@ -80,7 +80,7 @@
 <br/><br/><br/>
 <div style="float: left; width: 100%;">
     {% if group_images %}
-        <h2>Group pictures:</h2>
+        <h3>Group pictures:</h3>
         {% for image in group_images %}
           {% include "familytree/image_link.html" with image=image height=150 show_hover=True %}
         {% endfor %}
