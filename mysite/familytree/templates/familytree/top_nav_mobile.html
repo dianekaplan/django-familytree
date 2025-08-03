@@ -3,17 +3,20 @@
   {% if user.is_authenticated %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
+
+        <!-- Brand or Home link -->
+        <a class="navbar-brand" href="{% url 'dashboard' %}">Home</a>
+        {% if not user_is_guest %}
+          {% include "familytree/_top_nav_face_link.html" with person=user_person %}
+        {% endif %}  
+        <a class="nav-brand" href="{% url 'history' %}">Family History</a>
+
+
+
         <!-- Hamburger button for mobile -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNavbar" aria-controls="mobileNavbar" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
-        <!-- Brand or Home link -->
-        <a class="nav-brand" href="{% url 'history' %}">Family History</a>
-        {% if not user_is_guest %}
-          {% include "familytree/_top_nav_face_link.html" with person=user_person %}
-        {% endif %}  
-        <a class="navbar-brand" href="{% url 'dashboard' %}">Home</a>
 
         <!-- Collapsible menu -->
         <div class="collapse navbar-collapse" id="mobileNavbar">
