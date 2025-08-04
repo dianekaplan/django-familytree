@@ -1,6 +1,6 @@
     [tool.ruff]
     line-length = 120
-    target-version = "py311" # Adjust to your Python version
+    target-version = "py312" # Adjust to your Python version
 
     [tool.ruff.lint]
     select = ["E", "F", "I"] # E: pycodestyle, F: pyflakes, I: isort
