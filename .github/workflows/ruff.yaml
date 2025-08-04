@@ -23,4 +23,4 @@ jobs:
         run: pip install ruff
 
       - name: Run Ruff Check
-        run: ruff check . --format github # Use --format github for annotations in PRs
+        run: ruff check .
