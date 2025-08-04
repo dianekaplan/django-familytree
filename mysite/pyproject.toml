@@ -1,5 +1,5 @@
     [tool.ruff]
-    line-length = 115
+    line-length = 120
     target-version = "py311" # Adjust to your Python version
 
     [tool.ruff.lint]

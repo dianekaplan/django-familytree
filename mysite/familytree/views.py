@@ -691,7 +691,7 @@ def populate_album_and_outline_data(sender, instance, **kwargs):
         get_outline_html(accessible_branches, profile_queryset.first())
 
 
-# @TODO: Would prefer to do this in myauth/views form_valid while logging in, but different app can't import Profile
+# @TODO: Would rather do this in myauth/views form_valid while logging in, but different app can't import Profile
 @receiver(post_save, sender=User)
 def increment_profile_login_count(sender, instance, **kwargs):
     profile = Profile.objects.filter(user=instance).first()
@@ -734,7 +734,6 @@ def video_detail(request, video_id):
 def story_index(request):
     profile = get_display_profile(request).first()
     accessible_branches = get_valid_branches(request)
-    existing_branches = Branch.objects.all()
     story_list = Story.objects.none()
     browser = request.user_agent.browser.family
     user_is_guest = profile.guest_user
@@ -778,7 +777,6 @@ def story_index(request):
     context = {
         "story_list": combined_story_list,
         "accessible_branches": accessible_branches,
-        "branch2_name": branch2_name,
         "user_person": profile.person,
         "branch1_stories": branch1_stories,
         "branch2_stories": branch2_stories,
@@ -903,12 +901,12 @@ def make_list_into_html(list):
     result = ""
 
     for item in list:
-        if type(item) == Person:
+        if type(item) is Person:
             name = item.display_name
             path = root_url + "/people/" + str(item.id)
             link = '<li><a href="' + path + '">' + name + "</a></li>"
             result += link
-        elif type(item) == Family:
+        elif type(item) is Family:
             name = item.display_name
             path = root_url + "/families/" + str(item.id)
             link = '<ul><li><a href="' + path + '">' + name + "</a></li>"

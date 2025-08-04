@@ -110,7 +110,7 @@ class Command(BaseCommand):
         self.gedcom_person_records += 1
         (gedcom_first_middle, last) = element.get_name()
         gedcom_uuid = ""
-        skip_record = False
+        # skip_record = False
 
         # gather the data we'll want to use
         if "INDI" in str(element):
@@ -183,13 +183,14 @@ class Command(BaseCommand):
             element_children
         ):  # @TODO: look back at gedcom_parser.get_family_members approach: there you see FAMS but not wife vs husband
             # print(element.to_gedcom_string(recursive=True))
-            if "MARR" in str(child):
-                marriage_info = child.get_child_elements()
-                for item in marriage_info:
-                    if "PLAC" in str(item):
-                        marriage_place = str(item).replace("2 PLAC ", "")
-                    if "DATE" in str(item):
-                        marriage_date = str(item).replace("2 DATE ", "")
+            # if "MARR" in str(child):
+                # marriage_info = child.get_child_elements()
+                # @@FIXME revisit actually using these
+                # for item in marriage_info:
+                #     if "PLAC" in str(item):
+                #         marriage_place = str(item).replace("2 PLAC ", "")
+                #     if "DATE" in str(item):
+                #         marriage_date = str(item).replace("2 DATE ", "")
             if "WIFE" in str(child):
                 wife_indi = str(child).replace("1 WIFE ", "").replace("\r\n", "")
                 try:
@@ -220,7 +221,7 @@ class Command(BaseCommand):
                 no_kids_bool = False
                 child_indi = (
                     str(child).replace("1 CHIL ", "").replace("\r\n", "")
-                )  # @FIXME: originally did += for text field, but if this works we won't need to use that text field
+                )  # originally did += for text field, but if this works we won't need to use that text field
                 if child_indi not in self.child_family_dict:
                     self.child_family_dict[
                         child_indi
