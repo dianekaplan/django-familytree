@@ -1,12 +1,11 @@
 import os
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.mysite.settings")
 
 # from django.contrib.auth.models import User
 from django.test import TestCase
 
 from .models import Branch, Family, Image, Person
-
-
 
 
 def create_person(display_name):

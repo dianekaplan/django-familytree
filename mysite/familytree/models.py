@@ -1,14 +1,14 @@
 from django.conf import settings
 from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import User
+from django.core.mail import send_mail  # used by mailing signals
 from django.db import models
+from django.db.models.signals import post_save  # used by mailing signals
+from django.dispatch import receiver  # used by mailing signals
+from django.template.loader import render_to_string  # used by mailing signals
 from django.utils.safestring import mark_safe
-from mysite.settings import get_env_variable
 
-from django.core.mail import send_mail # used by mailing signals
-from django.db.models.signals import post_save # used by mailing signals
-from django.dispatch import receiver # used by mailing signals
-from django.template.loader import render_to_string # used by mailing signals
+from mysite.settings import get_env_variable
 
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
 DEFAULT_TIME_ZONE = settings.DEFAULT_TIME_ZONE

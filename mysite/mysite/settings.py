@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import sys
-
 from datetime import datetime
+
 from django.core.exceptions import ImproperlyConfigured
 
 # silence harmless whitenoise issue: https://github.com/evansd/whitenoise/issues/215
