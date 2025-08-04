@@ -10,4 +10,5 @@ django-debug-toolbar
 psycopg2-binary # PostgreSQL database adapter
 pytest
 pytz
+ruff
 tzdata # added to fix tz recognition issue on user metrics page

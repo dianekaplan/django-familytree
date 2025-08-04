@@ -957,7 +957,6 @@ def history(request):
 
 
 def logout(request):
-    logout(request)
     return render(request, "familytree/landing.html")
 
 
@@ -1071,7 +1070,7 @@ def user_metrics(request):
     else:
         branch4_users = None
 
-    # Custom code for my instance: I've had three generations of websites, so I differentiate between them
+    # Custom code for my instance, to differentiate between 3 generations of this website
     # A new instance would only need one count for logins, updates, and notes
     last_login_django_site = [
         x
