@@ -103,6 +103,8 @@ ul.no-indent {
 
 body {
   font-size: 16px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .navbar li{
   font-size: .85em;
