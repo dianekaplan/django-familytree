@@ -1,0 +1,26 @@
+name: Ruff Check
+
+on:
+  push:
+    branches:
+      - main # or your main development branch
+  pull_request:
+    branches:
+      - main # or your main development branch
+
+jobs:
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 # Checkout the repository code
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.5' # Specify your Python version, e.g., '3.10'
+
+      - name: Install Ruff
+        run: pip install ruff
+
+      - name: Run Ruff Check
+        run: ruff check .

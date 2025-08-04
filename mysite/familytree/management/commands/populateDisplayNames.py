@@ -1,5 +1,4 @@
-from django.core.management.base import BaseCommand, CommandError
-from django.utils import timezone
+from django.core.management.base import BaseCommand
 
 from ...models import Person
 

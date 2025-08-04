@@ -1,8 +1,13 @@
 from django.conf import settings
 from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import User
+from django.core.mail import send_mail  # used by mailing signals
 from django.db import models
+from django.db.models.signals import post_save  # used by mailing signals
+from django.dispatch import receiver  # used by mailing signals
+from django.template.loader import render_to_string  # used by mailing signals
 from django.utils.safestring import mark_safe
+
 from mysite.settings import get_env_variable
 
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
@@ -128,7 +133,7 @@ class Person(models.Model):
         db_table = "people"
 
     def unreviewed_person(self):
-        return self.reviewed == False
+        return not self.reviewed
 
     def __str__(self):
         return self.first + " " + self.last
@@ -562,12 +567,6 @@ class Login(models.Model):
         managed = False
         db_table = "logins"
 
-
-# signals
-from django.core.mail import send_mail
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.template.loader import render_to_string
 
 
 @receiver(post_save, sender=User)

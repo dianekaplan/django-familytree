@@ -1,5 +1,3 @@
-from django.urls import re_path as url
-from django.contrib.auth import views as auth_views
 from django.urls import include, path, re_path
 
 from . import views

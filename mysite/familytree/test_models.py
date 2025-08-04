@@ -1,14 +1,11 @@
 import os
-import django
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.mysite.settings")
 
-from django.contrib.auth.models import User
-from django.test import Client, TestCase, override_settings
-from django.urls import resolve, reverse
+# from django.contrib.auth.models import User
+from django.test import TestCase
 
-from .models import Branch, Family, Image, Person, Profile
-
-
+from .models import Branch, Family, Image, Person
 
 
 def create_person(display_name):

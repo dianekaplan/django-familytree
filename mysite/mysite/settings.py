@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import sys
+from datetime import datetime
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -87,8 +88,6 @@ SECRET_KEY = get_env_variable("EMAIL_HOST_PASSWORD")
 DB_PASSWORD = False
 
 MEDIA_SERVER = "https://res.cloudinary.com/hhuyx4tno/"
-
-from datetime import datetime
 
 LARAVEL_SITE_CREATION = datetime.strptime("2015-12-01", "%Y-%m-%d").date()
 DJANGO_SITE_CREATION = datetime.strptime("2021-07-14", "%Y-%m-%d").date()
@@ -206,7 +205,7 @@ DATABASES = {
 # TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # For unit tests we'll use sqlite
-import sys
+# import sys
 
 if "test" in sys.argv:
     DATABASES["default"] = {

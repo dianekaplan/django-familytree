@@ -1,14 +1,12 @@
 import os
-import django
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.mysite.settings")
 
 from django.contrib.auth.models import User
-from django.test import Client, TestCase, override_settings
-from django.urls import resolve, reverse
+from django.test import Client, TestCase
+from django.urls import reverse
 
 from .models import Branch, Family, Image, Person, Profile
-
-
 
 
 def create_person(display_name):
@@ -85,10 +83,10 @@ class TestLoggedOutViews(TestCase):
 
 class TestOtherViews(TestCase):
     def setUp(self):
-        branch1 = create_branch("BRANCH ONE")
-        branch2 = create_branch("BRANCH TWO")
-        branch3 = create_branch("BRANCH THREE")
-        branch4 = create_branch("BRANCH FOUR")
+        create_branch("BRANCH ONE")
+        create_branch("BRANCH TWO")
+        create_branch("BRANCH THREE")
+        create_branch("BRANCH FOUR")
 
         self.client = Client()
         self.user = User.objects.create_user(
