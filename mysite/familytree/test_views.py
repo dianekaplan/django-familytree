@@ -83,10 +83,10 @@ class TestLoggedOutViews(TestCase):
 
 class TestOtherViews(TestCase):
     def setUp(self):
-        # branch1 = create_branch("BRANCH ONE")
-        # branch2 = create_branch("BRANCH TWO")
-        # branch3 = create_branch("BRANCH THREE")
-        # branch4 = create_branch("BRANCH FOUR")
+        create_branch("BRANCH ONE")
+        create_branch("BRANCH TWO")
+        create_branch("BRANCH THREE")
+        create_branch("BRANCH FOUR")
 
         self.client = Client()
         self.user = User.objects.create_user(
