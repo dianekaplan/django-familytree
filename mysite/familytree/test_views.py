@@ -3,8 +3,8 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.mysite.settings")
 
 from django.contrib.auth.models import User
-from django.test import Client, TestCase, override_settings
-from django.urls import resolve, reverse
+from django.test import Client, TestCase
+from django.urls import reverse
 
 from .models import Branch, Family, Image, Person, Profile
 

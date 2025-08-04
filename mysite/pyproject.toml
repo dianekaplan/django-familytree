@@ -1,7 +1,7 @@
     [tool.ruff]
-    line-length = 100
+    line-length = 115
     target-version = "py311" # Adjust to your Python version
 
     [tool.ruff.lint]
     select = ["E", "F", "I"] # E: pycodestyle, F: pyflakes, I: isort
-    ignore = ["E722"] # Allow bare except for now
+    ignore = ["E722", "F811"] # Allow bare except for now, and redefinition (of logout)
