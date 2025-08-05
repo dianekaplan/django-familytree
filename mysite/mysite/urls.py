@@ -23,7 +23,7 @@ admin.site.enable_nav_sidebar = False
 urlpatterns = [
     path("", RedirectView.as_view(url="/familytree/")),
     path("familytree/", include("familytree.urls")),
-    path("admin/", admin.site.urls, name="admin"),
-    path("accounts/", include("myauth.urls")),
+    path("admin/", admin.site.urls, name="admin"), # for superuser routes
+    path("accounts/", include("myauth.urls")), # for account-level routes (password reset, updates) 
     path("__debug__/", include(debug_toolbar.urls)),
 ]
