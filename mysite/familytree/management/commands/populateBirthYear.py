@@ -39,7 +39,10 @@ class Command(BaseCommand):
                         .replace(" ", "")
                     )
                     if len(cleaned_value) == 4:
-                        birthyear_as_int = int(cleaned_value)
+                        try: 
+                            birthyear_as_int = int(cleaned_value)
+                        except ValueError: 
+                            print("birthdate_note didn't resolve to an integer.")
 
                     if len(cleaned_value) > 4:
                         birthyear_as_int = None
@@ -47,7 +50,10 @@ class Command(BaseCommand):
                         if len(array) > 1:
                             year = array[len(array) - 1]
                             if len(year) == 4:
-                                birthyear_as_int = int(year)
+                                try: 
+                                    birthyear_as_int = int(year)
+                                except ValueError: 
+                                    print("birthdate_note didn't resolve to an integer.")
 
                     if birthyear_as_int:
                         person.birthyear = birthyear_as_int
