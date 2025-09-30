@@ -6,17 +6,26 @@ from ...models import Person
 
 
 class Command(BaseCommand):
-    help = "Populates/updates living bool: when needed (if value is empty or death info added since earlier value)"
+    help = (
+        "Populates/updates living bool: when needed "
+        "(if value is empty or death info added since earlier value)"
+    )
 
     def handle(self, *args, **options):
         people = Person.objects.all()
         people_set_to_living_true = people.filter(living=True)
-        people_set_to_living_false_without_death_data = people.filter(living=False).filter(deathdate_note__isnull=True).filter(deathdate__isnull=True)
+        people_set_to_living_false_without_death_data = (
+            people.filter(living=False)
+            .filter(deathdate_note__isnull=True)
+            .filter(deathdate__isnull=True)
+        )
         today = date.today()
 
         # Case #1: living value should be updated False->True (default not updated after creation)
         # Context: person records default to living = False upon creation (true for most ancestors)
-        # @@TODO: confirm assumption: do we ever intentionally set value to False with no deathdate info? (record like that would be changed by this)
+        # @@TODO: confirm assumption: do we ever intentionally set value
+        # to False with no deathdate info? (record like that would be
+        # changed by this)
 
         print("People set to False who we'll update to True: ")
         for person in people_set_to_living_false_without_death_data:
@@ -54,8 +63,12 @@ class Command(BaseCommand):
                 person.save()
 
 
-        # Case #2: living value should be updated True -> False (death fields have been populated, or 100 years since birth)
-        print("\nPeople set to true who we'll update to false (have death notes or 100 years since birth): ")
+        # Case #2: living value should be updated True -> False
+        # death fields have been populated, or 100 years since birth
+        print(
+            "\nPeople set to true who we'll update to false "
+            "(have death notes or 100 years since birth): "
+        )
         current_year_as_int = int(today.year)
         for person in people_set_to_living_true:
             qualifying_info = ""
@@ -63,7 +76,9 @@ class Command(BaseCommand):
 
             # set living to False if there's death information
             if person.deathdate_note or person.deathdate:
-                qualifying_info = str(person.deathdate) if person.deathdate else person.deathdate_note
+                qualifying_info = (
+                    str(person.deathdate) if person.deathdate else person.deathdate_note
+                )
 
             # set living to False if birthyear value >=100 years ago          
             elif person.birthyear: 
