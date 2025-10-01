@@ -38,7 +38,10 @@ class Command(BaseCommand):
                             + str(person.birthyear)
                         )
                     else: 
-                        print(f"{person.display_name} birthdate_note has multiple potential matches to review: {potential_year_matches}")
+                        print(
+                            f"{person.display_name} birthdate_note has multiple potential matches "
+                            f"to review: {potential_year_matches}"
+                        )
                 else:
                     print(
                         "This person has birthdate note but no birthyear saved: "
