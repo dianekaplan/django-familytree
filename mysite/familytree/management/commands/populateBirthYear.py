@@ -1,62 +1,35 @@
 from django.core.management.base import BaseCommand
 
 from ...models import Person
-
+import re
 
 class Command(BaseCommand):
     help = "Populates birth year field for people (internal use)"
 
     def handle(self, *args, **options):
-        people = Person.objects.all()
+        people_without_birthyear = Person.objects.filter(birthyear__isnull=True)
 
         print("Populate birthyear value for people records where it's missing: ")
-        for person in people:
-            birthyear_as_int = None
-            this_display_name = ""
-            if person.nickname:
-                this_display_name = person.nickname.strip() + " " + person.last.strip()
-            else:
-                this_display_name = person.first.strip() + " " + person.last.strip()
+        for person in people_without_birthyear:
 
-            if not person.birthyear:
-                if person.birthdate:
-                    person.birthyear = person.birthdate.year
-                    person.save()
-                    print(
-                        "Saved value using birthdate: "
-                        + str(person.birthdate)
-                        + ": "
-                        + str(person.birthyear)
-                    )
-                    continue
+            # if birthdate is populated, grab it from there
+            if person.birthdate:
+                person.birthyear = person.birthdate.year
+                person.save()
+                print(
+                    "Saved value using birthdate: "
+                    + str(person.birthdate)
+                    + ": "
+                    + str(person.birthyear)
+                )
+                continue
 
-                if person.birthdate_note:
-                    cleaned_value = (
-                        person.birthdate_note.replace("?", "")
-                        .replace("ish", "")
-                        .replace("abt", "")
-                        .replace("Abt.", "")
-                        .replace(" ", "")
-                    )
-                    if len(cleaned_value) == 4:
-                        try: 
-                            birthyear_as_int = int(cleaned_value)
-                        except ValueError: 
-                            print("birthdate_note didn't resolve to an integer.")
-
-                    if len(cleaned_value) > 4:
-                        birthyear_as_int = None
-                        array = cleaned_value.split("/")
-                        if len(array) > 1:
-                            year = array[len(array) - 1]
-                            if len(year) == 4:
-                                try: 
-                                    birthyear_as_int = int(year)
-                                except ValueError: 
-                                    print("birthdate_note didn't resolve to an integer.")
-
-                    if birthyear_as_int:
-                        person.birthyear = birthyear_as_int
+            # if birthdate_note is populated, check the value for 4-digit chunks
+            if person.birthdate_note:
+                potential_year_matches = re.findall(r'\d{4}', person.birthdate_note)
+                if potential_year_matches: 
+                    if len(potential_year_matches)<2: 
+                        person.birthyear = int(potential_year_matches[0])
                         person.save()
                         print(
                             "Saved value using birthdate_note: "
@@ -64,10 +37,12 @@ class Command(BaseCommand):
                             + ": "
                             + str(person.birthyear)
                         )
-                    else:
-                        print(
-                            "This person has birthdate note but no birthyear saved: "
-                            + this_display_name
-                            + ": "
-                            + person.birthdate_note
-                        )
+                    else: 
+                        print(f"{person.display_name} birthdate_note has multiple potential matches to review: {potential_year_matches}")
+                else:
+                    print(
+                        "This person has birthdate note but no birthyear saved: "
+                        + person.display_name
+                        + ": "
+                        + person.birthdate_note
+                    )
