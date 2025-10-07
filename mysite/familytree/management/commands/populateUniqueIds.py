@@ -37,7 +37,6 @@ class Command(BaseCommand):
         return kids
 
     def populate_children_values(self, person):
-        pass
         # grab all families where this person is a spouse
         families = Family.objects.all().filter(Q(wife=person) | Q(husband=person))
         for family in families:
@@ -45,10 +44,10 @@ class Command(BaseCommand):
             children = Person.objects.all().filter(family_id=family.id)
             for child in children:
                 if not child.gedcom_uuid:
-                    gedcom_uuid = person.gedcom_uuid + child.first.replace(" ", "_").replace("/", "_")
-                    child.gedcom_uuid = gedcom_uuid
+                    value_to_use = person.gedcom_uuid + child.first.replace(" ", "_").replace("/", "_")
+                    child.gedcom_uuid = value_to_use
                     child.save()
-                    print("set value for " + child.display_name + ": " + gedcom_uuid)
+                    print("set value for " + child.display_name + ": " + value_to_use)
                 self.populate_children_values(child)
 
     def populate_downward_from_families(self):
@@ -178,11 +177,19 @@ class Command(BaseCommand):
         print("Missing Gedcom uuid value for this many person records: " + str(still_missing))
 
     def handle(self, *args, **options):
-        print("CALLING populate_downward_from_families")
-        self.populate_downward_from_families()
-        print("CALLING populate_outward_to_spouses")
-        self.populate_outward_to_spouses()
-        print("CALLING populate_outward_to_siblings")
-        self.populate_outward_to_siblings()
+        # This will only work if direct family numbers are already in place
+        person_records = Person.objects.all()
+        people_missing_value = Person.objects.filter(gedcom_uuid__isnull=True)
+
+        # If most records are unset, populate downward and outward
+        if people_missing_value.count() / person_records.count() > 0.5:
+            print("CALLING populate_downward_from_families")
+            self.populate_downward_from_families()
+            print("CALLING populate_outward_to_spouses")
+            self.populate_outward_to_spouses()
+            print("CALLING populate_outward_to_siblings")
+            self.populate_outward_to_siblings()
+
+        # If most records already have a value, we can run just this step (faster)
         print("CALLING populate_the_rest")
         self.populate_the_rest()
