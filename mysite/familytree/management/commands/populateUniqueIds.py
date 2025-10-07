@@ -37,7 +37,6 @@ class Command(BaseCommand):
         return kids
 
     def populate_children_values(self, person):
-        pass
         # grab all families where this person is a spouse
         families = Family.objects.all().filter(Q(wife=person) | Q(husband=person))
         for family in families:
@@ -45,11 +44,11 @@ class Command(BaseCommand):
             children = Person.objects.all().filter(family_id=family.id)
             for child in children:
                 if not child.gedcom_uuid:
-                    gedcom_uuid = person.gedcom_uuid + child.first.replace(" ", "_").replace("/", "_")
-                    child.gedcom_uuid = gedcom_uuid
+                    value_to_use = person.gedcom_uuid + child.first.replace(" ", "_").replace("/", "_")
+                    child.gedcom_uuid = value_to_use
                     child.save()
-                    print("set value for " + child.display_name + ": " + gedcom_uuid)
-                    self.populate_children_values(child)
+                    print("set value for " + child.display_name + ": " + value_to_use)
+                self.populate_children_values(child)
 
     def populate_downward_from_families(self):
         # grab all family objects where direct_family_number is populated
@@ -62,7 +61,7 @@ class Command(BaseCommand):
                     person.gedcom_uuid = gedcom_uuid
                     person.save()
                     print("set value for " + person.display_name + ": " + gedcom_uuid)
-                    self.populate_children_values(person)
+                self.populate_children_values(person)
 
     def populate_outward_to_spouses(self):
         # grab the people with gedcom_uuid populated
@@ -72,18 +71,17 @@ class Command(BaseCommand):
             spouse_count = 1
 
             for family in their_families:
-                gedcom_uuid = person.gedcom_uuid + "SP" + str(spouse_count)
-
-                # it's safe to grab both spouses because we only update the one without a value already
+                # grab that family's spouse who isn't the person we started with
                 spouses = self.get_family_spouses(family)
                 for spouse in spouses:
-                    if not spouse.gedcom_uuid:
-                        spouse.gedcom_uuid = gedcom_uuid
+                    if spouse != person and not spouse.gedcom_uuid:
+                        value_to_use_for_spouse = person.gedcom_uuid + "SP" + str(spouse_count) + spouse.first
+                        spouse.gedcom_uuid = value_to_use_for_spouse
                         spouse.save()
                         print("set value for " + spouse.display_name + ": " + spouse.gedcom_uuid)
                 spouse_count += 1
 
-    def populate_outward_to_siblings(self):  # Linda Dolph
+    def populate_outward_to_siblings(self):  # test with Linda Dolph
         # grab the people with gedcom_uuid populated
         populated_people = Person.objects.filter(gedcom_uuid__isnull=False)
         for person in populated_people:
@@ -96,9 +94,9 @@ class Command(BaseCommand):
                 # get all kids of that family
                 kids = self.get_family_kids(origin_family)
 
-                # for each kid, if their value is missing:
+                # for kids beside the original person, populate their value if missing
                 for kid in kids:
-                    if not kid.gedcom_uuid:
+                    if kid != person and not kid.gedcom_uuid:
                         gedcom_uuid = person.gedcom_uuid + "S" + kid.first.replace(" ", "_")
                         kid.gedcom_uuid = gedcom_uuid
                         kid.save()
@@ -166,24 +164,37 @@ class Command(BaseCommand):
         people_missing_value = Person.objects.filter(gedcom_uuid__isnull=True)
         still_missing = 0
         for person in people_missing_value:
-            self.check_spouse_for_value(person)
+            self.check_parent_for_value(person)
+            if not person.gedcom_uuid:  # (don't revisit if a previous step set it)
+                self.check_kid_for_value(person)
+            if not person.gedcom_uuid:
+                self.check_spouse_for_value(person)
             if not person.gedcom_uuid:
                 self.check_sibling_for_value(person)
             if not person.gedcom_uuid:
-                self.check_kid_for_value(person)
-            if not person.gedcom_uuid:
-                self.check_parent_for_value(person)
-            if not person.gedcom_uuid:
                 print("still missing it for " + person.display_name)
                 still_missing += 1
-        print("missing value for this many: " + str(still_missing))
+        print("Missing Gedcom uuid value for this many person records: " + str(still_missing))
 
     def handle(self, *args, **options):
-        print("CALLING populate_downward_from_families")
-        self.populate_downward_from_families()
-        print("CALLING populate_outward_to_spouses")
-        self.populate_outward_to_spouses()
-        print("CALLING populate_outward_to_siblings")
-        self.populate_outward_to_siblings()
+        # This will only work if direct family numbers are already in place
+        direct_families = Family.objects.filter(direct_family_number__isnull=False)
+        if direct_families.count() < 1:
+            print("Populate direct family numbers before running this script!")
+            return
+
+        person_records = Person.objects.all()
+        people_missing_value = Person.objects.filter(gedcom_uuid__isnull=True)
+
+        # If most records are unset, populate downward and outward
+        if people_missing_value.count() / person_records.count() > 0.5:
+            print("CALLING populate_downward_from_families")
+            self.populate_downward_from_families()
+            print("CALLING populate_outward_to_spouses")
+            self.populate_outward_to_spouses()
+            print("CALLING populate_outward_to_siblings")
+            self.populate_outward_to_siblings()
+
+        # If most records already have a value, we can run just this step (faster)
         print("CALLING populate_the_rest")
         self.populate_the_rest()
