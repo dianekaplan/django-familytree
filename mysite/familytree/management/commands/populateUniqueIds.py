@@ -178,6 +178,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # This will only work if direct family numbers are already in place
+        direct_families = Family.objects.filter(direct_family_number__isnull=False)
+        if direct_families.count() < 1:
+            print("Populate direct family numbers before running this script!")
+            return
+
         person_records = Person.objects.all()
         people_missing_value = Person.objects.filter(gedcom_uuid__isnull=True)
 
