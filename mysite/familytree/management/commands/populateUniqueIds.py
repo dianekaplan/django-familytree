@@ -75,15 +75,14 @@ class Command(BaseCommand):
                 # grab that family's spouse who isn't the person we started with
                 spouses = self.get_family_spouses(family)
                 for spouse in spouses:
-                    if spouse != person:
+                    if spouse != person and not spouse.gedcom_uuid:
                         value_to_use_for_spouse = person.gedcom_uuid + "SP" + str(spouse_count) + spouse.first
-                        if not spouse.gedcom_uuid:
-                            spouse.gedcom_uuid = value_to_use_for_spouse
-                            spouse.save()
-                            print("set value for " + spouse.display_name + ": " + spouse.gedcom_uuid)
+                        spouse.gedcom_uuid = value_to_use_for_spouse
+                        spouse.save()
+                        print("set value for " + spouse.display_name + ": " + spouse.gedcom_uuid)
                 spouse_count += 1
 
-    def populate_outward_to_siblings(self):  # Linda Dolph
+    def populate_outward_to_siblings(self):  # test with Linda Dolph
         # grab the people with gedcom_uuid populated
         populated_people = Person.objects.filter(gedcom_uuid__isnull=False)
         for person in populated_people:
@@ -96,9 +95,9 @@ class Command(BaseCommand):
                 # get all kids of that family
                 kids = self.get_family_kids(origin_family)
 
-                # for each kid, if their value is missing:
+                # for kids beside the original person, populate their value if missing
                 for kid in kids:
-                    if not kid.gedcom_uuid:
+                    if kid != person and not kid.gedcom_uuid:
                         gedcom_uuid = person.gedcom_uuid + "S" + kid.first.replace(" ", "_")
                         kid.gedcom_uuid = gedcom_uuid
                         kid.save()
@@ -166,13 +165,13 @@ class Command(BaseCommand):
         people_missing_value = Person.objects.filter(gedcom_uuid__isnull=True)
         still_missing = 0
         for person in people_missing_value:
-            self.check_spouse_for_value(person)
-            if not person.gedcom_uuid:
-                self.check_sibling_for_value(person)
-            if not person.gedcom_uuid:
+            self.check_parent_for_value(person)
+            if not person.gedcom_uuid:  # (don't revisit if a previous step set it)
                 self.check_kid_for_value(person)
             if not person.gedcom_uuid:
-                self.check_parent_for_value(person)
+                self.check_spouse_for_value(person)
+            if not person.gedcom_uuid:
+                self.check_sibling_for_value(person)
             if not person.gedcom_uuid:
                 print("still missing it for " + person.display_name)
                 still_missing += 1
