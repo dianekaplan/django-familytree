@@ -72,15 +72,15 @@ class Command(BaseCommand):
             spouse_count = 1
 
             for family in their_families:
-                gedcom_uuid = person.gedcom_uuid + "SP" + str(spouse_count)
-
-                # it's safe to grab both spouses because we only update the one without a value already
+                # grab that family's spouse who isn't the person we started with
                 spouses = self.get_family_spouses(family)
                 for spouse in spouses:
-                    if not spouse.gedcom_uuid:
-                        spouse.gedcom_uuid = gedcom_uuid
-                        spouse.save()
-                        print("set value for " + spouse.display_name + ": " + spouse.gedcom_uuid)
+                    if spouse != person:
+                        value_to_use_for_spouse = person.gedcom_uuid + "SP" + str(spouse_count) + spouse.first
+                        if not spouse.gedcom_uuid:
+                            spouse.gedcom_uuid = value_to_use_for_spouse
+                            spouse.save()
+                            print("set value for " + spouse.display_name + ": " + spouse.gedcom_uuid)
                 spouse_count += 1
 
     def populate_outward_to_siblings(self):  # Linda Dolph
