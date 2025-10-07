@@ -49,7 +49,7 @@ class Command(BaseCommand):
                     child.gedcom_uuid = gedcom_uuid
                     child.save()
                     print("set value for " + child.display_name + ": " + gedcom_uuid)
-                    self.populate_children_values(child)
+                self.populate_children_values(child)
 
     def populate_downward_from_families(self):
         # grab all family objects where direct_family_number is populated
@@ -62,7 +62,7 @@ class Command(BaseCommand):
                     person.gedcom_uuid = gedcom_uuid
                     person.save()
                     print("set value for " + person.display_name + ": " + gedcom_uuid)
-                    self.populate_children_values(person)
+                self.populate_children_values(person)
 
     def populate_outward_to_spouses(self):
         # grab the people with gedcom_uuid populated
@@ -176,7 +176,7 @@ class Command(BaseCommand):
             if not person.gedcom_uuid:
                 print("still missing it for " + person.display_name)
                 still_missing += 1
-        print("missing value for this many: " + str(still_missing))
+        print("Missing Gedcom uuid value for this many person records: " + str(still_missing))
 
     def handle(self, *args, **options):
         print("CALLING populate_downward_from_families")
