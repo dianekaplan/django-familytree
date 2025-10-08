@@ -84,6 +84,7 @@ ul.no-indent {
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
+  padding-bottom: 10px;
   max-width: 1320px !important;
 }
   .container:before,
