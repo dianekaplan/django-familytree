@@ -21,9 +21,7 @@ class Command(BaseCommand):
     child_family_dict = {}  # map of gedcom child/family associations (eg. P7: F1)
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "file name", type=Path, help="Name of GEDCOM file to import from"
-        )
+        parser.add_argument("file name", type=Path, help="Name of GEDCOM file to import from")
 
     def handle(self, *args, **kwargs):
         filename = kwargs["file name"]
@@ -58,15 +56,11 @@ class Command(BaseCommand):
             self.add_person_family_values(self.child_family_dict)
 
         else:
-            raise CommandError(
-                "That gedcom file does not exist in the expected directory"
-            )
+            raise CommandError("That gedcom file does not exist in the expected directory")
 
         # gather run results
         run_results = "gedcom_person_records: " + str(self.gedcom_person_records) + "\n"
-        run_results += (
-            "gedcom_family_records: " + str(self.gedcom_family_records) + "\n"
-        )
+        run_results += "gedcom_family_records: " + str(self.gedcom_family_records) + "\n"
         run_results += "person_added_count: " + str(self.person_added_count) + "\n"
         run_results += "person_skipped_count: " + str(self.person_skipped_count) + "\n"
         run_results += "family_added_count: " + str(self.family_added_count) + "\n"
@@ -91,15 +85,17 @@ class Command(BaseCommand):
                 has_type_AKA = True
 
         if has_type_AKA:
-            gedcom_uuid = str(item).replace("1 FACT ", "").replace("\r\n", "").strip()
+            for x in children:
+                if "NOTE" in str(x):
+                    gedcom_uuid = str(x).replace("2 NOTE ", "").replace("\r\n", "").strip()
+
+            # gedcom_uuid = str(item).replace("1 FACT ", "").replace("\r\n", "").strip()
             try:
                 matching_record = Person.objects.get(gedcom_uuid=gedcom_uuid)
             except Person.DoesNotExist:
                 matching_record = False
                 print(
-                    "REVIEW: "
-                    + display_name
-                    + ": got AKA FACT value without matching person record: ",
+                    "REVIEW: " + display_name + ": got AKA FACT value without matching person record: ",
                     gedcom_uuid,
                 )
         return matching_record, gedcom_uuid
@@ -114,9 +110,7 @@ class Command(BaseCommand):
 
         # gather the data we'll want to use
         if "INDI" in str(element):
-            gedcom_indi = (
-                str(element).replace(" INDI", "").replace("0 ", "").replace("\r\n", "")
-            )
+            gedcom_indi = str(element).replace(" INDI", "").replace("0 ", "").replace("\r\n", "")
         # get the fields available from our parser
         (birthdate, birthplace, sources) = element.get_birth_data()
         sex = element.get_gender()
@@ -127,18 +121,13 @@ class Command(BaseCommand):
 
         should_make_person = True
         for child in element_children:
-
             if "FACT" in str(child):
-                matching_record, uuid_from_fact = self.check_fact_for_AKA(
-                    child, display_name, element
-                )
+                matching_record, uuid_from_fact = self.check_fact_for_AKA(child, display_name, element)
                 gedcom_uuid = uuid_from_fact
 
                 if matching_record:
                     should_make_person = False
-                    self.update_matching_person_record(
-                        matching_record, element, gedcom_indi
-                    )
+                    self.update_matching_person_record(matching_record, element, gedcom_indi)
                     self.person_skipped_count += 1
         if should_make_person:
             (obj, created_bool) = Person.objects.get_or_create(
@@ -165,9 +154,7 @@ class Command(BaseCommand):
 
     # steps to process a family record in the gedcom file
     def handle_family(self, element):
-        gedcom_indi = (
-            str(element).replace(" FAM", "").replace("0 ", "").replace("\r\n", "")
-        )
+        gedcom_indi = str(element).replace(" FAM", "").replace("0 ", "").replace("\r\n", "")
         self.gedcom_family_records += 1
         no_kids_bool = True
         wife = ""
@@ -177,20 +164,18 @@ class Command(BaseCommand):
         husband_indi = ""
         wife_indi = ""
 
-        for (
-            child
-        ) in (
+        for child in (
             element_children
         ):  # @TODO: look back at gedcom_parser.get_family_members approach: there you see FAMS but not wife vs husband
             # print(element.to_gedcom_string(recursive=True))
             # if "MARR" in str(child):
-                # marriage_info = child.get_child_elements()
-                # @@FIXME revisit actually using these
-                # for item in marriage_info:
-                #     if "PLAC" in str(item):
-                #         marriage_place = str(item).replace("2 PLAC ", "")
-                #     if "DATE" in str(item):
-                #         marriage_date = str(item).replace("2 DATE ", "")
+            # marriage_info = child.get_child_elements()
+            # @@FIXME revisit actually using these
+            # for item in marriage_info:
+            #     if "PLAC" in str(item):
+            #         marriage_place = str(item).replace("2 PLAC ", "")
+            #     if "DATE" in str(item):
+            #         marriage_date = str(item).replace("2 DATE ", "")
             if "WIFE" in str(child):
                 wife_indi = str(child).replace("1 WIFE ", "").replace("\r\n", "")
                 try:
@@ -199,33 +184,21 @@ class Command(BaseCommand):
                     )  # this person does not exist for our family @F118@
                     wife = this_person
                 except:
-                    print(
-                        "For family "
-                        + gedcom_indi
-                        + ", couldn't find person matching wife_indi "
-                        + wife_indi
-                    )
+                    print("For family " + gedcom_indi + ", couldn't find person matching wife_indi " + wife_indi)
             if "HUSB" in str(child):
                 husband_indi = str(child).replace("1 HUSB ", "").replace("\r\n", "")
                 try:
                     this_person = Person.objects.get(gedcom_indi=husband_indi)
                     husband = this_person
                 except:
-                    print(
-                        "For family "
-                        + gedcom_indi
-                        + ", couldn't find person matching husband_indi "
-                        + husband_indi
-                    )
+                    print("For family " + gedcom_indi + ", couldn't find person matching husband_indi " + husband_indi)
             if "CHIL" in str(child):
                 no_kids_bool = False
                 child_indi = (
                     str(child).replace("1 CHIL ", "").replace("\r\n", "")
                 )  # originally did += for text field, but if this works we won't need to use that text field
                 if child_indi not in self.child_family_dict:
-                    self.child_family_dict[
-                        child_indi
-                    ] = gedcom_indi  # add dictionary entry for the child
+                    self.child_family_dict[child_indi] = gedcom_indi  # add dictionary entry for the child
 
         display_name = wife.display_name + " & " if wife != "" else "(unknown name) & "
         display_name += husband.display_name if husband != "" else "(unknown name)"
@@ -271,9 +244,7 @@ class Command(BaseCommand):
                     + child_family_dict.get(entry)
                 )
             try:
-                orig_family = Family.objects.get(
-                    gedcom_indi=self.child_family_dict.get(entry)
-                )
+                orig_family = Family.objects.get(gedcom_indi=self.child_family_dict.get(entry))
             except:
                 print("REVIEW: check original family for " + str(entry))
                 print(
@@ -285,16 +256,16 @@ class Command(BaseCommand):
                 this_person.save()
 
     # If we have a matching person record already, just update relevant fields
-    # @TODO: consider fields we may want to populate if blank in our record (e.g. birthdate)
+    # @@TODO: consider fields we may want to populate if blank in our record (e.g. birthdate)
     def update_matching_person_record(self, matching_record, element, gedcom_indi):
-        print(
-            "(Existing person, only update gedcom_indi: "
-            + matching_record.first
-            + " "
-            + matching_record.last
-            + ")"
-        )
-
+        # print(
+        #     "(Existing person, only update gedcom_indi: "
+        #     + matching_record.first
+        #     + " "
+        #     + matching_record.last
+        #     + ")"
+        # )
+        # these gedcom_indi values link people to families in the file
         matching_record.gedcom_indi = gedcom_indi
         matching_record.save()
 
@@ -303,27 +274,18 @@ class Command(BaseCommand):
         existing_family_record = None
         if wife and husband:
             try:
-                existing_family_record = Family.objects.filter(
-                    wife=wife, husband=husband
-                )
+                existing_family_record = Family.objects.filter(wife=wife, husband=husband)
             except:
                 return None
 
             if existing_family_record.count() > 1:
-                print(
-                    "REVIEW: Multiple family records found for : "
-                    + husband.first
-                    + " "
-                    + wife.first
-                )
+                print("REVIEW: Multiple family records found for : " + husband.first + " " + wife.first)
                 for family in existing_family_record:
                     print(family.display_name)
                     return existing_family_record
             else:
                 try:
-                    existing_family_record = Family.objects.get(
-                        wife=wife, husband=husband
-                    )
+                    existing_family_record = Family.objects.get(wife=wife, husband=husband)
                 except:
                     pass
                 else:
