@@ -3,7 +3,6 @@ from pathlib import Path
 import dateutil.parser
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
-from gedcom.element.family import FamilyElement
 from gedcom.element.individual import IndividualElement
 from gedcom.parser import Parser
 
@@ -20,6 +19,20 @@ class Command(BaseCommand):
     person_skipped_count = 0
     child_family_dict = {}  # map of gedcom child/family associations (eg. P7: F1)
 
+    gedcom_data_path = Path(
+        "mysite/familytree/management/commands/gedcom_files/"
+    )  # @@TODO: update to take the whole path (so it doesn't need to be saved in a particular folder)
+
+    path_plus_person_skip_file = gedcom_data_path.joinpath("person_skip_list.txt")
+    person_skip_list = []
+
+    try:
+        with open(path_plus_person_skip_file, "r") as file:
+            lines = file.readlines()
+            person_skip_list = [line.strip() for line in lines]
+    except:
+        pass
+
     def add_arguments(self, parser):
         parser.add_argument("file name", type=Path, help="Name of GEDCOM file to import from")
 
@@ -31,14 +44,11 @@ class Command(BaseCommand):
             raise CommandError("Please specify GEDCOM file, ex: myGedcom.ged")
 
         # Check that the file is there
-        path = Path(
-            "mysite/familytree/management/commands/gedcom_files/"
-        )  # @@TODO: update to take the whole path (so it doesn't need to be saved in a particular folder)
-        path_plus_file = path.joinpath(filename)
+        path_plus_gedcom_file = self.gedcom_data_path.joinpath(filename)
 
-        if path_plus_file.is_file():
+        if path_plus_gedcom_file.is_file():
             gedcom_parser = Parser()
-            gedcom_parser.parse_file(path_plus_file)
+            gedcom_parser.parse_file(path_plus_gedcom_file)
             root_child_elements = gedcom_parser.get_root_child_elements()
 
             # Find/add person records
@@ -46,14 +56,15 @@ class Command(BaseCommand):
                 if isinstance(element, IndividualElement):
                     self.handle_person(element)
 
-            # Find/add family records (after person records exist, so we can look up parents)
-            # also save intermediate dictionary: CHIL INDI - family INDI
-            for element in root_child_elements:
-                if isinstance(element, FamilyElement):
-                    self.handle_family(element)
+            # @@TODO: comment back out when ready
+            # # Find/add family records (after person records exist, so we can look up parents)
+            # # also save intermediate dictionary: CHIL INDI - family INDI
+            # for element in root_child_elements:
+            #     if isinstance(element, FamilyElement):
+            #         self.handle_family(element)
 
-            # now that we've saved all the people and families, populate orig_family on people records
-            self.add_person_family_values(self.child_family_dict)
+            # # now that we've saved all the people and families, populate orig_family on people records
+            # self.add_person_family_values(self.child_family_dict)
 
         else:
             raise CommandError("That gedcom file does not exist in the expected directory")
@@ -106,7 +117,6 @@ class Command(BaseCommand):
         self.gedcom_person_records += 1
         (gedcom_first_middle, last) = element.get_name()
         gedcom_uuid = ""
-        # skip_record = False
 
         # gather the data we'll want to use
         if "INDI" in str(element):
@@ -119,17 +129,23 @@ class Command(BaseCommand):
         display_name = gedcom_first_middle + " " + last
         element_children = element.get_child_elements()
 
-        should_make_person = True
-        for child in element_children:
-            if "FACT" in str(child):
-                matching_record, uuid_from_fact = self.check_fact_for_AKA(child, display_name, element)
-                gedcom_uuid = uuid_from_fact
+        skip_record = False
 
-                if matching_record:
-                    should_make_person = False
-                    self.update_matching_person_record(matching_record, element, gedcom_indi)
-                    self.person_skipped_count += 1
-        if should_make_person:
+        if display_name.strip() in self.person_skip_list:
+            skip_record = True
+            print(f"Skipping record matching person_skip_list: {display_name}")
+        else:
+            for child in element_children:
+                if "FACT" in str(child):
+                    matching_record, uuid_from_fact = self.check_fact_for_AKA(child, display_name, element)
+                    gedcom_uuid = uuid_from_fact
+                    if matching_record:
+                        skip_record = True
+                        self.update_matching_person_record(matching_record, element, gedcom_indi)
+
+        if skip_record:
+            self.person_skipped_count += 1
+        else:
             (obj, created_bool) = Person.objects.get_or_create(
                 gedcom_indi=gedcom_indi,
                 gedcom_uuid=gedcom_uuid,
