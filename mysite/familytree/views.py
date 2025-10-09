@@ -106,9 +106,8 @@ def index(request):  # dashboard page
             updated_story = Story.objects.get(id=update.object_id)
 
         content_type = str(ContentType.objects.get(id=update.content_type_id)).replace("familytree | ", "")
-        change_type = "added" if update.action_flag == 1 else "updated"
-        if update.action_flag == 3:
-            change_type = "deleted"
+        change_type = "added" if update.action_flag == 1 else "updated"  # (update corresponds to 2)
+        # 3 is for deletion (where we won't have an updated object to link to) so we don't show that as a change_type
         combination = [update, user_person, content_type, change_type, updated_person, updated_story]
         recent_updates.append(combination)
 
