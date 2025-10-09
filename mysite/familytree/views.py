@@ -91,19 +91,18 @@ def index(request):  # dashboard page
     recent_updates = []
     for update in recent_logentries:
         update_author = update.user
-        user_person = Profile.objects.get_object_or_404(user=update_author).person
+        user_person = Profile.objects.get(user=update_author).person
         updated_person = None
         updated_story = None
 
-        if update.content_type_id == 4:  # Person update
-            updated_person = Person.objects.get_object_or_404(id=update.object_id)
+        # @@FIXME: come back and uncomment after urgent db issue troubleshooting
+        # if update.content_type_id == 4:  # Person update
+        #     updated_person = Person.objects.get(id=update.object_id)
 
         if update.content_type_id == 5:  # Story update (including association with person/family)
-            updated_story = Story.objects.get_object_or_404(id=update.object_id)
+            updated_story = Story.objects.get(id=update.object_id)
 
-        content_type = str(ContentType.objects.get_object_or_404(id=update.content_type_id)).replace(
-            "familytree | ", ""
-        )
+        content_type = str(ContentType.objects.get(id=update.content_type_id)).replace("familytree | ", "")
         change_type = "added" if update.action_flag == 1 else "updated"
         combination = [update, user_person, content_type, change_type, updated_person, updated_story]
         recent_updates.append(combination)
