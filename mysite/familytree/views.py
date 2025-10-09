@@ -37,9 +37,7 @@ from .models import (
 media_server = settings.MEDIA_SERVER
 LARAVEL_SITE_CREATION = settings.LARAVEL_SITE_CREATION
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
-NEWEST_GENERATION_FOR_GUEST = (
-    settings.NEWEST_GENERATION_FOR_GUEST
-)  # guest users only see generations older than this
+NEWEST_GENERATION_FOR_GUEST = settings.NEWEST_GENERATION_FOR_GUEST  # guest users only see generations older than this
 root_url = settings.ROOT_URL
 
 # @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches.
@@ -53,22 +51,20 @@ existing_branches_list = list(Branch.objects.all())
 branch_count = len(existing_branches_list)
 
 
-
-def get_branch_class(accessible_branches, request): 
+def get_branch_class(accessible_branches, request):
     # pass style class name for index pages based on user's number of columns
     branch_classes = {
-    1: "one_branch_display",
-    2: "two_branch_display",
-    4: "four_branch_display",
+        1: "one_branch_display",
+        2: "two_branch_display",
+        4: "four_branch_display",
     }
     result = branch_classes[accessible_branches]
 
     show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
-    if show_mobile: 
+    if show_mobile:
         result = "mobile_index_page_display"
 
     return result
-
 
 
 @login_required(login_url=login_url)
@@ -82,11 +78,7 @@ def index(request):  # dashboard page
     guest_user_anniversary_cutoff = today.date() - relativedelta(years=50)
     picture_limit = 5 if show_mobile else 10
 
-    template = (
-        "familytree/dashboard_mobile.html"
-        if show_mobile
-        else "familytree/dashboard.html"
-    )
+    template = "familytree/dashboard_mobile.html" if show_mobile else "familytree/dashboard.html"
 
     # only include additions or updates, for family, person, story, notes
     display_action_types = [1, 2]  # added, updated
@@ -103,17 +95,16 @@ def index(request):  # dashboard page
         updated_person = None
         updated_story = None
 
-        if update.content_type_id == 4:  # Person update
-            updated_person = Person.objects.get(id=update.object_id)
-        
+        # @@FIXME: come back and uncomment after urgent db issue troubleshooting
+        # if update.content_type_id == 4:  # Person update
+        #     updated_person = Person.objects.get(id=update.object_id)
+
         if update.content_type_id == 5:  # Story update (including association with person/family)
             updated_story = Story.objects.get(id=update.object_id)
 
-        content_type = str(ContentType.objects.get(id=update.content_type_id)).replace(
-            "familytree | ", ""
-        )
+        content_type = str(ContentType.objects.get(id=update.content_type_id)).replace("familytree | ", "")
         change_type = "added" if update.action_flag == 1 else "updated"
-        combination = [update, user_person, content_type, change_type, updated_person, updated_story ]
+        combination = [update, user_person, content_type, change_type, updated_person, updated_story]
         recent_updates.append(combination)
 
     # get list of people with birthdays this month
@@ -121,13 +112,11 @@ def index(request):  # dashboard page
     birthday_people_combined = Person.objects.none()
     try:
         for branch in accessible_branches:
-            these_birthday_people = Person.objects.filter(
-                birthdate__month=today.month
-            ).filter(branches__display_name__contains=branch.display_name)
+            these_birthday_people = Person.objects.filter(birthdate__month=today.month).filter(
+                branches__display_name__contains=branch.display_name
+            )
             birthday_people_combined = birthday_people_combined | these_birthday_people
-        birthday_people_sorted = birthday_people_combined.order_by(
-            "birthdate__day"
-        ).distinct()
+        birthday_people_sorted = birthday_people_combined.order_by("birthdate__day").distinct()
     except Person.DoesNotExist:
         birthday_people = None
 
@@ -140,9 +129,7 @@ def index(request):  # dashboard page
         for branch in accessible_branches:
             this_branch_anniversary = (
                 Family.objects.filter(marriage_date__month=today.month)
-                .filter(
-                    branches__display_name__contains=branch.display_name, divorced=False
-                )
+                .filter(branches__display_name__contains=branch.display_name, divorced=False)
                 .order_by("marriage_date__day")
             )
             anniversary_list = anniversary_list | this_branch_anniversary
@@ -151,19 +138,13 @@ def index(request):  # dashboard page
         anniversary_couples = False
 
     if user_is_guest:
-        anniversary_couples = [
-            x
-            for x in anniversary_couples
-            if x.marriage_date < guest_user_anniversary_cutoff
-        ]
+        anniversary_couples = [x for x in anniversary_couples if x.marriage_date < guest_user_anniversary_cutoff]
 
     # get list of recent images
     image_list = Image.objects.none()
     try:
         for branch in accessible_branches:
-            latest_pics = Image.objects.filter(
-                branches__display_name__contains=branch.display_name
-            ).order_by("-id")
+            latest_pics = Image.objects.filter(branches__display_name__contains=branch.display_name).order_by("-id")
             image_list = image_list | latest_pics
         combined_image_list = image_list.order_by("-id").distinct()[:picture_limit]
     except Image.DoesNotExist:
@@ -173,9 +154,7 @@ def index(request):  # dashboard page
     video_list = Video.objects.none()
     try:
         for branch in accessible_branches:
-            latest_videos = Video.objects.filter(
-                branches__display_name__contains=branch.display_name
-            ).order_by("-id")
+            latest_videos = Video.objects.filter(branches__display_name__contains=branch.display_name).order_by("-id")
             video_list = video_list | latest_videos
         combined_video_list = video_list.order_by("-id").distinct()[:3]
     except Video.DoesNotExist:
@@ -189,9 +168,7 @@ def index(request):  # dashboard page
     try:
         for branch in accessible_branches:
             this_branch_stories = (
-                Story.objects.filter(
-                    branches__display_name__contains=branch.display_name
-                )
+                Story.objects.filter(branches__display_name__contains=branch.display_name)
                 .filter(dashboard_feature=True)
                 .order_by("-id")
             )
@@ -287,7 +264,6 @@ def set_branch_stories(existing_branches_list, branch_int):
         dashboard_feature=True,
     ).order_by("intro")
     return stories
-
 
 
 @login_required(login_url=login_url)
@@ -395,9 +371,7 @@ def person_detail(request, person_id):
         notes = None
 
     try:
-        featured_images = Image.objects.filter(
-            person_id=person_id
-        ) & Image.objects.filter(featured=1)
+        featured_images = Image.objects.filter(person_id=person_id) & Image.objects.filter(featured=1)
     except Image.DoesNotExist:
         featured_images = None
 
@@ -458,7 +432,6 @@ def add_note(request, object_id, object_type):
 
     if request.method == "POST":
         if note_form.is_valid():
-
             # make django_admin_log entry
             LogEntry.objects.log_action(
                 user_id=editing_user.id,
@@ -481,9 +454,7 @@ def edit_person(request, person_id):
     template_name = "familytree/edit_person.html"
     profile = get_display_profile(request).first()
     editing_user = profile.user
-    person = get_object_or_404(
-        Person, pk=person_id
-    )  # person whose info will be updated
+    person = get_object_or_404(Person, pk=person_id)  # person whose info will be updated
     person_edit_form = EditPersonForm(request.POST, instance=person)
 
     context = {
@@ -499,15 +470,9 @@ def edit_person(request, person_id):
             email_data = {"user": editing_user, "person": person}
             from_email = settings.ADMIN_EMAIL_SEND_FROM
             recipient_list = [settings.ADMIN_EMAIL_ADDRESS]
-            subject = render_to_string(
-                template_name="familytree/email/person_edit_subject.txt"
-            )
-            html_message = render_to_string(
-                "familytree/email/person_edit_message.html", email_data
-            )
-            send_mail(
-                subject, html_message, from_email, recipient_list, fail_silently=False
-            )
+            subject = render_to_string(template_name="familytree/email/person_edit_subject.txt")
+            html_message = render_to_string("familytree/email/person_edit_message.html", email_data)
+            send_mail(subject, html_message, from_email, recipient_list, fail_silently=False)
 
             # make django_admin_log entry
             LogEntry.objects.log_action(
@@ -537,9 +502,7 @@ def family_detail(request, family_id):
     user_is_guest = profile.guest_user
 
     try:
-        kids = Person.objects.filter(family_id=family_id).order_by(
-            "birthyear", "sibling_seq", "id"
-        )
+        kids = Person.objects.filter(family_id=family_id).order_by("birthyear", "sibling_seq", "id")
     except Person.DoesNotExist:
         kids = None
 
@@ -549,9 +512,7 @@ def family_detail(request, family_id):
         notes = None
 
     try:
-        featured_images = Image.objects.filter(family_id=family_id).order_by(
-            "id"
-        ) & Image.objects.filter(featured=1)
+        featured_images = Image.objects.filter(family_id=family_id).order_by("id") & Image.objects.filter(featured=1)
     except Image.DoesNotExist:
         featured_images = None
 
@@ -663,9 +624,7 @@ def get_image_index_data(accessible_branches, profile):
     image_list = Image.objects.none()
     for branch in accessible_branches:
         name = branch.display_name
-        image_list = image_list.union(
-            Image.objects.filter(branches__display_name__contains=name).order_by("year")
-        )
+        image_list = image_list.union(Image.objects.filter(branches__display_name__contains=name).order_by("year"))
 
     sorted_list = image_list.order_by("year")
     family_album_data = []
@@ -681,7 +640,6 @@ def get_image_index_data(accessible_branches, profile):
 #  receiver code to cache data as a user logs in
 @receiver(post_save, sender=User)
 def populate_album_and_outline_data(sender, instance, **kwargs):
-
     profile_queryset = Profile.objects.filter(user=instance)
     if (
         profile_queryset
@@ -730,6 +688,7 @@ def video_detail(request, video_id):
         },
     )
 
+
 @login_required(login_url=login_url)
 def story_index(request):
     profile = get_display_profile(request).first()
@@ -741,9 +700,7 @@ def story_index(request):
     try:
         for branch in accessible_branches:
             this_branch_stories = (
-                Story.objects.filter(
-                    branches__display_name__contains=branch.display_name
-                )
+                Story.objects.filter(branches__display_name__contains=branch.display_name)
                 .filter(dashboard_feature=True)
                 .order_by("-id")
             )
@@ -751,7 +708,6 @@ def story_index(request):
         combined_story_list = story_list.order_by("-id").distinct()[:30]
     except Story.DoesNotExist:
         combined_story_list = None
-
 
     if branch_count > 0:
         branch1_stories = set_branch_stories(existing_branches_list, 0)
@@ -772,7 +728,6 @@ def story_index(request):
         branch4_stories = set_branch_stories(existing_branches_list, 3)
     else:
         branch4_stories = None
-
 
     context = {
         "story_list": combined_story_list,
@@ -806,11 +761,7 @@ def video_index(request):
     for branch in existing_branches:
         if branch in accessible_branches:
             name = branch.display_name
-            video_list = video_list.union(
-                Video.objects.filter(branches__display_name__contains=name).order_by(
-                    "year"
-                )
-            )
+            video_list = video_list.union(Video.objects.filter(branches__display_name__contains=name).order_by("year"))
     sorted_list = video_list.order_by("year")
 
     context = {
@@ -835,7 +786,11 @@ def story(request, story_id):
     return render(
         request,
         "familytree/story.html",
-        {"story": story, "media_server": media_server, "user_person": user_person, },
+        {
+            "story": story,
+            "media_server": media_server,
+            "user_person": user_person,
+        },
     )
 
 
@@ -880,9 +835,7 @@ def get_outline_html(accessible_branches, profile):
         name = branch.display_name
         this_branch_results = []
 
-        for family in Family.objects.filter(
-            branches__display_name__contains=name, original_family=True
-        ):
+        for family in Family.objects.filter(branches__display_name__contains=name, original_family=True):
             this_family_results = get_descendants(family, user_is_guest)
             this_branch_results.append(this_family_results)
 
@@ -890,9 +843,7 @@ def get_outline_html(accessible_branches, profile):
         total_results_html[name] = this_branch_html
 
     outline_cache_name = "outline_" + str(profile.user)
-    cache.set(
-        outline_cache_name, total_results_html, 60 * 30
-    )  # save this for 30 minutes
+    cache.set(outline_cache_name, total_results_html, 60 * 30)  # save this for 30 minutes
     print("outline_cache is set")
     return total_results_html
 
@@ -920,14 +871,10 @@ def make_list_into_html(list):
 
 def landing(request):
     show_mobile = request.user_agent.is_mobile or request.GET.get("show_mobile")
-    landing_page_people = Person.objects.filter(
-        living=False, show_on_landing_page=True
-    ).order_by("last", "first")
+    landing_page_people = Person.objects.filter(living=False, show_on_landing_page=True).order_by("last", "first")
     email_to = settings.ADMIN_EMAIL_ADDRESS
 
-    template = (
-        "familytree/landing_mobile.html" if show_mobile else "familytree/landing.html"
-    )
+    template = "familytree/landing_mobile.html" if show_mobile else "familytree/landing.html"
 
     context = {
         "landing_page_people": landing_page_people,
@@ -997,9 +944,7 @@ def get_descendants(family, user_is_guest, results=None):
                         families_made = Family.objects.filter(husband=kid)
                     if families_made:
                         for new_family in families_made:
-                            next_results = get_descendants(
-                                new_family, user_is_guest, these_results
-                            )
+                            next_results = get_descendants(new_family, user_is_guest, these_results)
                             these_results.extend([next_results])
     return these_results
 
@@ -1038,53 +983,32 @@ def user_metrics(request):
     existing_branches_list = list(Branch.objects.all())
 
     last_login_never = [x for x in profiles if not x.last_login()]
-    last_login_past_month = [
-        x for x in profiles if x.last_login() and x.last_login().date() > month_ago_date
-    ]
+    last_login_past_month = [x for x in profiles if x.last_login() and x.last_login().date() > month_ago_date]
     last_login_past_month.sort(reverse=True, key=lambda x: x.last_login())
 
     if branch_count > 0:
-        branch1_users = Profile.objects.filter(
-            branches__display_name__contains=existing_branches_list[0]
-        )
+        branch1_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[0])
     else:
         branch1_users = None
     if branch_count > 1:
-        branch2_users = Profile.objects.filter(
-            branches__display_name__contains=existing_branches_list[1]
-        )
+        branch2_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[1])
     else:
         branch2_users = None
     if branch_count > 2:
-        branch3_users = Profile.objects.filter(
-            branches__display_name__contains=existing_branches_list[2]
-        )
+        branch3_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[2])
     else:
         branch3_users = None
     if branch_count > 3:
-        branch4_users = Profile.objects.filter(
-            branches__display_name__contains=existing_branches_list[3]
-        )
+        branch4_users = Profile.objects.filter(branches__display_name__contains=existing_branches_list[3])
     else:
         branch4_users = None
 
     # Custom code for my instance, to differentiate between 3 generations of this website
     # A new instance would only need one count for logins, updates, and notes
-    last_login_django_site = [
-        x
-        for x in profiles
-        if x.last_login() and x.last_login().date() >= DJANGO_SITE_CREATION
-    ]
-    last_login_old_site_only = [
-        x
-        for x in profiles
-        if x.last_login() and x.last_login().date() < LARAVEL_SITE_CREATION
-    ]
+    last_login_django_site = [x for x in profiles if x.last_login() and x.last_login().date() >= DJANGO_SITE_CREATION]
+    last_login_old_site_only = [x for x in profiles if x.last_login() and x.last_login().date() < LARAVEL_SITE_CREATION]
     last_login_laravel_site = [
-        x
-        for x in profiles
-        if x.last_login()
-        and LARAVEL_SITE_CREATION < x.last_login().date() < DJANGO_SITE_CREATION
+        x for x in profiles if x.last_login() and LARAVEL_SITE_CREATION < x.last_login().date() < DJANGO_SITE_CREATION
     ]
 
     profiles_who_made_notes_old = [x for x in profiles if x.notes_written("old")]
