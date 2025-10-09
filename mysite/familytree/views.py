@@ -95,15 +95,20 @@ def index(request):  # dashboard page
         updated_person = None
         updated_story = None
 
-        # @@FIXME: come back and uncomment after urgent db issue troubleshooting
-        # if update.content_type_id == 4:  # Person update
-        #     updated_person = Person.objects.get(id=update.object_id)
+        if update.content_type_id == 4:  # Person update
+            try:
+                updated_person = Person.objects.get(id=update.object_id)
+            except Person.DoesNotExist:
+                pass
+                # @@TODO: log something for this case
 
         if update.content_type_id == 5:  # Story update (including association with person/family)
             updated_story = Story.objects.get(id=update.object_id)
 
         content_type = str(ContentType.objects.get(id=update.content_type_id)).replace("familytree | ", "")
         change_type = "added" if update.action_flag == 1 else "updated"
+        if update.action_flag == 3:
+            change_type = "deleted"
         combination = [update, user_person, content_type, change_type, updated_person, updated_story]
         recent_updates.append(combination)
 
