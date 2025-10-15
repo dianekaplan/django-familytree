@@ -176,13 +176,14 @@ class Command(BaseCommand):
         gedcom_indi = str(element).replace(" FAM", "").replace("0 ", "").replace("\r\n", "")
         self.gedcom_family_records += 1
         no_kids_bool = True
-        wife = ""
-        husband = ""
+        person_with_wife_indi = ""
+        person_with_husband_indi = ""
         element_children = element.get_child_elements()
         marriage_date = ""
         husband_indi = ""
         wife_indi = ""
 
+        # Gather family values from the child elements
         for child in (
             element_children
         ):  # @TODO: look back at gedcom_parser.get_family_members approach: there you see FAMS but not wife vs husband
@@ -199,16 +200,16 @@ class Command(BaseCommand):
                 wife_indi = str(child).replace("1 WIFE ", "").replace("\r\n", "")
                 try:
                     this_person = Person.objects.get(gedcom_indi=wife_indi)
-                    wife = this_person
+                    person_with_wife_indi = this_person
                 except:
-                    print(f"Family {gedcom_indi}: couldn't find person matching wife_indi {wife_indi}")
+                    pass
             if "HUSB" in str(child):
                 husband_indi = str(child).replace("1 HUSB ", "").replace("\r\n", "")
                 try:
                     this_person = Person.objects.get(gedcom_indi=husband_indi)
-                    husband = this_person
+                    person_with_husband_indi = this_person
                 except:
-                    print(f"Family {gedcom_indi}: couldn't find person matching husband_indi {husband_indi}")
+                    pass
             if "CHIL" in str(child):
                 no_kids_bool = False
                 child_indi = (
@@ -218,12 +219,21 @@ class Command(BaseCommand):
                     self.child_family_dict[child_indi] = gedcom_indi  # add dictionary entry for the child
 
         # Process the family record if it matches with two people in our database
-        if wife and husband:
-            display_name = wife.display_name + " & " if wife != "" else "(unknown name) & "
-            display_name += husband.display_name if husband != "" else "(unknown name)"
-            existing_record = self.find_existing_family_record(wife, husband)
+        if person_with_wife_indi and person_with_husband_indi:
+            display_name = person_with_wife_indi.display_name + " & " + person_with_husband_indi.display_name
+            given_spouses_existing_record = self.find_existing_family_record(
+                person_with_wife_indi, person_with_husband_indi
+            )
+            spouses_swapped_existing_record = self.find_existing_family_record(
+                person_with_husband_indi, person_with_wife_indi
+            )
+            existing_family_record = given_spouses_existing_record or spouses_swapped_existing_record
 
-            if not existing_record:
+            if existing_family_record:
+                existing_family_record.gedcom_indi = gedcom_indi
+                existing_family_record.save()
+            else:
+                # create a family record for these two people
                 (obj, created_bool) = Family.objects.get_or_create(
                     gedcom_indi=gedcom_indi,
                     display_name=display_name,
@@ -237,15 +247,12 @@ class Command(BaseCommand):
                 )
 
                 # link the associated parents
-                obj.wife = wife
-                obj.husband = husband
+                obj.wife = person_with_wife_indi
+                obj.husband = person_with_husband_indi
                 obj.save()
 
                 if created_bool:
                     self.family_added_count += 1
-            else:
-                existing_record.gedcom_indi = gedcom_indi
-                existing_record.save()
 
     # Loop through dictionary
     def add_person_family_values(self, child_family_dict):
