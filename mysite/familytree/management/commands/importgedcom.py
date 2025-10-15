@@ -3,6 +3,7 @@ from pathlib import Path
 import dateutil.parser
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
+from gedcom.element.family import FamilyElement
 from gedcom.element.individual import IndividualElement
 from gedcom.parser import Parser
 
@@ -56,13 +57,13 @@ class Command(BaseCommand):
                 if isinstance(element, IndividualElement):
                     self.handle_person(element)
 
-            # @@TODO: comment back out when ready
-            # # Find/add family records (after person records exist, so we can look up parents)
-            # # also save intermediate dictionary: CHIL INDI - family INDI
-            # for element in root_child_elements:
-            #     if isinstance(element, FamilyElement):
-            #         self.handle_family(element)
+            # Find/add family records (after person records exist, so we can look up parents)
+            # also save intermediate dictionary: CHIL INDI - family INDI
+            for element in root_child_elements:
+                if isinstance(element, FamilyElement):
+                    self.handle_family(element)
 
+            # @@TODO: comment back out when ready
             # # now that we've saved all the people and families, populate orig_family on people records
             # self.add_person_family_values(self.child_family_dict)
 
@@ -111,7 +112,7 @@ class Command(BaseCommand):
                 )
         return matching_record, gedcom_uuid
 
-    # process a person record in the gedcom file
+    # Process a person record in the gedcom file
     def handle_person(self, element):
         matching_record = None
         self.gedcom_person_records += 1
@@ -168,18 +169,21 @@ class Command(BaseCommand):
             if created_bool:
                 self.person_added_count += 1
 
-    # steps to process a family record in the gedcom file
+    # Steps to process a family record in the gedcom file
+    # Summary: update/add a record if the WIFE and HUSB entries match person records in our database
+    # (This can include newly-imported people; the ancestry.com GEDCOM export lists person records before family)
     def handle_family(self, element):
         gedcom_indi = str(element).replace(" FAM", "").replace("0 ", "").replace("\r\n", "")
         self.gedcom_family_records += 1
         no_kids_bool = True
-        wife = ""
-        husband = ""
+        person_with_wife_indi = ""
+        person_with_husband_indi = ""
         element_children = element.get_child_elements()
         marriage_date = ""
         husband_indi = ""
         wife_indi = ""
 
+        # Gather family values from the child elements
         for child in (
             element_children
         ):  # @TODO: look back at gedcom_parser.get_family_members approach: there you see FAMS but not wife vs husband
@@ -195,19 +199,17 @@ class Command(BaseCommand):
             if "WIFE" in str(child):
                 wife_indi = str(child).replace("1 WIFE ", "").replace("\r\n", "")
                 try:
-                    this_person = Person.objects.get(
-                        gedcom_indi=wife_indi
-                    )  # this person does not exist for our family @F118@
-                    wife = this_person
+                    this_person = Person.objects.get(gedcom_indi=wife_indi)
+                    person_with_wife_indi = this_person
                 except:
-                    print("For family " + gedcom_indi + ", couldn't find person matching wife_indi " + wife_indi)
+                    pass
             if "HUSB" in str(child):
                 husband_indi = str(child).replace("1 HUSB ", "").replace("\r\n", "")
                 try:
                     this_person = Person.objects.get(gedcom_indi=husband_indi)
-                    husband = this_person
+                    person_with_husband_indi = this_person
                 except:
-                    print("For family " + gedcom_indi + ", couldn't find person matching husband_indi " + husband_indi)
+                    pass
             if "CHIL" in str(child):
                 no_kids_bool = False
                 child_indi = (
@@ -216,36 +218,41 @@ class Command(BaseCommand):
                 if child_indi not in self.child_family_dict:
                     self.child_family_dict[child_indi] = gedcom_indi  # add dictionary entry for the child
 
-        display_name = wife.display_name + " & " if wife != "" else "(unknown name) & "
-        display_name += husband.display_name if husband != "" else "(unknown name)"
-
-        existing_record = self.find_existing_family_record(wife, husband)
-        if not existing_record:
-            (obj, created_bool) = Family.objects.get_or_create(
-                gedcom_indi=gedcom_indi,
-                display_name=display_name,
-                wife_indi=wife_indi,
-                husband_indi=husband_indi,
-                marriage_date_note=marriage_date,
-                no_kids_bool=no_kids_bool,
-                created_at=timezone.now(),
-                updated_at=timezone.now(),
-                reviewed=False,
+        # Process the family record if it matches with two people in our database
+        if person_with_wife_indi and person_with_husband_indi:
+            display_name = person_with_wife_indi.display_name + " & " + person_with_husband_indi.display_name
+            given_spouses_existing_record = self.find_existing_family_record(
+                person_with_wife_indi, person_with_husband_indi
             )
+            spouses_swapped_existing_record = self.find_existing_family_record(
+                person_with_husband_indi, person_with_wife_indi
+            )
+            existing_family_record = given_spouses_existing_record or spouses_swapped_existing_record
 
-            # link the parents that are known
-            if wife != "":
-                obj.wife = wife
-                obj.save()
-            if husband != "":
-                obj.husband = husband
+            if existing_family_record:
+                existing_family_record.gedcom_indi = gedcom_indi
+                existing_family_record.save()
+            else:
+                # create a family record for these two people
+                (obj, created_bool) = Family.objects.get_or_create(
+                    gedcom_indi=gedcom_indi,
+                    display_name=display_name,
+                    wife_indi=wife_indi,
+                    husband_indi=husband_indi,
+                    marriage_date_note=marriage_date,
+                    no_kids_bool=no_kids_bool,
+                    created_at=timezone.now(),
+                    updated_at=timezone.now(),
+                    reviewed=False,
+                )
+
+                # link the associated parents
+                obj.wife = person_with_wife_indi
+                obj.husband = person_with_husband_indi
                 obj.save()
 
-            if created_bool:
-                self.family_added_count += 1
-        else:
-            existing_record.gedcom_indi = gedcom_indi
-            existing_record.save()
+                if created_bool:
+                    self.family_added_count += 1
 
     # Loop through dictionary
     def add_person_family_values(self, child_family_dict):
