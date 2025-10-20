@@ -63,9 +63,8 @@ class Command(BaseCommand):
                 if isinstance(element, FamilyElement):
                     self.handle_family(element)
 
-            # @@TODO: comment back out when ready
-            # # now that we've saved all the people and families, populate orig_family on people records
-            # self.add_person_family_values(self.child_family_dict)
+            # Now that we've saved all the people and families, populate orig_family on people records
+            self.add_person_family_values(self.child_family_dict)
 
         else:
             raise CommandError("That gedcom file does not exist in the expected directory")
@@ -215,8 +214,12 @@ class Command(BaseCommand):
                 child_indi = (
                     str(child).replace("1 CHIL ", "").replace("\r\n", "")
                 )  # originally did += for text field, but if this works we won't need to use that text field
+                try:
+                    this_person = Person.objects.get(gedcom_indi=child_indi)
+                except:
+                    continue
                 if child_indi not in self.child_family_dict:
-                    self.child_family_dict[child_indi] = gedcom_indi  # add dictionary entry for the child
+                    self.child_family_dict[child_indi] = gedcom_indi  # add dictionary entry if existing person
 
         # Process the family record if it matches with two people in our database
         if person_with_wife_indi and person_with_husband_indi:
@@ -260,21 +263,13 @@ class Command(BaseCommand):
             try:
                 this_person = Person.objects.get(gedcom_indi=entry)
             except:
-                print(
-                    "Gedcom file had child/family association where we didn't find person: "
-                    + entry
-                    + " "
-                    + child_family_dict.get(entry)
-                )
+                print(f"Gedcom file had child/family association where we didn't find person: {entry}")
+                # {child_family_dict.get(entry)}")
             try:
                 orig_family = Family.objects.get(gedcom_indi=self.child_family_dict.get(entry))
             except:
-                print("REVIEW: check original family for " + str(entry))
-                print(
-                    "Gedcom file had child/family association where we didn't find family: "
-                    + self.child_family_dict.get(entry)
-                )
-            else:
+                print(f"REVIEW: for person {str(entry)} we don't find family: {self.child_family_dict.get(entry)}")
+            if this_person and orig_family:
                 this_person.family = orig_family
                 this_person.save()
 
