@@ -102,7 +102,10 @@ class Command(BaseCommand):
 
             # gedcom_uuid = str(item).replace("1 FACT ", "").replace("\r\n", "").strip()
             try:
-                matching_record = Person.objects.get(gedcom_uuid=gedcom_uuid)
+                matching_records = Person.objects.filter(gedcom_uuid=gedcom_uuid)
+                if matching_records.count() > 1:
+                    print(f"ATTENTION!! MULTIPLE DATABASE RECORDS HAVE SAME UNIQUE ID: {gedcom_uuid}")
+                matching_record = matching_records.first()
             except Person.DoesNotExist:
                 matching_record = False
                 print(
@@ -234,6 +237,8 @@ class Command(BaseCommand):
 
             if existing_family_record:
                 existing_family_record.gedcom_indi = gedcom_indi
+                existing_family_record.wife_indi = wife_indi
+                existing_family_record.husband_indi = husband_indi
                 existing_family_record.save()
             else:
                 # create a family record for these two people
@@ -268,7 +273,8 @@ class Command(BaseCommand):
             try:
                 orig_family = Family.objects.get(gedcom_indi=self.child_family_dict.get(entry))
             except:
-                print(f"REVIEW: for person {str(entry)} we don't find family: {self.child_family_dict.get(entry)}")
+                # Ex: person is a child in gedcom family record with one parent (we only process those with two parents)
+                print(f"REVIEW: for person {str(entry)} we didn't find family: {self.child_family_dict.get(entry)}")
             if this_person and orig_family:
                 this_person.family = orig_family
                 this_person.save()
