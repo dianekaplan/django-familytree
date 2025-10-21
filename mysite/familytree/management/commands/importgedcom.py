@@ -239,7 +239,6 @@ class Command(BaseCommand):
                 existing_family_record.gedcom_indi = gedcom_indi
                 existing_family_record.wife_indi = wife_indi
                 existing_family_record.husband_indi = husband_indi
-                print(f"found family record, updating gedcom_indi value to: {gedcom_indi}")
                 existing_family_record.save()
             else:
                 # create a family record for these two people
