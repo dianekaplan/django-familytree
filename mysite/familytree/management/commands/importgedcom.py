@@ -145,6 +145,8 @@ class Command(BaseCommand):
                     gedcom_uuid = uuid_from_fact
                     if gedcom_uuid in self.unique_id_list:
                         print(f"GEDCOM FILE HAS REPEATED UNIQUE ID: {gedcom_uuid}, SKIPPING PERSON")
+                        # Note: in this case, only the second/subsequent person records will be skipped
+                        # (If the mistaken record appears first in the file, our person will get that gedcom_indi)
                     else:
                         self.unique_id_list.append(gedcom_uuid)
                         if matching_record:
