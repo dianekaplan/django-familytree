@@ -19,6 +19,7 @@ class Command(BaseCommand):
     family_added_count = 0
     person_skipped_count = 0
     child_family_dict = {}  # map of gedcom child/family associations (eg. P7: F1)
+    unique_id_list = []
 
     gedcom_data_path = Path(
         "mysite/familytree/management/commands/gedcom_files/"
@@ -142,6 +143,11 @@ class Command(BaseCommand):
                 if "FACT" in str(child):
                     matching_record, uuid_from_fact = self.check_fact_for_AKA(child, display_name, element)
                     gedcom_uuid = uuid_from_fact
+                    if gedcom_uuid in self.unique_id_list:
+                        print(f"GEDCOM FILE HAS REPEATED UNIQUE ID: {gedcom_uuid}")
+                    else:
+                        self.unique_id_list.append(gedcom_uuid)
+
                     if matching_record:
                         skip_record = True
                         self.update_matching_person_record(matching_record, element, gedcom_indi)
