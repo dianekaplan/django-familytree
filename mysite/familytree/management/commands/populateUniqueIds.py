@@ -42,9 +42,18 @@ class Command(BaseCommand):
         for family in families:
             # grab all children in that family
             children = Person.objects.all().filter(family_id=family.id)
+            child_names = []  # Handle case of same-named siblings (facepalm)
+            repeat_seq = 0
             for child in children:
+                firstname_cleaned = child.first.replace(" ", "_").replace("/", "_")
+                if firstname_cleaned not in child_names:
+                    child_names.append(firstname_cleaned)
+                else:  # family has same-named siblings
+                    firstname_cleaned = firstname_cleaned + str(repeat_seq)
+                    repeat_seq += 1
+                value_to_use = person.gedcom_uuid + firstname_cleaned
+
                 if not child.gedcom_uuid:
-                    value_to_use = person.gedcom_uuid + child.first.replace(" ", "_").replace("/", "_")
                     child.gedcom_uuid = value_to_use
                     child.save()
                     print("set value for " + child.display_name + ": " + value_to_use)
@@ -112,6 +121,7 @@ class Command(BaseCommand):
             for parent in parents:
                 if parent.gedcom_uuid and not person.gedcom_uuid:  # only fill it in when it's still missing
                     value_for_kid = parent.gedcom_uuid + person.first.replace(" ", "_")
+                    # @TODO: add support for the same-named sibling case (covered in populate_children_values)
                     person.gedcom_uuid = value_for_kid
                     person.save()
                     print("set value for " + person.display_name + ": " + person.gedcom_uuid)
