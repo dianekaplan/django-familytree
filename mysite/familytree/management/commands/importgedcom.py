@@ -19,7 +19,6 @@ class Command(BaseCommand):
     family_added_count = 0
     person_skipped_count = 0
     child_family_dict = {}  # map of gedcom child/family associations (eg. P7: F1)
-    unique_id_list = []
 
     gedcom_data_path = Path(
         "mysite/familytree/management/commands/gedcom_files/"
@@ -178,16 +177,9 @@ class Command(BaseCommand):
             gedcom_uuid = self.check_record_for_unique_id(element)
             if gedcom_uuid:
                 matching_record = self.check_db_for_person_with_id(gedcom_uuid, display_name)
-                if gedcom_uuid in self.unique_id_list:
-                    print(f"GEDCOM FILE HAS REPEATED UNIQUE ID: {gedcom_uuid}, SKIPPING PERSON")
-                    # Note: in this case, only the second/subsequent person records will be skipped
-                    # (If the mistaken record appears first in the file, our person will get that gedcom_indi)
-                else:
-                    self.unique_id_list.append(gedcom_uuid)
-                    if matching_record:
-                        skip_record = True
-                        self.update_matching_person_record(matching_record, element, gedcom_indi)
-
+                if matching_record:
+                    skip_record = True
+                    self.update_matching_person_record(matching_record, element, gedcom_indi)
         if skip_record:
             self.person_skipped_count += 1
         else:
