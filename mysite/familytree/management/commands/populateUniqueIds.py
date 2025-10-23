@@ -111,6 +111,20 @@ class Command(BaseCommand):
                         kid.save()
                         print("set value for " + kid.display_name + ": " + kid.gedcom_uuid)
 
+    def check_if_in_direct_family(self, person):
+        origin_family = None
+        try:
+            origin_family = Family.objects.get(id=person.family_id)
+        except:
+            pass
+        else:
+            if origin_family and origin_family.direct_family_number:
+                value_to_use = str(origin_family.direct_family_number) + person.first.replace(" ", "_")
+                person.gedcom_uuid = value_to_use
+                person.save()
+                print("Set value for " + person.display_name + ": " + person.gedcom_uuid)
+                # @TODO: add support for the same-named sibling case, or validate first
+
     def check_parent_for_value(self, person):
         try:
             origin_family = Family.objects.get(id=person.family_id)
@@ -121,7 +135,7 @@ class Command(BaseCommand):
             for parent in parents:
                 if parent.gedcom_uuid and not person.gedcom_uuid:  # only fill it in when it's still missing
                     value_for_kid = parent.gedcom_uuid + person.first.replace(" ", "_")
-                    # @TODO: add support for the same-named sibling case (covered in populate_children_values)
+                    # @TODO: add support for the same-named sibling case, or validate first
                     person.gedcom_uuid = value_for_kid
                     person.save()
                     print("set value for " + person.display_name + ": " + person.gedcom_uuid)
@@ -174,8 +188,10 @@ class Command(BaseCommand):
         people_missing_value = Person.objects.filter(gedcom_uuid__isnull=True)
         still_missing = 0
         for person in people_missing_value:
-            self.check_parent_for_value(person)
+            self.check_if_in_direct_family(person)
             if not person.gedcom_uuid:  # (don't revisit if a previous step set it)
+                self.check_parent_for_value(person)
+            if not person.gedcom_uuid:
                 self.check_kid_for_value(person)
             if not person.gedcom_uuid:
                 self.check_spouse_for_value(person)
