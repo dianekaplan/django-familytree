@@ -38,6 +38,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("file name", type=Path, help="Name of GEDCOM file to import from")
 
+    # Process the person and family records from specified GEDCOM file (for now we ignore objects/pictures and sources)
     def handle(self, *args, **kwargs):
         filename = kwargs["file name"]
 
@@ -52,19 +53,29 @@ class Command(BaseCommand):
             gedcom_parser = Parser()
             gedcom_parser.parse_file(path_plus_gedcom_file)
             root_child_elements = gedcom_parser.get_root_child_elements()
+            person_records: list[IndividualElement] = []
+            family_records: list[FamilyElement] = []
 
-            # Find/add person records
+            # Person records need to be in place before family.
+            # Ancestry.com GEDCOM exports use that order, but collect them out first to make sure of it
             for element in root_child_elements:
                 if isinstance(element, IndividualElement):
-                    self.handle_person(element)
-
-            # Find/add family records (after person records exist, so we can look up parents)
-            # also save intermediate dictionary: CHIL INDI - family INDI
-            for element in root_child_elements:
+                    person_records.append(element)
                 if isinstance(element, FamilyElement):
-                    self.handle_family(element)
+                    family_records.append(element)
 
-            # Now that we've saved all the people and families, populate orig_family on people records
+            # validate file
+            # @@TODO: add checking for duplicated unique ids (AKA FACT items in people_records)
+
+            # Process person records
+            for item in person_records:
+                self.handle_person(item)
+
+            # Process family records
+            for item in family_records:
+                self.handle_family(item)
+
+            # Populate orig_family on people records
             self.add_person_family_values(self.child_family_dict)
 
         else:
