@@ -95,13 +95,10 @@ class Command(BaseCommand):
         f.write(run_results)
         f.closed
 
-    # check a FACT to see if this is an AKA with a value matching a person record (unique ID)
-    # return two things: matching person (or False), and uuid value from AKA FACT
-    def check_fact_for_AKA(self, item, display_name, element):
+    # If person record has an AKA item, grab the unique ID
+    def check_record_for_unique_id(self, item, display_name, element):
         has_type_AKA = False
-        matching_record = False
         gedcom_uuid = ""
-
         children = item.get_child_elements()
         for x in children:
             if "AKA" in str(x):
@@ -111,20 +108,23 @@ class Command(BaseCommand):
             for x in children:
                 if "NOTE" in str(x):
                     gedcom_uuid = str(x).replace("2 NOTE ", "").replace("\r\n", "").strip()
+        return gedcom_uuid
 
-            # gedcom_uuid = str(item).replace("1 FACT ", "").replace("\r\n", "").strip()
-            try:
-                matching_records = Person.objects.filter(gedcom_uuid=gedcom_uuid)
-                if matching_records.count() > 1:
-                    print(f"ATTENTION!! MULTIPLE DATABASE RECORDS HAVE SAME UNIQUE ID: {gedcom_uuid}")
-                matching_record = matching_records.first()
-            except Person.DoesNotExist:
-                matching_record = False
-                print(
-                    "REVIEW: " + display_name + ": got AKA FACT value without matching person record: ",
-                    gedcom_uuid,
-                )
-        return matching_record, gedcom_uuid
+    # Check database for person record with given unique ID
+    def check_db_for_person_with_id(self, gedcom_uuid, display_name):
+        matching_record = None
+        try:
+            matching_records = Person.objects.filter(gedcom_uuid=gedcom_uuid)
+            if matching_records.count() > 1:
+                print(f"{matching_records.count()} DATABASE RECORDS HAVE SAME UNIQUE ID: {gedcom_uuid}!!")
+            matching_record = matching_records.first()
+        except Person.DoesNotExist:
+            matching_record = False
+            print(
+                "REVIEW: " + display_name + ": got AKA FACT value without matching person record: ",
+                gedcom_uuid,
+            )
+        return matching_record
 
     # Process a person record in the gedcom file
     def handle_person(self, element):
@@ -152,8 +152,8 @@ class Command(BaseCommand):
         else:
             for child in element_children:
                 if "FACT" in str(child):
-                    matching_record, uuid_from_fact = self.check_fact_for_AKA(child, display_name, element)
-                    gedcom_uuid = uuid_from_fact
+                    gedcom_uuid = self.check_record_for_unique_id(child, display_name, element)
+                    matching_record = self.check_db_for_person_with_id(gedcom_uuid, display_name)
                     if gedcom_uuid in self.unique_id_list:
                         print(f"GEDCOM FILE HAS REPEATED UNIQUE ID: {gedcom_uuid}, SKIPPING PERSON")
                         # Note: in this case, only the second/subsequent person records will be skipped
