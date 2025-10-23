@@ -38,8 +38,10 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("file name", type=Path, help="Name of GEDCOM file to import from")
 
+    # Process the person and family records from specified GEDCOM file (for now we ignore objects/pictures and sources)
     def handle(self, *args, **kwargs):
         filename = kwargs["file name"]
+        run_failures = None
 
         # validate that the user gave file with extension ged
         if filename.suffix != ".ged":
@@ -52,21 +54,35 @@ class Command(BaseCommand):
             gedcom_parser = Parser()
             gedcom_parser.parse_file(path_plus_gedcom_file)
             root_child_elements = gedcom_parser.get_root_child_elements()
+            person_records: list[IndividualElement] = []
+            family_records: list[FamilyElement] = []
 
-            # Find/add person records
+            # Person records need to be in place before family.
+            # Ancestry.com GEDCOM exports use that order, but collect them out first to make sure of it
             for element in root_child_elements:
                 if isinstance(element, IndividualElement):
-                    self.handle_person(element)
-
-            # Find/add family records (after person records exist, so we can look up parents)
-            # also save intermediate dictionary: CHIL INDI - family INDI
-            for element in root_child_elements:
+                    person_records.append(element)
                 if isinstance(element, FamilyElement):
-                    self.handle_family(element)
+                    family_records.append(element)
 
-            # Now that we've saved all the people and families, populate orig_family on people records
-            self.add_person_family_values(self.child_family_dict)
+            # validate file
+            valid_person_records, message = self.validate_person_ids_unique(person_records)
+            if message:
+                run_failures = f"Validation failed, fix before importing: {message}"
 
+            if valid_person_records:
+                self.stdout.write("File passes validation")
+
+                # Process person records
+                for item in person_records:
+                    self.handle_person(item)
+
+                # Process family records
+                for item in family_records:
+                    self.handle_family(item)
+
+                # Populate orig_family on people records
+                self.add_person_family_values(self.child_family_dict)
         else:
             raise CommandError("That gedcom file does not exist in the expected directory")
 
@@ -79,41 +95,63 @@ class Command(BaseCommand):
 
         # Display and log them
         self.stdout.write(self.style.SUCCESS("You passed filename: ") + str(filename))
-        self.stdout.write(run_results)
-        f = open("ImportInfo.txt", "w")
-        f.write(run_results)
-        f.closed
+        if run_failures:
+            self.stdout.write(self.style.ERROR(run_failures))
+        else:
+            self.stdout.write(run_results)
+            f = open("ImportInfo.txt", "w")
+            f.write(run_results)
+            f.closed
 
-    # check a FACT to see if this is an AKA with a value matching a person record (unique ID)
-    # return two things: matching person (or False), and uuid value from AKA FACT
-    def check_fact_for_AKA(self, item, display_name, element):
-        has_type_AKA = False
-        matching_record = False
-        gedcom_uuid = ""
+    # Validate no duplicated unique ids (AKA FACT items in people_records)
+    def validate_person_ids_unique(self, person_records):
+        unique_id_list = []
+        message = None
+        for record in person_records:
+            gedcom_uuid = self.check_record_for_unique_id(record)
+            if gedcom_uuid and gedcom_uuid in unique_id_list:
+                message = f"{gedcom_uuid} is not unique in the file!"
+                return [False, message]
+            else:
+                unique_id_list.append(gedcom_uuid)
+        return [True, message]
 
+    # If person record has an AKA item, grab the unique ID
+    # (item will have a child FACT, which will have children TYPE and NOTE)
+    def check_record_for_unique_id(self, item):
         children = item.get_child_elements()
         for x in children:
-            if "AKA" in str(x):
-                has_type_AKA = True
+            if "FACT" in str(x):
+                fact_children = x.get_child_elements()
 
-        if has_type_AKA:
-            for x in children:
-                if "NOTE" in str(x):
-                    gedcom_uuid = str(x).replace("2 NOTE ", "").replace("\r\n", "").strip()
+                # Only look at NOTE if it's part of an AKA fact
+                this_is_aka_fact = False
+                for line in fact_children:
+                    if "AKA" in str(line):
+                        this_is_aka_fact = True
+                        break
+                if this_is_aka_fact:
+                    for line in fact_children:
+                        if "NOTE" in str(line):
+                            gedcom_uuid = str(line).replace("2 NOTE ", "").replace("\r\n", "").strip()
+                            return gedcom_uuid
+        return None
 
-            # gedcom_uuid = str(item).replace("1 FACT ", "").replace("\r\n", "").strip()
-            try:
-                matching_records = Person.objects.filter(gedcom_uuid=gedcom_uuid)
-                if matching_records.count() > 1:
-                    print(f"ATTENTION!! MULTIPLE DATABASE RECORDS HAVE SAME UNIQUE ID: {gedcom_uuid}")
-                matching_record = matching_records.first()
-            except Person.DoesNotExist:
-                matching_record = False
-                print(
-                    "REVIEW: " + display_name + ": got AKA FACT value without matching person record: ",
-                    gedcom_uuid,
-                )
-        return matching_record, gedcom_uuid
+    # Check database for person record with given unique ID
+    def check_db_for_person_with_id(self, gedcom_uuid, display_name):
+        matching_record = None
+        try:
+            matching_records = Person.objects.filter(gedcom_uuid=gedcom_uuid)
+            if matching_records.count() > 1:
+                print(f"{matching_records.count()} DATABASE RECORDS HAVE SAME UNIQUE ID: {gedcom_uuid}!!")
+            matching_record = matching_records.first()
+        except Person.DoesNotExist:
+            matching_record = False
+            print(
+                "REVIEW: " + display_name + ": got AKA FACT value without matching person record: ",
+                gedcom_uuid,
+            )
+        return matching_record
 
     # Process a person record in the gedcom file
     def handle_person(self, element):
@@ -131,27 +169,24 @@ class Command(BaseCommand):
         occupation = element.get_occupation()
         (deathdate, deathplace, sources) = element.get_death_data()
         display_name = gedcom_first_middle + " " + last
-        element_children = element.get_child_elements()
-
         skip_record = False
 
         if display_name.strip() in self.person_skip_list:
             skip_record = True
             print(f"Skipping record matching person_skip_list: {display_name}")
         else:
-            for child in element_children:
-                if "FACT" in str(child):
-                    matching_record, uuid_from_fact = self.check_fact_for_AKA(child, display_name, element)
-                    gedcom_uuid = uuid_from_fact
-                    if gedcom_uuid in self.unique_id_list:
-                        print(f"GEDCOM FILE HAS REPEATED UNIQUE ID: {gedcom_uuid}, SKIPPING PERSON")
-                        # Note: in this case, only the second/subsequent person records will be skipped
-                        # (If the mistaken record appears first in the file, our person will get that gedcom_indi)
-                    else:
-                        self.unique_id_list.append(gedcom_uuid)
-                        if matching_record:
-                            skip_record = True
-                            self.update_matching_person_record(matching_record, element, gedcom_indi)
+            gedcom_uuid = self.check_record_for_unique_id(element)
+            if gedcom_uuid:
+                matching_record = self.check_db_for_person_with_id(gedcom_uuid, display_name)
+                if gedcom_uuid in self.unique_id_list:
+                    print(f"GEDCOM FILE HAS REPEATED UNIQUE ID: {gedcom_uuid}, SKIPPING PERSON")
+                    # Note: in this case, only the second/subsequent person records will be skipped
+                    # (If the mistaken record appears first in the file, our person will get that gedcom_indi)
+                else:
+                    self.unique_id_list.append(gedcom_uuid)
+                    if matching_record:
+                        skip_record = True
+                        self.update_matching_person_record(matching_record, element, gedcom_indi)
 
         if skip_record:
             self.person_skipped_count += 1
