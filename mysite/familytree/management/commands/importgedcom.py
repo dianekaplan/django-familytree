@@ -18,7 +18,7 @@ class Command(BaseCommand):
     person_added_count = 0
     family_added_count = 0
     person_skipped_count = 0
-    child_family_dict = {}  # map of gedcom child/family associations (eg. P7: F1)
+    child_family_dict = {}  # map of gedcom child/family associations (eg. I7: F1)
 
     gedcom_data_path = Path(
         "mysite/familytree/management/commands/gedcom_files/"
@@ -81,7 +81,7 @@ class Command(BaseCommand):
                     self.handle_family(item)
 
                 # Populate orig_family on people records
-                self.add_person_family_values(self.child_family_dict)
+                self.add_person_family_values()
         else:
             raise CommandError("That gedcom file does not exist in the expected directory")
 
@@ -209,11 +209,12 @@ class Command(BaseCommand):
     # Summary: update/add a record if the WIFE and HUSB entries match person records in our database
     # (This can include newly-imported people; the ancestry.com GEDCOM export lists person records before family)
     def handle_family(self, element):
-        gedcom_indi = str(element).replace(" FAM", "").replace("0 ", "").replace("\r\n", "")
+        family_gedcom_indi = str(element).replace(" FAM", "").replace("0 ", "").replace("\r\n", "")
         self.gedcom_family_records += 1
         no_kids_bool = True
-        person_with_wife_indi = ""
-        person_with_husband_indi = ""
+        person_with_wife_indi = None
+        person_with_husband_indi = None
+        family_children_array = []
         element_children = element.get_child_elements()
         marriage_date = ""
         husband_indi = ""
@@ -253,12 +254,11 @@ class Command(BaseCommand):
                 )  # originally did += for text field, but if this works we won't need to use that text field
                 try:
                     this_person = Person.objects.get(gedcom_indi=child_indi)
+                    family_children_array.append(this_person)
                 except:
                     continue
-                if child_indi not in self.child_family_dict:
-                    self.child_family_dict[child_indi] = gedcom_indi  # add dictionary entry if existing person
 
-        # Process the family record if it matches with two people in our database
+        # With gathered info, process the family record if both parents match people in our database
         if person_with_wife_indi and person_with_husband_indi:
             display_name = person_with_wife_indi.display_name + " & " + person_with_husband_indi.display_name
             given_spouses_existing_record = self.find_existing_family_record(
@@ -270,14 +270,14 @@ class Command(BaseCommand):
             existing_family_record = given_spouses_existing_record or spouses_swapped_existing_record
 
             if existing_family_record:
-                existing_family_record.gedcom_indi = gedcom_indi
+                existing_family_record.gedcom_indi = family_gedcom_indi
                 existing_family_record.wife_indi = wife_indi
                 existing_family_record.husband_indi = husband_indi
                 existing_family_record.save()
             else:
                 # create a family record for these two people
                 (obj, created_bool) = Family.objects.get_or_create(
-                    gedcom_indi=gedcom_indi,
+                    gedcom_indi=family_gedcom_indi,
                     display_name=display_name,
                     wife_indi=wife_indi,
                     husband_indi=husband_indi,
@@ -296,14 +296,21 @@ class Command(BaseCommand):
                 if created_bool:
                     self.family_added_count += 1
 
+            # If family has children in our database, update child_family_dict
+            if len(family_children_array) > 0:
+                for child in family_children_array:
+                    their_indi_value = child.gedcom_indi
+                    self.child_family_dict[their_indi_value] = family_gedcom_indi
+
     # Loop through dictionary
-    def add_person_family_values(self, child_family_dict):
+    def add_person_family_values(self):
+        this_person = None
         for entry in self.child_family_dict:
             try:
                 this_person = Person.objects.get(gedcom_indi=entry)
             except:
                 print(f"Gedcom file had child/family association where we didn't find person: {entry}")
-                # {child_family_dict.get(entry)}")
+
             try:
                 orig_family = Family.objects.get(gedcom_indi=self.child_family_dict.get(entry))
             except:
