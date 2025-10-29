@@ -366,7 +366,7 @@ class Command(BaseCommand):
             return None
 
         else:
-            result = ""
+            result = None
             try:
                 result = dateutil.parser.parse(date_string)
             finally:
