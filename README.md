@@ -6,11 +6,10 @@ common geneology standard used on sites like ancestry.com), and allow you to:
 - summarize 'family history' for each branch of the family, to help pull together narratives to orient your users
 
 **Overview**
-This tool provides a way to set up a more customized display for your family tree, pulling the people/families from your
-GEDCOM file to set up the structure (you can also add them one at a time using the django admin), but where you then add
-your own custom content and have control over the display. For now this assumes working knowledge of Django, as well as
-having some media server to host your images. The instance of my family tree runs on Heroku, using the Cloudinary plugin
-to host images and video/audio files.
+This tool offers a way to set up a more customized display for your family tree, pulling the people/families from your
+GEDCOM file to set up the structure (you can also add/edit them within django admin), but where you then add
+custom content and have control over the display. This assumes working knowledge of Django, and having some media server
+to host your images. My family tree instance runs on Heroku, using the Cloudinary plugin to host images and video/audio files.
 
 **Determine what 'branches' to set up for your family**
 Some relatives/users are only related to one part of the family, so I want to only show them people/images related to them.
@@ -23,11 +22,12 @@ Setup: in the admin area, add up to 4 branches, then specify which branch(es) ap
 people, family, images, and more.
 
 **Have a way to map these records to those on your ancestry tree**
-After the initial GEDCOM import is done, you'll still be learning new things in your family tree and adding new people.
-You need a way to map a person's record in this tree with the one in ancestry, and unfortunately the GEDCOM format
-doesn't provide unique IDs. This tool has scripts to generate unique IDs for every person, but we then need to add them
-in to the corresponding records in ancestry.com. (That way subsequent imports recognize which people are already there
-and don't need to be re-added).
+After the initial GEDCOM import is done, you can still edit/add people within ancestry, and do a subsequent import to
+transfer those updates into your tree here. Unfortunately the GEDCOM format doesn't have unique IDs for people or families,
+so I have a script to generate/add unique IDs for every person in this tree, you just need to also tack those values onto
+the corresponding people in ancestry.com (once), so existing people are recognized during subsequent imports, rather than
+duplicated.
+
 
 **Requirements**
 You'll need:
