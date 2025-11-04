@@ -55,7 +55,7 @@ if any([arg in sys.argv for arg in ["test"]]):
 
 # Handling Key Import Errors
 def get_env_variable(var_name):
-    """ Get the environment variable or return exception """
+    """Get the environment variable or return exception"""
     try:
         return os.environ[var_name]
     except KeyError:
@@ -91,6 +91,7 @@ MEDIA_SERVER = "https://res.cloudinary.com/hhuyx4tno/"
 
 LARAVEL_SITE_CREATION = datetime.strptime("2015-12-01", "%Y-%m-%d").date()
 DJANGO_SITE_CREATION = datetime.strptime("2021-07-14", "%Y-%m-%d").date()
+ROOT_FAMILY = 17
 NEWEST_GENERATION_FOR_GUEST = 13
 ADMIN_EMAIL_SEND_FROM = "diane@ourbigfamilytree.com"
 ADMIN_EMAIL_ADDRESS = "dianekaplan@gmail.com"
@@ -101,7 +102,7 @@ if ENV_ROLE == "development":
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
     DB_HOST = "localhost"
-    DB_DATABASE =  "aug27_2024_backup"
+    DB_DATABASE = "aug27_2024_backup"
     DB_USER = None
     DB_PASSWORD = None
     DB_OPTIONS = {"sslmode": "allow"}
@@ -217,9 +218,7 @@ if "test" in sys.argv:
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},

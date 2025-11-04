@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from ...models import Family, Person
@@ -14,13 +15,6 @@ These numbers will only be applied to the 'direct' families, the ancestors of th
 
 class Command(BaseCommand):
     help = "Populates direct_family_number values for migrated database (internal use)"
-
-    def add_arguments(self, parser):
-        parser.add_argument(
-            "root family",
-            type=int,
-            help="root family to orient tree display",
-        )
 
     # given a family, get specified spouse
     def get_family_spouse(self, family, type):
@@ -92,7 +86,20 @@ class Command(BaseCommand):
         self.set_family_value(first_family, starting_family_value)
         self.populate_next_family(first_family, starting_family_value)
 
-    def handle(self, *args, **kwargs):
-        root_family = kwargs["root family"]
+    def handle(self, **options):
+        root_family_id = settings.ROOT_FAMILY
+
+        # Verify ROOT_FAMILY exists in database
+        try:
+            Family.objects.get(id=root_family_id)
+        except Family.DoesNotExist:
+            self.stdout.write(
+                self.style.ERROR(
+                    f"Error: ROOT_FAMILY (ID: {root_family_id}) not found in database. "
+                    f"Please ensure ROOT_FAMILY is set correctly in settings."
+                )
+            )
+            return
+
         print("CALLING populate_family_number_values")
-        self.populate_family_number_values(root_family)
+        self.populate_family_number_values(root_family_id)

@@ -1,13 +1,14 @@
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from familytree.models import Family, Person
 
 
 class PopulateDirectFamilyNumbersCommandTests(TestCase):
     def run_command(self, root_family_id):
-        # Positional argument is required by the command ("root family")
-        call_command("populateDirectFamilyNumbers", root_family_id)
+        # Command uses ROOT_FAMILY from settings, override for testing
+        with override_settings(ROOT_FAMILY=root_family_id):
+            call_command("populateDirectFamilyNumbers")
 
     def test_sets_numbers_for_root_and_parents(self):
         # Create root family and spouses
