@@ -129,9 +129,10 @@ if ENV_ROLE == "prod":
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
-    "family-django-demo.herokuapp.com",
-    "family-django-stage.herokuapp.com",
-    "family-django-prod.herokuapp.com",
+    ".herokuapp.com",
+    # "family-django-demo.herokuapp.com",
+    # "family-django-stage.herokuapp.com",
+    # "family-django-prod.herokuapp.com",
     ".ourbigfamilytree.com",
 ]
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
