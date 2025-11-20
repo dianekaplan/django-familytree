@@ -129,6 +129,7 @@ if ENV_ROLE == "prod":
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
+    "family-django-demo.herokuapp.com",
     "family-django-stage.herokuapp.com",
     "family-django-prod.herokuapp.com",
     ".ourbigfamilytree.com",
