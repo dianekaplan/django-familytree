@@ -49,10 +49,10 @@ class Command(BaseCommand):
             new_lastname_value = person.last.replace(name, replacement_name)
             if new_lastname_value:
                 old = person.last
-            person.last = new_lastname_value
-            self.stdout.write(f"Update person last: {old} -> {new_lastname_value}")
-            if not getattr(self, "dry_run", True):
-                person.save()
+                person.last = new_lastname_value
+                self.stdout.write(f"Update person last: {old} -> {new_lastname_value}")
+                if not getattr(self, "dry_run", True):
+                    person.save()
 
     def update_person_record_displayname(self, person, name, replacement_name):
         name_groupings = person.display_name.split(" ", 1)
