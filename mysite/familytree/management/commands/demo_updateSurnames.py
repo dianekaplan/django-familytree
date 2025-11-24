@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
     def determine_replacement_name(self, name) -> str:
         branch_lastnames = list(Branch.objects.values_list("display_name", flat=True).distinct())
-        branch_mappings = {"Husband": "Adams", "Keem": "Barvian", "Kemler": "Cohen", "Kobrin": "Davies"}
+        branch_mappings = {"Husband": "Connor", "Keem": "Fischer", "Kemler": "Abrams", "Kobrin": "Berg"}
         if name in branch_lastnames:
             return branch_mappings[name]
         else:
@@ -47,10 +47,10 @@ class Command(BaseCommand):
             new_lastname_value = replacement_name
         elif person.last and name in person.last:  # handle hyphenated cases, etc
             new_lastname_value = person.last.replace(name, replacement_name)
-        if new_lastname_value:
-            old = person.last
+            # if new_lastname_value:
+            #     old = person.last
             person.last = new_lastname_value
-            self.stdout.write(f"Update person last: {old} -> {new_lastname_value}")
+            # self.stdout.write(f"Update person last: {old} -> {new_lastname_value}")
             if not getattr(self, "dry_run", True):
                 person.save()
 
