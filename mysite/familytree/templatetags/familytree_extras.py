@@ -25,7 +25,7 @@ def get_class(object):
 
 @register.simple_tag
 def get_history_filepath(branch):
-    result = "familytree/custom/family_history/" + str(branch) + ".html"
+    result = "familytree/custom/family_history/family_" + str(branch.id) + ".html"
     return result
 
 
