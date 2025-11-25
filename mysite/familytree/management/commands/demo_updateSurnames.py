@@ -47,8 +47,8 @@ class Command(BaseCommand):
             new_lastname_value = replacement_name
         elif person.last and name in person.last:  # handle hyphenated cases, etc
             new_lastname_value = person.last.replace(name, replacement_name)
-            if new_lastname_value:
-                old = person.last
+        if new_lastname_value:
+            old = person.last
             person.last = new_lastname_value
             self.stdout.write(f"Update person last: {old} -> {new_lastname_value}")
             if not getattr(self, "dry_run", True):
