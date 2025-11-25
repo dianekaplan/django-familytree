@@ -11,6 +11,12 @@ GEDCOM file to set up the structure (you can also add/edit them within django ad
 custom content and have control over the display. This assumes working knowledge of Django, and having some media server
 to host your images. My family tree instance runs on Heroku, using the Cloudinary plugin to host images and video/audio files.
 
+**See a demo site**
+See demo site <a href="https://family-django-demo-ce045c96cd3c.herokuapp.com/familytree/" target="_blank">HERE</a>,
+using test user that sees 4 family branches:  dianekaplan+4branches@gmail.com / password2025
+
+See <a href="https://github.com/dianekaplan/django-familytree/wiki" target="_blank">wiki documentation</a> for more details.
+
 **Determine what 'branches' to set up for your family**
 Some relatives/users are only related to one part of the family, so I want to only show them people/images related to them.
 Define family branches in the admin UI as a way of (a) sorting people for clearer display and (b) showing each user the people
