@@ -29,7 +29,8 @@
     {% endif %}
 </div>
 
-<div style="float: left; width: 100%;">
+{% if person.notes1 or person.notes2 or person.notes3 or notes or stories or videos or audio_files or images or group_images %}
+<div class="notes-pictures-card">
     {% if person.notes1 %} <div style="margin: 10px">{{ person.notes1 | safe}} </div>{% endif %}
     {% if person.notes2 %} <div style="margin: 10px">{{ person.notes2 | safe}} </div>{% endif %}
     {% if person.notes3 %} <div style="margin: 10px">{{ person.notes3 | safe}} </div>{% endif %}
@@ -38,26 +39,19 @@
     <h3>Notes: </h3>
         {% include "familytree/_notes_display.html" with notes=notes %}
     {% endif %}
-</div>
-<div style="float: left; width: 100%;">
+
     {% include "familytree/_stories_display.html" with stories=stories %}
-</div>
 
-
-{% if videos %}
-    <div style="float: left; width: 100%;">
+    {% if videos %}
         <h3>Videos: </h3>
         <div>
             {% for video in videos %}
                 {% include "familytree/video_link.html" with video=video show_hover=True %}
             {% endfor %}
         </div>
-    </div>
-{% endif %}
+    {% endif %}
 
-
-{% if audio_files %}
-    <div style="float: left; width: 100%;">
+    {% if audio_files %}
         <h3>Audio links: </h3>
         <div>
             {% for file in audio_files %}
@@ -66,19 +60,15 @@
                 ({{ file.recording_date}})<br/>
             {% endfor %}
         </div>
-    </div>
-{% endif %}
+    {% endif %}
 
-{% if images %}
-    <div style="float: left; width: 100%;">
+    {% if images %}
         <h3>Pictures of {{ person.first }}: </h3>
         {% for image in images %}
             {% include "familytree/image_link.html" with image=image height=150 show_hover=False %}
         {% endfor %}
-    </div>
-{% endif %}
-<br/><br/><br/>
-<div style="float: left; width: 100%;">
+    {% endif %}
+
     {% if group_images %}
         <h3>Group pictures:</h3>
         {% for image in group_images %}
@@ -86,5 +76,6 @@
         {% endfor %}
     {% endif %}
 </div>
+{% endif %}
 
 {% endblock content %}
