@@ -179,3 +179,14 @@ body {
 #center_parents img {
   vertical-align: middle;
 }
+
+.notes-pictures-card {
+  background-color: #fafafa;
+  border-radius: 10px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  clear: both;
+}

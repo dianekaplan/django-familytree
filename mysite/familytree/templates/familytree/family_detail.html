@@ -49,7 +49,8 @@
     {% endif %}
     </div>
 
- <div style="float: left;width: 100%;">
+{% if family.notes1 or family.notes2 or family.notes3 or notes or stories or images %}
+<div class="notes-pictures-card">
     {% if family.notes1 %} {{ family.notes1 | safe }} <br/>{% endif %}
     {% if family.notes2 %} {{ family.notes2 | safe }} <br/>{% endif %}
     {% if family.notes3 %} {{ family.notes3 | safe }} <br/>{% endif %}
@@ -58,13 +59,9 @@
      <h2>Notes: </h2>
         {% include "familytree/_notes_display.html" with notes=notes %}
     {% endif %}
- </div>
 
-<div style="float: left; width: 100%;">
     {% include "familytree/_stories_display.html" with stories=stories %}
-</div>
 
- <div style="float: left;width: 100%;">
     {% if images %}
     <h2>Images:</h2>
     <ul>
@@ -73,6 +70,7 @@
     {% endfor %}
     </ul>
     {% endif %}
- </div>
+</div>
+{% endif %}
 
 {% endblock content %}
