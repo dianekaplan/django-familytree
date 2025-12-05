@@ -466,7 +466,7 @@ def add_note(request, object_id, object_type):
     if request.method == "POST":
         if note_form.is_valid():
             # make django_admin_log entry
-            LogEntry.objects.log_action(
+            LogEntry.objects.create(
                 user_id=editing_user.id,
                 content_type_id=ContentType.objects.get_for_model(Note).pk,
                 object_id=(str(object_type) + ":" + str(object_id)),
@@ -508,7 +508,7 @@ def edit_person(request, person_id):
             send_mail(subject, html_message, from_email, recipient_list, fail_silently=False)
 
             # make django_admin_log entry
-            LogEntry.objects.log_action(
+            LogEntry.objects.create(
                 user_id=editing_user.id,
                 content_type_id=ContentType.objects.get_for_model(person).pk,
                 object_id=person.id,
