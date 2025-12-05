@@ -797,8 +797,6 @@ def video_index(request):
     browser = request.user_agent.browser.family
     user_is_guest = profile.guest_user
 
-    _, branch2_name, _, _ = get_branch_names()
-
     for branch in existing_branches:
         if branch in accessible_branches:
             name = branch.display_name
@@ -808,7 +806,6 @@ def video_index(request):
     context = {
         "video_list": sorted_list,
         "accessible_branches": accessible_branches,
-        "branch2_name": branch2_name,
         "user_person": profile.person,
         "media_server": media_server,
         "browser": browser,
