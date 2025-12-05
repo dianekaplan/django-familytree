@@ -40,15 +40,34 @@ DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
 NEWEST_GENERATION_FOR_GUEST = settings.NEWEST_GENERATION_FOR_GUEST  # guest users only see generations older than this
 root_url = settings.ROOT_URL
 
-# @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches.
-branch1_name = Branch.objects.filter(id=1)
-branch2_name = Branch.objects.filter(id=2)
-branch3_name = Branch.objects.filter(id=3)
-branch4_name = Branch.objects.filter(id=4)
-show_by_branch = True if branch1_name else False
 login_url = "/familytree/landing/"
-existing_branches_list = list(Branch.objects.all())
-branch_count = len(existing_branches_list)
+
+
+# @@TODO: this is specific to a 4-branch setup. Make it more flexible to handle other numbers of branches.
+def get_branch_names():
+    """Lazily fetch branch names to avoid queries during test discovery."""
+    return (
+        Branch.objects.filter(id=1),
+        Branch.objects.filter(id=2),
+        Branch.objects.filter(id=3),
+        Branch.objects.filter(id=4),
+    )
+
+
+def get_existing_branches_list():
+    """Lazily fetch all branches to avoid queries during test discovery."""
+    return list(Branch.objects.all())
+
+
+def get_branch_count():
+    """Lazily compute branch count to avoid queries during test discovery."""
+    return len(get_existing_branches_list())
+
+
+def get_show_by_branch():
+    """Lazily determine if we should show by branch to avoid queries during test discovery."""
+    branch1_name = Branch.objects.filter(id=1)
+    return True if branch1_name else False
 
 
 def get_branch_class(accessible_branches, request):
@@ -210,6 +229,11 @@ def family_index(request):
     accessible_branches = get_valid_branches(request)
     user_is_guest = Profile.objects.get(user=request.user).guest_user
 
+    existing_branches_list = get_existing_branches_list()
+    branch_count = get_branch_count()
+    branch1_name, branch2_name, branch3_name, branch4_name = get_branch_names()
+    show_by_branch = get_show_by_branch()
+
     if branch_count > 0:
         branch1_families = set_branch_families(existing_branches_list, 0)
     else:
@@ -275,6 +299,11 @@ def person_index(request):
     accessible_branches = get_valid_branches(request)
     profile = get_display_profile(request).first()
     user_is_guest = profile.guest_user
+
+    existing_branches_list = get_existing_branches_list()
+    branch_count = get_branch_count()
+    branch1_name, branch2_name, branch3_name, branch4_name = get_branch_names()
+    show_by_branch = get_show_by_branch()
 
     if branch_count > 0:
         branch1_people = set_branch_people(existing_branches_list, 0)
@@ -611,7 +640,6 @@ def image_index(request):
     context = {
         "image_list": family_album_data,
         "accessible_branches": accessible_branches,
-        "branch2_name": branch2_name,
         "profile": profile,
         "user_person": profile.person,
         "media_server": media_server,
@@ -701,6 +729,10 @@ def story_index(request):
     browser = request.user_agent.browser.family
     user_is_guest = profile.guest_user
 
+    existing_branches_list = get_existing_branches_list()
+    branch_count = get_branch_count()
+    branch1_name, branch2_name, branch3_name, branch4_name = get_branch_names()
+
     try:
         for branch in accessible_branches:
             this_branch_stories = (
@@ -771,7 +803,6 @@ def video_index(request):
     context = {
         "video_list": sorted_list,
         "accessible_branches": accessible_branches,
-        "branch2_name": branch2_name,
         "user_person": profile.person,
         "media_server": media_server,
         "browser": browser,
@@ -984,7 +1015,8 @@ def user_metrics(request):
 
     accessible_branches = get_valid_branches(request)
     profiles = Profile.objects.all()
-    existing_branches_list = list(Branch.objects.all())
+    existing_branches_list = get_existing_branches_list()
+    branch_count = get_branch_count()
 
     last_login_never = [x for x in profiles if not x.last_login()]
     last_login_past_month = [x for x in profiles if x.last_login() and x.last_login().date() > month_ago_date]
