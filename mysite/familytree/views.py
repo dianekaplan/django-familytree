@@ -620,8 +620,6 @@ def image_index(request):
     accessible_branches = get_valid_branches(request)
     user_is_guest = profile.guest_user
 
-    _, branch2_name, _, _ = get_branch_names()
-
     image_cache_name = "images_" + str(profile.user)
     family_album_data = cache.get(image_cache_name)
     if not family_album_data:
@@ -642,7 +640,6 @@ def image_index(request):
     context = {
         "image_list": family_album_data,
         "accessible_branches": accessible_branches,
-        "branch2_name": branch2_name,
         "profile": profile,
         "user_person": profile.person,
         "media_server": media_server,
