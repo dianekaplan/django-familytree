@@ -1,15 +1,35 @@
-python-gedcom
-django
-django-heroku
-Faker # used to generate fake names and dates for scrubbing data on demo site
-gunicorn
-pre-commit
-python-dateutil
-django_user_agents # used to identify the visitor's browser (for safari workaround)
-whitenoise # used for static files
-django-debug-toolbar
-psycopg2-binary # PostgreSQL database adapter
-pytest
-pytz
-ruff
-tzdata # added to fix tz recognition issue on user metrics page
+asgiref==3.9.2
+cfgv==3.4.0
+distlib==0.4.0
+dj-database-url==3.0.1
+Django==6.0
+django-debug-toolbar==6.1.0
+django-heroku==0.3.1
+django-user-agents==0.4.0
+Faker==38.2.0
+filelock==3.19.1
+gunicorn==23.0.0
+identify==2.6.14
+iniconfig==2.1.0
+nodeenv==1.9.1
+packaging==25.0
+platformdirs==4.4.0
+pluggy==1.6.0
+pre_commit==4.5.0
+psycopg2==2.9.10
+psycopg2-binary==2.9.11
+Pygments==2.19.2
+pytest==9.0.1
+python-dateutil==2.9.0.post0
+python-gedcom==1.0.0
+pytz==2025.2
+PyYAML==6.0.3
+ruff==0.14.8
+six==1.17.0
+sqlparse==0.5.3
+tzdata==2025.2
+ua-parser==1.0.1
+ua-parser-builtins==0.18.0.post1
+user-agents==2.2.0
+virtualenv==20.34.0
+whitenoise==6.11.0
