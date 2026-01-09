@@ -4,18 +4,20 @@
 {% block content %}
 
 <div style="float: left; width: 80%;">
-    <div style="margin-bottom: 20px; margin-top: 20px; margin-right: 10px;">
-        <img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}"  style="max-width:100%;">
-    </div>
-    <div>
-        {% if image.caption %}
-            <h3>{{ image.caption }}</h3>
-        {% endif %}
-        <b>{{ image.year }}</b>
-        {% if image.notes %}
-            <p>{{ image.notes }}</p>
-        {% endif %}
-    </div>
+    <turbo-frame id="image-frame">
+        <div style="margin-bottom: 20px; margin-top: 20px; margin-right: 10px;">
+            <img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}"  style="max-width:100%;">
+        </div>
+        <div>
+            {% if image.caption %}
+                <h3>{{ image.caption }}</h3>
+            {% endif %}
+            <b>{{ image.year }}</b>
+            {% if image.notes %}
+                <p>{{ image.notes }}</p>
+            {% endif %}
+        </div>
+    </turbo-frame>
  </div>
 
  <div style="float: right; width: 20%; margin-top: 20px;">
@@ -39,4 +41,23 @@
     {%  endif %}
  </div>
 
+    {# thumbnails row when images list is present #}
+        {% if images %}
+            {% load static %}
+            <div style="clear: both; margin-top: 20px; max-width: 98vw;">
+                <h3>{{ gallery_heading }}</h3>
+                <div id="gallery-thumbnails" style="display: inline-block; vertical-align: middle; width: 90vw; overflow-x: auto; white-space: nowrap;">
+                    <button id="gallery-arrow-left" onclick="galleryPrev()" style="vertical-align: middle; font-size: 2em; background: none; border: none; cursor: pointer; display: none;">&#8592;</button>
+                    {% for img in images %}
+                        <span class="gallery-thumb" style="display: none;">
+                            {% include "familytree/image_link.html" with image=img height=75 show_hover=False images=images %}
+                        </span>
+                    {% endfor %}
+                    {% if images|length > 10 %}
+                        <button id="gallery-arrow-right" onclick="galleryNext()" style="vertical-align: middle; font-size: 2em; background: none; border: none; cursor: pointer;">&#8594;</button>
+                    {% endif %}
+                </div>
+            </div>
+            <script src="{% static 'familytree/gallery_scroller.js' %}"></script>
+        {% endif %}
 {% endblock content %}

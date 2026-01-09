@@ -1,7 +1,7 @@
  {% if image.id %}  {#  shouldn't need this, but there were some records coming through without ID! #}
 
     <div style="display: inline-block; margin-bottom:10px;" class="image_container">
-        <a href="{% url 'image_detail' image.id  %}">
+        <a href="{% url 'image_detail' image.id  %}{% if images %}?images={% for img in images %}{% if not forloop.first %},{% endif %}{{ img.id }}{% endfor %}{% if image_set %}&set={{ image_set }}{% endif %}{% endif %}"{% if images %} data-turbo-frame="image-frame"{% endif %}>
             {%  if image.little_name %}
                 <img src="{{ media_server }}/image/upload/h_{{ height }},r_20/{{ image.little_name }}" class="image"/>
             {%  else %}

@@ -595,6 +595,31 @@ def image_detail(request, image_id):
     this_image_person, this_image_family, image_people = Image.image_subjects(image)
     image_full_path = media_server + "/image/upload/r_20/" + image.big_name
 
+    # parse optional images list from querystring: ?images=1,2,3
+    images_param = request.GET.get("images")
+    image_set = request.GET.get("set", None)
+    images_list = None
+    if images_param:
+        try:
+            ids = [int(x) for x in images_param.split(",") if x.strip().isdigit()]
+            if ids:
+                imgs_qs = Image.objects.filter(id__in=ids)
+                # preserve order from ids
+                imgs_by_id = {img.id: img for img in imgs_qs}
+                images_list = [imgs_by_id[i] for i in ids if i in imgs_by_id]
+        except Exception:
+            images_list = None
+
+    # Determine gallery heading by image_set param
+    gallery_heading = "Gallery"
+    if image_set is not None:
+        if image_set == "solo":
+            gallery_heading = "Solo pictures:"
+        elif image_set == "group":
+            gallery_heading = "Group pictures:"
+    elif images_list and this_image_family:
+        gallery_heading = "Family images:"
+
     return render(
         request,
         "familytree/image_detail.html",
@@ -609,6 +634,8 @@ def image_detail(request, image_id):
             "user": profile.user,
             "media_server": media_server,
             "user_is_guest": user_is_guest,
+            "images": images_list,
+            "gallery_heading": gallery_heading,
         },
     )
 

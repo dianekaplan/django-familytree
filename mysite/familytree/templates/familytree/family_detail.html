@@ -66,7 +66,7 @@
     <h2>Images:</h2>
     <ul>
     {% for image in images %}
-        {% include "familytree/image_link.html" with image=image height=150 show_hover=False %}
+        {% include "familytree/image_link.html" with image=image height=150 show_hover=False images=images %}
     {% endfor %}
     </ul>
     {% endif %}
