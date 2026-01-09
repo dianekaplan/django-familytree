@@ -129,6 +129,45 @@ class TestOtherViews(TestCase):
         response = self.client.get(reverse("outline"))
         self.assertEqual(response.status_code, 200)
 
+
+class TestImageDetailWithImages(TestCase):
+    def setUp(self):
+        # basic user/profile setup
+        self.client = Client()
+        self.user = User.objects.create_user("jane", "jane@example.com", "janepass")
+        self.person = create_person(display_name="Test Person")
+        self.profile = Profile()
+        self.profile.user = self.user
+        self.profile.guest_user = False
+        self.profile.person = self.person
+        self.profile.save()
+
+    def test_image_detail_with_images_param(self):
+        # create two images
+        img1 = create_image(big_name="one.jpg")
+        img2 = create_image(big_name="two.jpg")
+
+        # login
+        self.client.login(username="jane", password="janepass")
+
+        # request image detail with images param
+        url = reverse("image_detail", args=(img1.id,)) + "?images=%d,%d" % (img1.id, img2.id)
+        response = self.client.get(url)
+
+        # should render the page
+        self.assertEqual(response.status_code, 200)
+
+        # context should include ordered images
+        images_ctx = response.context.get("images")
+        self.assertIsNotNone(images_ctx)
+        self.assertEqual(len(images_ctx), 2)
+        self.assertEqual(images_ctx[0].id, img1.id)
+        self.assertEqual(images_ctx[1].id, img2.id)
+
+        # thumbnails markup should include the image filenames
+        content = response.content.decode("utf-8")
+        self.assertIn("one.jpg", content)
+        self.assertIn("two.jpg", content)
         response = self.client.get(reverse("history"))
         self.assertEqual(response.status_code, 200)
 

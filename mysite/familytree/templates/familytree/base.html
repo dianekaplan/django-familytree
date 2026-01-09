@@ -17,7 +17,7 @@
         <link rel="manifest" href="{% static 'familytree/favicon/site.webmanifest' %}">
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/united/bootstrap.css">
-        <link rel="stylesheet" type="text/css" href="{% static 'familytree/style.css' %}"> 
+        <link rel="stylesheet" type="text/css" href="{% static 'familytree/style.css' %}">
         <!-- (^ Note: last stylesheet included takes precedence) -->
 
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
@@ -25,6 +25,8 @@
         <script src="{% static 'js/noframework.waypoints.js' %}"></script>
         <script src="{% static 'js/infinite.js' %}"></script>
         <script src="{% static 'js/top_nav.js' %}"></script>
+        <!-- Hotwire Turbo for partial page/frame swaps -->
+        <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@7.2.0/dist/turbo.min.js"></script>
     </head>
 
     <body>
@@ -43,4 +45,22 @@
         {% endblock content %}
     </div>
     </body>
+    <script>
+        // Update browser URL to the clicked image's canonical path
+        // when a thumbnail (targeting the image-frame) finishes loading.
+        document.addEventListener('click', function(e){
+            var a = e.target.closest && e.target.closest('a[data-turbo-frame="image-frame"]');
+            if (!a) return;
+            var href = a.getAttribute('href') || a.href;
+            if (!href) return;
+            var url = href.split('?')[0];
+            var onLoad = function(evt){
+                if (evt.target && evt.target.id === 'image-frame'){
+                    history.pushState({}, '', url);
+                    window.removeEventListener('turbo:frame-load', onLoad);
+                }
+            };
+            window.addEventListener('turbo:frame-load', onLoad);
+        });
+    </script>
 </html>
