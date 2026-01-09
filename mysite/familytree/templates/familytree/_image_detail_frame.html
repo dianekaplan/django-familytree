@@ -1,0 +1,24 @@
+{% comment %}Partial for Turbo frame swaps: main image and info only, wrapped in turbo-frame{% endcomment %}
+<div style="margin-bottom: 20px; margin-top: 20px; margin-right: 10px; display: flex; align-items: center; justify-content: center;">
+    {% if prev_image_id %}
+        <a href="{% url 'image_detail' prev_image_id %}?images={% for i in images %}{% if not forloop.first %},{% endif %}{{ i.id }}{% endfor %}{% if image_set %}&set={{ image_set }}{% endif %}"
+           data-turbo-frame="image-frame"
+           style="font-size: 3em; margin-right: 20px; text-decoration: none; color: #333;">&#8592;</a>
+    {% endif %}
+    <img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}"  style="max-width:80%; display: inline-block;">
+    {% if next_image_id %}
+        <a href="{% url 'image_detail' next_image_id %}?images={% for i in images %}{% if not forloop.first %},{% endif %}{{ i.id }}{% endfor %}{% if image_set %}&set={{ image_set }}{% endif %}"
+           data-turbo-frame="image-frame"
+           style="font-size: 3em; margin-left: 20px; text-decoration: none; color: #333;">&#8594;</a>
+    {% endif %}
+</div>
+
+<div>
+    {% if image.caption %}
+        <h3>{{ image.caption }}</h3>
+    {% endif %}
+    <b>{{ image.year }}</b>
+    {% if image.notes %}
+        <p>{{ image.notes }}</p>
+    {% endif %}
+</div>

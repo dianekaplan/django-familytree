@@ -620,24 +620,64 @@ def image_detail(request, image_id):
     elif images_list and this_image_family:
         gallery_heading = "Family images:"
 
-    return render(
-        request,
-        "familytree/image_detail.html",
-        {
-            "image": image,
-            "image_person": this_image_person,
-            "image_family": this_image_family,
-            "show_book": False,
-            "image_people": image_people,
-            "user_person": profile.person,
-            "image_full_path": image_full_path,
-            "user": profile.user,
-            "media_server": media_server,
-            "user_is_guest": user_is_guest,
-            "images": images_list,
-            "gallery_heading": gallery_heading,
-        },
-    )
+    # Compute prev/next image ids if in a gallery
+    prev_image_id = None
+    next_image_id = None
+    if images_list:
+        ids = [img.id for img in images_list]
+        if image.id in ids:
+            idx = ids.index(image.id)
+            if idx > 0:
+                prev_image_id = ids[idx - 1]
+            if idx < len(ids) - 1:
+                next_image_id = ids[idx + 1]
+
+    # Turbo partial rendering (case-insensitive header)
+    turbo_frame_header = request.headers.get("Turbo-Frame") or request.headers.get("turbo-frame")
+    if turbo_frame_header == "image-frame":
+        return render(
+            request,
+            "familytree/_image_detail_frame.html",
+            {
+                "image": image,
+                "image_person": this_image_person,
+                "image_family": this_image_family,
+                "show_book": False,
+                "image_people": image_people,
+                "user_person": profile.person,
+                "image_full_path": image_full_path,
+                "user": profile.user,
+                "media_server": media_server,
+                "user_is_guest": user_is_guest,
+                "images": images_list,
+                "gallery_heading": gallery_heading,
+                "prev_image_id": prev_image_id,
+                "next_image_id": next_image_id,
+                "image_set": image_set,
+            },
+        )
+    else:
+        return render(
+            request,
+            "familytree/image_detail.html",
+            {
+                "image": image,
+                "image_person": this_image_person,
+                "image_family": this_image_family,
+                "show_book": False,
+                "image_people": image_people,
+                "user_person": profile.person,
+                "image_full_path": image_full_path,
+                "user": profile.user,
+                "media_server": media_server,
+                "user_is_guest": user_is_guest,
+                "images": images_list,
+                "gallery_heading": gallery_heading,
+                "prev_image_id": prev_image_id,
+                "next_image_id": next_image_id,
+                "image_set": image_set,
+            },
+        )
 
 
 @login_required(login_url=login_url)
