@@ -148,8 +148,20 @@ INSTALLED_APPS = [
     "myauth",
     "django_user_agents",
     "debug_toolbar",
+    "turbo",
+    "channels",  # ASGI support, needed by turbo-django
 ]
 
+ASGI_APPLICATION = "mysite.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    }
+}
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
