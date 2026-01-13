@@ -38,15 +38,29 @@
             {%  endif %}
             {% if image_family and not image_people %}
                 <h3>Go to family's page:</h3>
-                 <a href="{% url 'family_detail' image_family.id %}">{{ image_family.display_name }}</a>
+                 <a href="{% url 'family_detail' image_family.id %}" data-turbo="false">{{ image_family.display_name }}</a>
                 <br/>
             {%  endif %}
         </div>
-
-
-
-
-
-
     </div>
+
+        {# thumbnails row when images list is present #}
+    {% if images %}
+        {% load static %}
+        <div style="clear: both; margin-top: 20px; max-width: 98vw;">
+            <h3>{{ gallery_heading }}</h3>
+            <div id="gallery-thumbnails" style="display: inline-block; vertical-align: middle; width: 90vw; overflow-x: auto; white-space: nowrap;">
+                <button id="gallery-arrow-left" onclick="galleryPrev()" style="vertical-align: middle; font-size: 2em; background: none; border: none; cursor: pointer; display: none;">&#8592;</button>
+                {% for img in images %}
+                    <span class="gallery-thumb" style="display: inline-block;">
+                        {% include "familytree/image_link.html" with image=img height=75 show_hover=False images=images %}
+                    </span>
+                {% endfor %}
+                {% if images|length > 10 %}
+                    <button id="gallery-arrow-right" onclick="galleryNext()" style="vertical-align: middle; font-size: 2em; background: none; border: none; cursor: pointer;">&#8594;</button>
+                {% endif %}
+            </div>
+        </div>
+        <script src="{% static 'familytree/gallery_scroller.js' %}"></script>
+    {% endif %}
 </turbo-frame>
