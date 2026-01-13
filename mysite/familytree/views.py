@@ -591,6 +591,7 @@ def image_detail(request, image_id):
     profile = get_display_profile(request).first()
     image = get_object_or_404(Image, pk=image_id)
     user_is_guest = profile.guest_user
+    is_mobile = request.user_agent.is_mobile
 
     this_image_person, this_image_family, image_people = Image.image_subjects(image)
     image_full_path = media_server + "/image/upload/r_20/" + image.big_name
@@ -654,6 +655,7 @@ def image_detail(request, image_id):
                 "prev_image_id": prev_image_id,
                 "next_image_id": next_image_id,
                 "image_set": image_set,
+                "is_mobile": is_mobile,
             },
         )
     else:
@@ -676,6 +678,7 @@ def image_detail(request, image_id):
                 "prev_image_id": prev_image_id,
                 "next_image_id": next_image_id,
                 "image_set": image_set,
+                "is_mobile": is_mobile,
             },
         )
 
