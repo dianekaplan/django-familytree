@@ -1,6 +1,6 @@
 // Simple gallery scroller for Django/Hotwire thumbnail row
 // Assumes thumbnails are in a div with id 'gallery-thumbnails' and each thumb has class 'gallery-thumb'
-// Increase to 10 thumbnails per row for wider gallery
+// Currently shows 10 thumbnails per row; adjust maxVisible below to change this
 (function(){
     var maxVisible = 10; // number of thumbnails to show per row
     var startIdx = 0;
