@@ -633,53 +633,38 @@ def image_detail(request, image_id):
             if idx < len(ids) - 1:
                 next_image_id = ids[idx + 1]
 
+    context = {
+        "image": image,
+        "image_person": this_image_person,
+        "image_family": this_image_family,
+        "show_book": False,
+        "image_people": image_people,
+        "user_person": profile.person,
+        "image_full_path": image_full_path,
+        "user": profile.user,
+        "media_server": media_server,
+        "user_is_guest": user_is_guest,
+        "images": images_list,
+        "gallery_heading": gallery_heading,
+        "prev_image_id": prev_image_id,
+        "next_image_id": next_image_id,
+        "image_set": image_set,
+        "is_mobile": is_mobile,
+    }
+
     # Turbo partial rendering (case-insensitive header)
     turbo_frame_header = request.headers.get("Turbo-Frame") or request.headers.get("turbo-frame")
     if turbo_frame_header == "image-frame":
         return render(
             request,
             "familytree/_image_detail_frame.html",
-            {
-                "image": image,
-                "image_person": this_image_person,
-                "image_family": this_image_family,
-                "show_book": False,
-                "image_people": image_people,
-                "user_person": profile.person,
-                "image_full_path": image_full_path,
-                "user": profile.user,
-                "media_server": media_server,
-                "user_is_guest": user_is_guest,
-                "images": images_list,
-                "gallery_heading": gallery_heading,
-                "prev_image_id": prev_image_id,
-                "next_image_id": next_image_id,
-                "image_set": image_set,
-                "is_mobile": is_mobile,
-            },
+            context,
         )
     else:
         return render(
             request,
             "familytree/image_detail.html",
-            {
-                "image": image,
-                "image_person": this_image_person,
-                "image_family": this_image_family,
-                "show_book": False,
-                "image_people": image_people,
-                "user_person": profile.person,
-                "image_full_path": image_full_path,
-                "user": profile.user,
-                "media_server": media_server,
-                "user_is_guest": user_is_guest,
-                "images": images_list,
-                "gallery_heading": gallery_heading,
-                "prev_image_id": prev_image_id,
-                "next_image_id": next_image_id,
-                "image_set": image_set,
-                "is_mobile": is_mobile,
-            },
+            context,
         )
 
 

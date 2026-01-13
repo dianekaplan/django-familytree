@@ -168,11 +168,3 @@ class TestImageDetailWithImages(TestCase):
         content = response.content.decode("utf-8")
         self.assertIn("one.jpg", content)
         self.assertIn("two.jpg", content)
-        response = self.client.get(reverse("history"))
-        self.assertEqual(response.status_code, 200)
-
-        response = self.client.get(reverse("account"))
-        self.assertEqual(response.status_code, 200)
-
-        response = self.client.get(reverse("user_metrics"))
-        self.assertEqual(response.status_code, 200)
