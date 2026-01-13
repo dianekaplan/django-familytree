@@ -37,7 +37,6 @@ def create_branch(display_name):
     return Branch.objects.create(display_name=display_name)
 
 
-
 def create_profile(user):
     """
     Create a profile for the given user
@@ -60,9 +59,7 @@ class TestDetailViews(TestCase):
         """
         wife = create_person(display_name="Carol Brady")
         husband = create_person(display_name="Mike Brady")
-        this_family = create_family(
-            display_name="The Bradys (Mike & Carol)", wife=wife, husband=husband
-        )
+        this_family = create_family(display_name="The Bradys (Mike & Carol)", wife=wife, husband=husband)
         response = self.client.get(reverse("family_detail", args=(this_family.id,)))
         self.assertEqual(response.status_code, 302)
 
@@ -89,9 +86,7 @@ class TestOtherViews(TestCase):
         create_branch("BRANCH FOUR")
 
         self.client = Client()
-        self.user = User.objects.create_user(
-            "john", "lennon@thebeatles.com", "johnpassword"
-        )
+        self.user = User.objects.create_user("john", "lennon@thebeatles.com", "johnpassword")
 
         self.person = create_person(display_name="Marcia Brady")
 
@@ -142,3 +137,31 @@ class TestOtherViews(TestCase):
 
         response = self.client.get(reverse("user_metrics"))
         self.assertEqual(response.status_code, 200)
+
+
+def test_image_detail_with_images_param(self):
+    # create two images
+    img1 = create_image(big_name="one.jpg")
+    img2 = create_image(big_name="two.jpg")
+
+    # login
+    self.client.login(username="jane", password="janepass")
+
+    # request image detail with images param
+    url = reverse("image_detail", args=(img1.id,)) + "?images=%d,%d" % (img1.id, img2.id)
+    response = self.client.get(url)
+
+    # should render the page
+    self.assertEqual(response.status_code, 200)
+
+    # context should include ordered images
+    images_ctx = response.context.get("images")
+    self.assertIsNotNone(images_ctx)
+    self.assertEqual(len(images_ctx), 2)
+    self.assertEqual(images_ctx[0].id, img1.id)
+    self.assertEqual(images_ctx[1].id, img2.id)
+
+    # thumbnails markup should include the image filenames
+    content = response.content.decode("utf-8")
+    self.assertIn("one.jpg", content)
+    self.assertIn("two.jpg", content)
