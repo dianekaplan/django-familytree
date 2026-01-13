@@ -44,8 +44,8 @@
         </div>
     </div>
 
-        {# thumbnails row when images list is present #}
-    {% if images %}
+    {# gallery thumbnails row when images list is present #}
+    {% if images and not is_mobile %}
         {% load static %}
         <div style="clear: both; margin-top: 20px; max-width: 98vw;">
             <h3>{{ gallery_heading }}</h3>

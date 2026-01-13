@@ -4,7 +4,8 @@
 (function(){
     var maxVisible = 10; // number of thumbnails to show per row
     var startIdx = 0;
-    function renderGallery(){
+    function renderGallery(resetIdx){
+        if (resetIdx) startIdx = 0;
         var thumbs = document.querySelectorAll('#gallery-thumbnails .gallery-thumb');
         thumbs.forEach(function(el, i){
             el.style.display = (i >= startIdx && i < startIdx+maxVisible) ? '' : 'none';
@@ -31,6 +32,7 @@
             renderGallery();
         }
     };
-    document.addEventListener('DOMContentLoaded', renderGallery);
-    window.addEventListener('turbo:frame-load', renderGallery);
+    document.addEventListener('DOMContentLoaded', function(){ renderGallery(true); });
+    window.addEventListener('turbo:frame-load', function(){ renderGallery(true); });
+    window.addEventListener('turbo:load', function(){ renderGallery(true); });
 })();
