@@ -7,7 +7,7 @@ django-debug-toolbar==6.1.0
 django-heroku==0.3.1
 django-user-agents==0.4.0  # used to identify the visitor's browser (for safari workaround)
 Faker==38.2.0  # used to generate fake names and dates for scrubbing data on demo site
-filelock==3.20.1
+filelock==3.20.3
 gunicorn==23.0.0
 identify==2.6.14
 iniconfig==2.1.0
