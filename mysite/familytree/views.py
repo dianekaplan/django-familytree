@@ -600,6 +600,7 @@ def image_detail(request, image_id):
     images_param = request.GET.get("images")
     image_set = request.GET.get("set", None)
     images_list = None
+    images_query = ""
     if images_param:
         try:
             ids = [int(x) for x in images_param.split(",") if x.strip().isdigit()]
@@ -608,8 +609,16 @@ def image_detail(request, image_id):
                 # preserve order from ids
                 imgs_by_id = {img.id: img for img in imgs_qs}
                 images_list = [imgs_by_id[i] for i in ids if i in imgs_by_id]
+
+            if images_list:
+                images_query = "images=" + ",".join(str(img.id) for img in images_list)
+                if image_set:
+                    images_query += f"&set={image_set}"
+
         except Exception:
             images_list = None
+
+    # combine list of
 
     # Determine gallery heading by image_set param
     gallery_heading = "Gallery"
@@ -649,6 +658,7 @@ def image_detail(request, image_id):
         "prev_image_id": prev_image_id,
         "next_image_id": next_image_id,
         "image_set": image_set,
+        "images_query": images_query,
         "is_mobile": is_mobile,
     }
 

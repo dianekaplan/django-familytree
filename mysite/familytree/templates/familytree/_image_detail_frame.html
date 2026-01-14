@@ -3,13 +3,13 @@
     <div style="margin-bottom: 20px; margin-top: 20px; margin-right: 10px; display: flex; align-items: flex-start; justify-content: flex-start; gap: 40px;">
         <div style="flex: 1; min-width: 0;">
             {% if prev_image_id %}
-                <a href="{% url 'image_detail' prev_image_id %}?images={% for i in images %}{% if not forloop.first %},{% endif %}{{ i.id }}{% endfor %}{% if image_set %}&set={{ image_set }}{% endif %}"
+                <a href="{% url 'image_detail' prev_image_id %}?{{ images_query }}"
                    data-turbo-frame="image-frame"
                    style="font-size: 3em; margin-right: 20px; text-decoration: none; color: #333;">&#8592;</a>
             {% endif %}
             <img src="{{ media_server }}/image/upload/r_20/{{image.big_name}}"  style="max-width:80%; display: inline-block;">
             {% if next_image_id %}
-                <a href="{% url 'image_detail' next_image_id %}?images={% for i in images %}{% if not forloop.first %},{% endif %}{{ i.id }}{% endfor %}{% if image_set %}&set={{ image_set }}{% endif %}"
+                <a href="{% url 'image_detail' next_image_id %}?{{ images_query }}"
                    data-turbo-frame="image-frame"
                    style="font-size: 3em; margin-left: 20px; text-decoration: none; color: #333;">&#8594;</a>
             {% endif %}
