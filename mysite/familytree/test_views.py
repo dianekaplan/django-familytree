@@ -165,3 +165,20 @@ def test_image_detail_with_images_param(self):
     content = response.content.decode("utf-8")
     self.assertIn("one.jpg", content)
     self.assertIn("two.jpg", content)
+
+
+class TestTurboFramePartial(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("jane", "jane@example.com", "janepass")
+        self.person = create_person(display_name="Test Person")
+        self.profile = Profile.objects.create(user=self.user, person=self.person, guest_user=False)
+        self.client = Client()
+        self.client.login(username="jane", password="janepass")
+        self.image = create_image(big_name="partial.jpg")
+
+    def test_image_detail_partial_turbo_frame(self):
+        url = reverse("image_detail", args=(self.image.id,))
+        response = self.client.get(url, HTTP_TURBO_FRAME="image-frame")
+        self.assertEqual(response.status_code, 200)
+        # Should render the partial template, not the full page
+        self.assertIn('<turbo-frame id="image-frame">', response.content.decode("utf-8"))
