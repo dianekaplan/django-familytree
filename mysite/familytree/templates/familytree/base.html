@@ -31,25 +31,8 @@
         <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@7.2.0/dist/turbo.min.js"></script>
         <!-- Gallery scroller for thumbnails -->
         <script src="{% static 'familytree/gallery_scroller.js' %}"></script>
-    </head>
 
-    <body>
-
-    {# Top nav #}
-    {% if is_mobile %}
-        {% include "familytree/top_nav_mobile.html" with user_person=user_person %}
-    {% else %}
-        {% include "familytree/top_nav.html" with user_person=user_person %}
-    {% endif %}
-
-    {# Page content#}
-    <div class="container">
-        {% block content %}
-            <p>Placeholder text in base template- this gets replaced with page content.</p>
-        {% endblock content %}
-    </div>
-    </body>
-    <script>
+        <script>
         // Update browser URL to the clicked image's canonical path
         // when a thumbnail (targeting the image-frame) finishes loading.
         document.addEventListener('click', function(e){
@@ -67,4 +50,23 @@
             window.addEventListener('turbo:frame-load', onLoad);
         });
     </script>
+    </head>
+
+
+    <body>
+
+    {# Top nav #}
+    {% if is_mobile %}
+        {% include "familytree/top_nav_mobile.html" with user_person=user_person %}
+    {% else %}
+        {% include "familytree/top_nav.html" with user_person=user_person %}
+    {% endif %}
+
+    {# Page content#}
+    <div class="container">
+        {% block content %}
+            <p>Placeholder text in base template- this gets replaced with page content.</p>
+        {% endblock content %}
+    </div>
+    </body>
 </html>
