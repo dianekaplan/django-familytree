@@ -54,7 +54,7 @@
                 aria-label="Previous images">&#8592;</button>
                 {% for img in images %}
                     <span class="gallery-thumb" style="display: inline-block;">
-                        {% include "familytree/image_link.html" with image=img height=75 show_hover=False images=images %}
+                        {% include "familytree/image_link.html" with image=img height=75 show_hover=False %}
                     </span>
                 {% endfor %}
                 {% if images|length > 10 %}
