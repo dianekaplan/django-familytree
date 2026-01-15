@@ -591,26 +591,91 @@ def image_detail(request, image_id):
     profile = get_display_profile(request).first()
     image = get_object_or_404(Image, pk=image_id)
     user_is_guest = profile.guest_user
+    is_mobile = request.user_agent.is_mobile
 
     this_image_person, this_image_family, image_people = Image.image_subjects(image)
     image_full_path = media_server + "/image/upload/r_20/" + image.big_name
 
-    return render(
-        request,
-        "familytree/image_detail.html",
-        {
-            "image": image,
-            "image_person": this_image_person,
-            "image_family": this_image_family,
-            "show_book": False,
-            "image_people": image_people,
-            "user_person": profile.person,
-            "image_full_path": image_full_path,
-            "user": profile.user,
-            "media_server": media_server,
-            "user_is_guest": user_is_guest,
-        },
-    )
+    # parse optional images list from querystring: ?images=1,2,3
+    images_param = request.GET.get("images")
+    image_set = request.GET.get("set", None)
+    images_list = None
+    images_query = ""
+    if images_param:
+        try:
+            ids = [int(x) for x in images_param.split(",") if x.strip().isdigit()]
+            if ids:
+                imgs_qs = Image.objects.filter(id__in=ids)
+                # preserve order from ids
+                imgs_by_id = {img.id: img for img in imgs_qs}
+                images_list = [imgs_by_id[i] for i in ids if i in imgs_by_id]
+
+            if images_list:
+                images_query = "images=" + ",".join(str(img.id) for img in images_list)
+                if image_set:
+                    images_query += f"&set={image_set}"
+
+        except Exception:
+            images_list = None
+
+    # combine list of
+
+    # Determine gallery heading by image_set param
+    gallery_heading = "Gallery"
+    if image_set is not None:
+        if image_set == "solo":
+            gallery_heading = "Solo pictures:"
+        elif image_set == "group":
+            gallery_heading = "Group pictures:"
+    elif images_list and this_image_family:
+        gallery_heading = "Family images:"
+
+    # Compute prev/next image ids if in a gallery
+    prev_image_id = None
+    next_image_id = None
+    if images_list:
+        ids = [img.id for img in images_list]
+        if image.id in ids:
+            idx = ids.index(image.id)
+            if idx > 0:
+                prev_image_id = ids[idx - 1]
+            if idx < len(ids) - 1:
+                next_image_id = ids[idx + 1]
+
+    context = {
+        "image": image,
+        "image_person": this_image_person,
+        "image_family": this_image_family,
+        "show_book": False,
+        "image_people": image_people,
+        "user_person": profile.person,
+        "image_full_path": image_full_path,
+        "user": profile.user,
+        "media_server": media_server,
+        "user_is_guest": user_is_guest,
+        "images": images_list,
+        "gallery_heading": gallery_heading,
+        "prev_image_id": prev_image_id,
+        "next_image_id": next_image_id,
+        "image_set": image_set,
+        "images_query": images_query,
+        "is_mobile": is_mobile,
+    }
+
+    # Turbo partial rendering (case-insensitive header)
+    turbo_frame_header = request.headers.get("Turbo-Frame") or request.headers.get("turbo-frame")
+    if turbo_frame_header == "image-frame":
+        return render(
+            request,
+            "familytree/_image_detail_frame.html",
+            context,
+        )
+    else:
+        return render(
+            request,
+            "familytree/image_detail.html",
+            context,
+        )
 
 
 @login_required(login_url=login_url)

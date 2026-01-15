@@ -148,8 +148,29 @@ INSTALLED_APPS = [
     "myauth",
     "django_user_agents",
     "debug_toolbar",
+    "turbo",
+    "channels",  # ASGI support, needed by turbo-django
 ]
 
+ASGI_APPLICATION = "mysite.asgi.application"
+
+REDIS_HOST = os.environ.get("REDIS_HOST", "127.0.0.1")
+REDIS_PORT = int(os.environ.get("REDIS_PORT", "6379"))
+REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", "")
+
+if REDIS_PASSWORD:
+    _redis_hosts = [f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/0"]
+else:
+    _redis_hosts = [(REDIS_HOST, REDIS_PORT)]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": _redis_hosts,
+        },
+    }
+}
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",

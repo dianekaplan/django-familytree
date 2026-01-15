@@ -7,11 +7,11 @@
         {% if person %}
                 {% if person.display_name %}
                     {% include "familytree/_face_link.html" with person=person %}
-                    <a href="{% url 'person_detail' person.id %}">{{ person.display_name }}</a>
+                    <a href="{% url 'person_detail' person.id %}" data-turbo="false">{{ person.display_name }}</a>
                 {%  else %}
                     {#  Don't have display name <br/>#}
                     {% include "familytree/_face_link.html" with person=person %}
-                    <a href="{% url 'person_detail' person.id %}">{{ person.first }} {{ person.last }}</a>
+                    <a href="{% url 'person_detail' person.id %}" data-turbo="false">{{ person.first }} {{ person.last }}</a>
                 {%  endif %}
                 {% if person.has_stories and show_book %}
                         <img src="{% static 'familytree/book.png' %}" height="50"/>

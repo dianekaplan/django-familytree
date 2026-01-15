@@ -65,14 +65,14 @@
     {% if images %}
         <h3>Pictures of {{ person.first }}: </h3>
         {% for image in images %}
-            {% include "familytree/image_link.html" with image=image height=150 show_hover=False %}
+            {% include "familytree/image_link.html" with image=image height=150 show_hover=False images=images image_set='solo' %}
         {% endfor %}
     {% endif %}
 
     {% if group_images %}
         <h3>Group pictures:</h3>
         {% for image in group_images %}
-          {% include "familytree/image_link.html" with image=image height=150 show_hover=True %}
+          {% include "familytree/image_link.html" with image=image height=150 show_hover=True images=group_images image_set='group' %}
         {% endfor %}
     {% endif %}
 </div>
