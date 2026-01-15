@@ -1,0 +1,126 @@
+@media (max-width: 600px) {
+  .image-frame-container {
+    flex-direction: column;
+    gap: 0;
+  }
+  .image-frame-main {
+    width: 100%;
+    min-width: 0;
+    display: block;
+  }
+  .image-frame-img {
+    max-width: 100%;
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+  }
+  .image-frame-sidebar {
+    width: 100%;
+    flex: none;
+    margin-top: 20px;
+  }
+}
+.image-frame-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+.image-frame-caption {
+  margin-top: 10px;
+}
+/* Gallery and image detail frame styles */
+
+.image-frame-container {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-right: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 40px;
+}
+.image-frame-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.image-frame-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.image-frame-arrow {
+  font-size: 3em;
+  margin-right: 20px;
+  margin-left: 20px;
+  text-decoration: none;
+  color: #333;
+}
+
+.image-frame-arrow:hover {
+  text-decoration: none;
+}
+.image-frame-img {
+  max-width: 80%;
+  height: auto;
+  display: block;
+  flex-shrink: 1;
+  margin: 0 auto;
+}
+@media (max-width: 600px) {
+  .image-frame-container {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .image-frame-main {
+    width: 100%;
+    min-width: 0;
+  }
+  .image-frame-img {
+    max-width: 90vw;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  .image-frame-sidebar {
+    max-width: 100%;
+    min-width: 0;
+    word-break: break-word;
+    margin-top: 0;
+  }
+}
+
+.image-frame-sidebar {
+  flex: 0 0 220px;
+  margin-top: 0;
+}
+
+.gallery-container {
+  clear: both;
+  margin-top: 20px;
+  max-width: 98vw;
+}
+
+.gallery-thumbnails {
+  display: inline-block;
+  vertical-align: middle;
+  width: 90vw;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.gallery-arrow {
+  vertical-align: middle;
+  font-size: 2em;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.gallery-thumb {
+  display: inline-block;
+}
