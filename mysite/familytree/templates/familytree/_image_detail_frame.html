@@ -1,7 +1,7 @@
 
 <turbo-frame id="image-frame">
-    <div style="margin-bottom: 20px; margin-top: 20px; margin-right: 10px; display: flex; align-items: flex-start; justify-content: flex-start; gap: 40px;">
-        <div style="flex: 1; min-width: 0;">
+    <div class="image-frame-container">
+        <div class="image-frame-main">
             <div class="image-frame-row">
                 {% if prev_image_id %}
                     <a href="{% url 'image_detail' prev_image_id %}?{{ images_query }}"
@@ -15,7 +15,7 @@
                        class="image-frame-arrow">&#8594;</a>
                 {% endif %}
             </div>
-            <div>
+            <div class="image-frame-caption-block">
                 {% if image.caption %}
                     <h3>{{ image.caption }}</h3>
                 {% endif %}
@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <div style="flex: 0 0 220px; margin-top: 0;">
+        <div class="image-frame-sidebar">
             {% if image_people %}
                 <h3>This picture contains:</h3>
                 {% for person in image_people %}

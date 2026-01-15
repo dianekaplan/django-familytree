@@ -1,23 +1,39 @@
+/* Ensure caption block is below image/arrows */
+.image-frame-caption-block {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+}
 @media (max-width: 600px) {
   .image-frame-container {
-    flex-direction: column;
-    gap: 0;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
   }
   .image-frame-main {
-    width: 100%;
-    min-width: 0;
-    display: block;
+    width: 68vw;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .image-frame-img {
     max-width: 100%;
+    min-width: 140px;
     width: 100%;
+    height: auto;
     display: block;
     margin: 0 auto;
   }
   .image-frame-sidebar {
-    width: 100%;
-    flex: none;
-    margin-top: 20px;
+    width: 32vw;
+    max-width: 32vw;
+    min-width: 100px;
+    word-break: break-word;
+    margin-top: 0;
+    margin-left: 0;
+    overflow-wrap: break-word;
+    overflow-x: auto;
   }
 }
 .image-frame-row {
@@ -44,12 +60,8 @@
   flex: 1;
   min-width: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  flex-wrap: nowrap;
-}
-.image-frame-main {
-  flex: 1;
-  min-width: 0;
 }
 
 .image-frame-arrow {
@@ -70,29 +82,7 @@
   flex-shrink: 1;
   margin: 0 auto;
 }
-@media (max-width: 600px) {
-  .image-frame-container {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .image-frame-main {
-    width: 100%;
-    min-width: 0;
-  }
-  .image-frame-img {
-    max-width: 90vw;
-    width: auto;
-    display: block;
-    margin: 0 auto;
-  }
-  .image-frame-sidebar {
-    max-width: 100%;
-    min-width: 0;
-    word-break: break-word;
-    margin-top: 0;
-  }
-}
+
 
 .image-frame-sidebar {
   flex: 0 0 220px;
