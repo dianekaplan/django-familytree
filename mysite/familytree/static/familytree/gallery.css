@@ -5,6 +5,9 @@
   margin-top: 12px;
 }
 @media (max-width: 600px) {
+    .image-frame-row {
+      margin-left: 16px;
+    }
   .image-frame-container {
     flex-direction: row;
     align-items: flex-start;
@@ -34,7 +37,7 @@
     min-width: 100px;
     word-break: break-word;
     margin-top: 0;
-    margin-left: 20px;
+    margin-right: 10px;
     overflow-wrap: break-word;
     overflow-x: auto;
   }
