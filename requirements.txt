@@ -33,5 +33,5 @@ ua-parser-builtins==0.18.0.post1
 user-agents==2.2.0
 
 turbo-django
-virtualenv==20.34.0
+virtualenv==20.36.1
 whitenoise==6.11.0  # used for static files
