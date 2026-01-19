@@ -168,9 +168,6 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": _redis_hosts,
-            "options": {
-                "ssl_cert_reqs": None,
-            },
         },
     }
 }
