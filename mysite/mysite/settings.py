@@ -129,6 +129,7 @@ if ENV_ROLE == "prod":
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
+    "localhost",
     ".herokuapp.com",
     ".ourbigfamilytree.com",
 ]
@@ -168,9 +169,6 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": _redis_hosts,
-            "options": {
-                "ssl_cert_reqs": None,
-            },
         },
     }
 }
