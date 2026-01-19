@@ -1,5 +1,7 @@
 asgiref==3.9.2
 cfgv==3.4.0
+channels==4.3.2
+channels-redis==4.3.0
 daphne==4.2.1
 distlib==0.4.0
 dj-database-url==3.0.1
