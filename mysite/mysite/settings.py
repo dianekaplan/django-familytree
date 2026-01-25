@@ -93,9 +93,8 @@ LARAVEL_SITE_CREATION = datetime.strptime("2015-12-01", "%Y-%m-%d").date()
 DJANGO_SITE_CREATION = datetime.strptime("2021-07-14", "%Y-%m-%d").date()
 ROOT_FAMILY = 17
 NEWEST_GENERATION_FOR_GUEST = 13
-ADMIN_EMAIL_SEND_FROM = "diane@ourbigfamilytree.com"
+DEFAULT_FROM_EMAIL = "diane@ourbigfamilytree.com"
 ADMIN_EMAIL_ADDRESS = "dianekaplan@gmail.com"
-DEFAULT_FROM_EMAIL = ADMIN_EMAIL_SEND_FROM
 DEFAULT_TIME_ZONE = "US/Eastern"
 
 
