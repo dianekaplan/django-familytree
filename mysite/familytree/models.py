@@ -14,6 +14,7 @@ DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
 DEFAULT_TIME_ZONE = settings.DEFAULT_TIME_ZONE
 ENV_ROLE = get_env_variable("ENV_ROLE")
 
+
 class Branch(models.Model):
     display_name = models.CharField(max_length=50, blank=True)
 
@@ -40,18 +41,12 @@ class Person(models.Model):
     birthdate_note = models.CharField(max_length=55, null=True, blank=True, default="")
     birthyear = models.IntegerField(blank=True, null=True)
     birthplace = models.CharField(max_length=80, null=True, blank=True, default="")
-    family = models.ForeignKey(
-        "Family", null=True, blank=True, on_delete=models.SET_NULL
-    )  # person's origin family
+    family = models.ForeignKey("Family", null=True, blank=True, on_delete=models.SET_NULL)  # person's origin family
     orig_fam_indi = models.CharField(max_length=20, null=True, blank=True, default="")
     sex = models.CharField(max_length=2, default="")
-    origin = models.CharField(
-        max_length=100, null=True, blank=True, default=""
-    )  # description of background
+    origin = models.CharField(max_length=100, null=True, blank=True, default="")  # description of background
     face = models.CharField(max_length=25, null=True, blank=True, default="")
-    current_location = models.CharField(
-        max_length=75, null=True, blank=True, default=""
-    )
+    current_location = models.CharField(max_length=75, null=True, blank=True, default="")
     work = models.CharField(max_length=300, null=True, blank=True, default="")
     interests = models.CharField(max_length=300, null=True, blank=True, default="")
     education = models.CharField(max_length=300, null=True, blank=True, default="")
@@ -62,21 +57,13 @@ class Person(models.Model):
     adopted = models.BooleanField(null=True, default=False)
     direct_line = models.BooleanField(null=True, default=False)
     show_on_landing_page = models.BooleanField(null=True, default=False)
-    sibling_seq = models.IntegerField(
-        blank=True, null=True
-    )  # will later update families to handle this individually
+    sibling_seq = models.IntegerField(blank=True, null=True)  # will later update families to handle this individually
     notes1 = models.CharField(max_length=1200, null=True, blank=True, default="")
     notes2 = models.CharField(max_length=1200, null=True, blank=True, default="")
     notes3 = models.CharField(max_length=1200, null=True, blank=True, default="")
-    flag1 = models.CharField(
-        max_length=10, null=True, blank=True, default=""
-    )  # not using anymore
-    flag2 = models.CharField(
-        max_length=10, null=True, blank=True, default=""
-    )  # not using anymore
-    flag3 = models.CharField(
-        max_length=10, null=True, blank=True, default=""
-    )  # not using anymore
+    flag1 = models.CharField(max_length=10, null=True, blank=True, default="")  # not using anymore
+    flag2 = models.CharField(max_length=10, null=True, blank=True, default="")  # not using anymore
+    flag3 = models.CharField(max_length=10, null=True, blank=True, default="")  # not using anymore
     reviewed = models.BooleanField(null=True, default=False)
     living = models.BooleanField(null=True, default=False)
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
@@ -103,18 +90,14 @@ class Person(models.Model):
         group_images = Image.objects.none()
 
         # add the ones from image_person
-        group_image_listings = ImagePerson.objects.filter(person_id=self.id).order_by(
-            "image__year"
-        )
+        group_image_listings = ImagePerson.objects.filter(person_id=self.id).order_by("image__year")
         for listing in group_image_listings:
             this_image = Image.objects.filter(id=listing.image_id)
             group_images = group_images | this_image
 
         # add the ones for original family, if the image year >= person's birth year
         if self.family:
-            family_images = Image.objects.filter(family=self.family).filter(
-                spouses_only=False
-            )
+            family_images = Image.objects.filter(family=self.family).filter(spouses_only=False)
 
             for image in family_images:
                 if self.birthyear and image.year_as_int() >= self.birthyear:
@@ -158,20 +141,14 @@ class Family(models.Model):
     )
     wife_indi = models.CharField(max_length=20, null=True, blank=True, default="")
     husband_indi = models.CharField(max_length=20, null=True, blank=True, default="")
-    child_indi = models.CharField(
-        max_length=20, null=True, blank=True, default=""
-    )  # temporary- still need this?
+    child_indi = models.CharField(max_length=20, null=True, blank=True, default="")  # temporary- still need this?
     no_kids_bool = models.BooleanField(null=True)
     original_family = models.BooleanField(null=True)
-    original_family_text = models.CharField(
-        max_length=600, null=True, blank=True, default=""
-    )
+    original_family_text = models.CharField(max_length=600, null=True, blank=True, default="")
     branches = models.ManyToManyField(Branch, blank=True)
     direct_family_number = models.IntegerField(blank=True, null=True)
     marriage_date = models.DateField(null=True, blank=True)
-    marriage_date_note = models.CharField(
-        max_length=100, null=True, blank=True, default=""
-    )
+    marriage_date_note = models.CharField(max_length=100, null=True, blank=True, default="")
     divorced = models.BooleanField(null=True, default=False)
     show_on_branch_view = models.BooleanField(null=True, default=False)
     sequence = models.IntegerField(blank=True, null=True)
@@ -194,9 +171,7 @@ class Family(models.Model):
 
 
 class Image(models.Model):
-    big_name = models.CharField(
-        max_length=50, null=True, blank=True
-    )  # this field will always be present
+    big_name = models.CharField(max_length=50, null=True, blank=True)  # this field will always be present
     med_name = models.CharField(
         max_length=50, null=True, blank=True
     )  # optional file name for different medium sized image (rather than just resized)
@@ -208,21 +183,15 @@ class Image(models.Model):
     branches = models.ManyToManyField(Branch, blank=True)
 
     year = models.CharField(max_length=20, null=True, blank=True)
-    person = models.ForeignKey(
-        Person, null=True, blank=True, on_delete=models.SET_NULL, related_name="person"
-    )
-    family = models.ForeignKey(
-        Family, null=True, blank=True, on_delete=models.SET_NULL, related_name="family"
-    )
+    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name="person")
+    family = models.ForeignKey(Family, null=True, blank=True, on_delete=models.SET_NULL, related_name="family")
     spouses_only = models.BooleanField(null=True, default=False)
     featured = models.IntegerField(null=True, default=False)
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     def image_subjects(self):
-        image_people = (
-            []
-        )  # use list instead of queryset to preserve display order on image detail page
+        image_people = []  # use list instead of queryset to preserve display order on image detail page
 
         # get the featured person, if there is one
         if self.person:
@@ -237,9 +206,7 @@ class Image(models.Model):
             this_image_family = None
 
         # Get the queryset for ImagePerson records, then get the people from that
-        image_person_records = ImagePerson.objects.filter(image_id=self.id).order_by(
-            "id"
-        )
+        image_person_records = ImagePerson.objects.filter(image_id=self.id).order_by("id")
         for record in image_person_records:
             person = Person.objects.get(id=record.person_id)
             image_people.append(person)
@@ -253,9 +220,7 @@ class Image(models.Model):
         if this_image_person:
             pictured_list += this_image_person.display_name
 
-        if (
-            image_people
-        ):  # if the image has both family and individuals configured, show people
+        if image_people:  # if the image has both family and individuals configured, show people
             for person in image_people:
                 pictured_list += person.display_name
                 pictured_list += "<br/>"
@@ -281,9 +246,7 @@ class Image(models.Model):
 
 
 class ImagePerson(models.Model):
-    image = models.ForeignKey(
-        Image, null=True, blank=True, on_delete=models.SET_NULL, related_name="image_id"
-    )
+    image = models.ForeignKey(Image, null=True, blank=True, on_delete=models.SET_NULL, related_name="image_id")
     person = models.ForeignKey(
         Person,
         null=True,
@@ -303,9 +266,7 @@ class ImagePerson(models.Model):
 
 class Profile(models.Model):  # This class holds additional info for user records
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    person = models.ForeignKey(
-        "Person", null=True, blank=True, on_delete=models.SET_NULL
-    )
+    person = models.ForeignKey("Person", null=True, blank=True, on_delete=models.SET_NULL)
     branches = models.ManyToManyField(Branch, blank=True)
     login_count = models.IntegerField(null=True, default=0)
     last_pestered = models.DateField(null=True, blank=True)
@@ -324,15 +285,9 @@ class Profile(models.Model):  # This class holds additional info for user record
         if self.person:
             edits_made = LogEntry.objects.filter(user_id=self.user.id)
             if type == "old":
-                edits_made = [
-                    x for x in edits_made if x.action_time.date() < DJANGO_SITE_CREATION
-                ]
+                edits_made = [x for x in edits_made if x.action_time.date() < DJANGO_SITE_CREATION]
             if type == "new":
-                edits_made = [
-                    x
-                    for x in edits_made
-                    if x.action_time.date() >= DJANGO_SITE_CREATION
-                ]
+                edits_made = [x for x in edits_made if x.action_time.date() >= DJANGO_SITE_CREATION]
             edit_counts = len(edits_made)
         else:
             edit_counts = False
@@ -356,13 +311,9 @@ class Profile(models.Model):  # This class holds additional info for user record
         if self.person:
             all_notes = Note.objects.filter(author=self.person.id)
             if type == "old":
-                notes_written = [
-                    x for x in all_notes if x.created_at.date() < DJANGO_SITE_CREATION
-                ]
+                notes_written = [x for x in all_notes if x.created_at.date() < DJANGO_SITE_CREATION]
             elif type == "new":
-                notes_written = [
-                    x for x in all_notes if x.created_at.date() > DJANGO_SITE_CREATION
-                ]
+                notes_written = [x for x in all_notes if x.created_at.date() > DJANGO_SITE_CREATION]
             notes_written_count = len(notes_written) if notes_written else False
         else:
             notes_written_count = False
@@ -387,9 +338,7 @@ class Profile(models.Model):  # This class holds additional info for user record
 
     # For a given profile, return an array of dates they logged in
     def get_logins(self):
-        login_dates_queryset = list(
-            Login.objects.filter(user_id=self.user.id).values("created_at")
-        )
+        login_dates_queryset = list(Login.objects.filter(user_id=self.user.id).values("created_at"))
         login_dates = []
         for x in login_dates_queryset:
             login_dates.append(x.get("created_at").date())
@@ -401,9 +350,7 @@ class Profile(models.Model):  # This class holds additional info for user record
 
 class Story(models.Model):
     description = models.CharField(max_length=255, blank=True)
-    image = models.CharField(
-        max_length=255, null=True, blank=True
-    )  # note- this is NOT an Image object
+    image = models.CharField(max_length=255, null=True, blank=True)  # note- this is NOT an Image object
     intro = models.CharField(max_length=2000, null=True, blank=True)
     slug = models.CharField(max_length=255, null=True, blank=True)
     source = models.CharField(max_length=255, null=True, blank=True)
@@ -471,9 +418,7 @@ class Video(models.Model):
         video_subjects = self.video_subjects()
         pictured_list = ""
 
-        if (
-            video_subjects
-        ):  # if the image has both family and individuals configured, show people
+        if video_subjects:  # if the image has both family and individuals configured, show people
             for person in video_subjects:
                 pictured_list += person.display_name
                 pictured_list += "<br/>"
@@ -489,9 +434,7 @@ class Video(models.Model):
 
 
 class VideoPerson(models.Model):
-    video = models.ForeignKey(
-        Video, null=True, blank=True, on_delete=models.SET_NULL, related_name="video_id"
-    )
+    video = models.ForeignKey(Video, null=True, blank=True, on_delete=models.SET_NULL, related_name="video_id")
     person = models.ForeignKey(
         Person,
         null=True,
@@ -511,9 +454,7 @@ class VideoPerson(models.Model):
 
 
 class Note(models.Model):
-    author = models.ForeignKey(
-        Person, null=True, blank=True, on_delete=models.SET_NULL, related_name="author"
-    )
+    author = models.ForeignKey(Person, null=True, blank=True, on_delete=models.SET_NULL, related_name="author")
     author_name = models.CharField(max_length=50, null=True, blank=True)
     external_author = models.BooleanField(null=True, default=False)
     body = models.CharField(max_length=3000)
@@ -568,16 +509,12 @@ class Login(models.Model):
         db_table = "logins"
 
 
-
 @receiver(post_save, sender=User)
 def send_login_email(sender, instance, **kwargs):
-
     in_local_dev = True if ENV_ROLE == "development" else False
     email_data = {"user": instance}
-    from_email = settings.ADMIN_EMAIL_SEND_FROM
+    from_email = settings.DEFAULT_FROM_EMAIL
     recipient_list = [settings.ADMIN_EMAIL_ADDRESS]
     subject = render_to_string(template_name="familytree/email/login_email_subject.txt")
-    html_message = render_to_string(
-        "familytree/email/login_email_message.html", email_data
-    )
+    html_message = render_to_string("familytree/email/login_email_message.html", email_data)
     send_mail(subject, html_message, from_email, recipient_list, fail_silently=in_local_dev)

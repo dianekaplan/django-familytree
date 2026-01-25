@@ -501,7 +501,7 @@ def edit_person(request, person_id):
         if person_edit_form.is_valid():
             # send an email to the site admin
             email_data = {"user": editing_user, "person": person}
-            from_email = settings.ADMIN_EMAIL_SEND_FROM
+            from_email = settings.DEFAULT_FROM_EMAIL
             recipient_list = [settings.ADMIN_EMAIL_ADDRESS]
             subject = render_to_string(template_name="familytree/email/person_edit_subject.txt")
             html_message = render_to_string("familytree/email/person_edit_message.html", email_data)
