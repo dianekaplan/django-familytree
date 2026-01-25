@@ -1,0 +1,81 @@
+{% extends 'familytree/base.html' %}
+{% load static %}
+{% block title %} - {{ person.display_name }}{% endblock title %}
+{% block content %}
+
+
+<div>
+    <div style="float: left; width: 100%;">
+        {%  if person.display_name %}
+            <h1>{{ person.display_name }}</h1>
+        {%  else %}
+            <h1>{{ person.first }} {{ person.last }}</h1>
+        {%  endif %}
+    </div>
+
+    {# top partial #}
+    {% if is_mobile %}
+        {% include "familytree/_person_detail_top_mobile.html" %}
+    {% else %}
+        {% include "familytree/_person_detail_top.html" %}
+    {% endif %}
+</div>
+
+<div style="float: left; width: 100%;">
+    {% if not user_is_guest %}
+    <img src="{% static 'familytree/pencil.png' %}" height="25" />
+        <a href="{% url 'add_person_note' 'person' person.id %}">
+    Add a note or memory</a>
+    {% endif %}
+</div>
+
+{% if person.notes1 or person.notes2 or person.notes3 or notes or stories or videos or audio_files or images or group_images %}
+<div class="notes-pictures-card">
+    {% if person.notes1 %} <div style="margin: 10px">{{ person.notes1 | safe}} </div>{% endif %}
+    {% if person.notes2 %} <div style="margin: 10px">{{ person.notes2 | safe}} </div>{% endif %}
+    {% if person.notes3 %} <div style="margin: 10px">{{ person.notes3 | safe}} </div>{% endif %}
+
+    {% if notes %}
+    <h3>Notes: </h3>
+        {% include "familytree/_notes_display.html" with notes=notes %}
+    {% endif %}
+
+    {% include "familytree/_stories_display.html" with stories=stories %}
+
+    {% if videos %}
+        <h3>Videos: </h3>
+        <div>
+            {% for video in videos %}
+                {% include "familytree/video_link.html" with video=video show_hover=True %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if audio_files %}
+        <h3>Audio links: </h3>
+        <div>
+            {% for file in audio_files %}
+            {{ file.summary}}
+                <a href="{{ media_server }}/video/upload/{{ file.filename }}">click here</a>
+                ({{ file.recording_date}})<br/>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if images %}
+        <h3>Pictures of {{ person.first }}: </h3>
+        {% for image in images %}
+            {% include "familytree/image_link.html" with image=image height=150 show_hover=False images=images image_set='solo' %}
+        {% endfor %}
+    {% endif %}
+
+    {% if group_images %}
+        <h3>Group pictures:</h3>
+        {% for image in group_images %}
+          {% include "familytree/image_link.html" with image=image height=150 show_hover=True images=group_images image_set='group' %}
+        {% endfor %}
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,13 @@
+{% extends 'familytree/base.html' %}
+
+{% block title %} - image detail{% endblock title %}
+{% block content %}
+
+<div style="float: left; width: 80%; position: relative;">
+    <turbo-frame id="image-frame">
+        {% include "familytree/_image_detail_frame.html" %}
+        <!-- Note: including it all in this file introduced issues-->
+    </turbo-frame>
+</div>
+
+{% endblock content %}
