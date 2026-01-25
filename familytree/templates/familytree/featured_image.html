@@ -1,0 +1,10 @@
+<div style="display: inline-block;" >
+<!--    @FIXME: for the few families with multiple featured images, if these are too wide, the second will wrap underneath-->
+{%  if image.id %}
+    {%  if image.med_name %}
+        <img src="{{ media_server }}/image/upload/h_250,r_20/{{ image.med_name }}" />
+    {%  else %}
+        <img src="{{ media_server }}image/upload/h_250,r_20/{{ image.big_name }}" />
+    {%  endif %}
+{%  endif %}
+</div>

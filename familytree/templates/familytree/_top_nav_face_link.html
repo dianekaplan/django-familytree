@@ -1,0 +1,11 @@
+
+<!--(only shown for non-guest users)-->
+{% if person %}
+    {% if person.face %}
+        <a href="{% url 'person_detail' person.id %}"><img src= "{{ media_server }}/image/upload/h_51,bo_4px_solid_white/{{ person.face }}" /></a>
+    {% else %}
+        <a href="{% url 'person_detail' person.id %}"><img src="{{ media_server }}/image/upload/h_51,bo_4px_solid_white/noimage.gif"/></a>
+    {% endif %}
+    {% else %}
+<!--        Got here with no person-->
+    {% endif %}

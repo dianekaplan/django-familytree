@@ -1,0 +1,102 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - home{% endblock title %}
+{% block content %}
+{% load static %}
+
+{% if not user_is_guest and user_person.display_name %}
+    <div style="margin: 10px">
+        Welcome, {{ user_person.display_name }}!
+    </div>
+{% endif %}
+
+<div>
+    <div style="float: left;" class="col-3">
+        <div class="circled_section">
+        {% if not user_is_guest %}
+            {% include "familytree/_face_name_link.html" with person=user_person %}<br/>
+        {% endif %}
+        <h2><a href="{% url 'history' %}">My family history</a></h2>
+        <h2><a href="{% url 'image_index' %}">Family album</a></h2>
+        <h2><a href="{% url 'video_index' %}">Home Movies</a></h2>
+        <h2><a href="{% url 'outline' %}">Outline View</a></h2>
+        {% if profile.furthest_html %}
+            <b>My furthest ancestors here:</b> <br/>{{ profile.furthest_html | safe}}<br/>
+        {% endif %}
+        </div>
+
+            <div  class="circled_section">
+                <b>Latest stories:</b> <br/>
+                {% if latest_stories %}
+                    {% for story in latest_stories %}
+                        <img src="{% static 'familytree/book.png' %}" height="25"/>
+                        <a href="{% url 'story' story.id %}">{{ story.description }}</a>
+                    {% endfor %}
+                {% else %}
+                (coming soon)
+                {% endif %}
+    </div>
+</div>
+
+<div style="float: left;" class="circled_section col-3.5">
+    {%  if today_birthday %}
+        <b>Today's birthdays:</b>
+        <ul class="no-indent">
+        {% for person in today_birthday %}
+            <li style="list-style-type:none;"> {% include "familytree/_face_name_link.html" with person=person %} {{person.birthdate}}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if anniversary_couples %}
+    <b>Anniversaries this month:</b>
+        <ul class="no-indent">
+        {% for family in anniversary_couples %}
+            <li style="list-style-type:none;"> <a href="{% url 'family_detail' family.id %}">{{ family.display_name }}</a> {{family.marriage_date}}</li>
+        {% endfor %}
+        </ul>
+        <br/>
+    {% endif %}
+
+    <b>Birthdays this month:</b>
+    {%  if birthday_people %}
+        {% for person in birthday_people %}
+            <li style="list-style-type:none;"> {% include "familytree/_face_name_link.html" with person=person %} {{person.birthdate}}</li>
+        {% endfor %}
+    {% else %}
+        (none)
+    {% endif %}
+    </div>
+</div>
+
+<div style="float: left;" class="col-4">
+    <div  class="circled_section">
+        <b>Latest pics:</b> <br/>
+       {%  if latest_pics%}
+        {% for image in latest_pics %}
+            {% include "familytree/image_link.html" with image=image height=100 show_hover=True %}
+        {% endfor %}
+    {% else %}
+        (none)
+    {% endif %}
+    </div>
+    <div class="circled_section">
+       <b>Latest videos:</b> <br/>
+       {% if latest_videos %}
+        {% for video in latest_videos %}
+            {% include "familytree/video_link.html" with video=video show_hover=True %}
+        {% endfor %}
+    {% else %}
+        (none)
+    {% endif %}
+    </div>
+    {% if not user_is_guest %}
+    <div class="circled_section">
+        <b>Latest updates:</b><br/>
+        {% for update, person, content_type, change_type, updated_person, updated_story in recent_updates %}
+           {% include "familytree/update_partial.html"%}
+        {% endfor %}
+    </div>
+    {% endif %}
+ </div>
+
+{% endblock content %}

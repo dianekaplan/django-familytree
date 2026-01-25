@@ -1,0 +1,35 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - family album{% endblock title %}
+{% block content %}
+
+<h1>Family Album</h1>
+
+<div class="infinite-container">
+{% if items %}
+    {% for image, pictured_list in items %}
+    <span class="infinite-item">
+        {% include "familytree/image_link.html" with image=image height=150 show_hover=True pictured_list=pictured_list %}
+    </span>
+    {% endfor %}
+
+      {% if items.has_next %}
+        <a class="infinite-more-link" href="?page={{ items.next_page_number }}">More</a>
+      {% endif %}
+</div>
+
+{% else %}
+    <p>No images are available.</p>
+{% endif %}
+
+
+  <script>
+    var infinite = new Waypoint.Infinite({
+  element: $('.infinite-container')[0],
+  handler: function() {
+    console.log('infinite waypoint triggered')
+  }
+})
+  </script>
+
+
+{% endblock content %}
