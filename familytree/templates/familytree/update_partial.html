@@ -1,0 +1,40 @@
+{% load familytree_extras %}
+{% load static %}
+
+ {% get_time_ago update.action_time as timesince %}
+
+<div>
+        {% include "familytree/person_name_link.html" %}
+        {{change_type}}
+
+        {% if content_type == 'person' %}
+                {% if updated_person %}
+                        {% include "familytree/_face_name_link.html" with person=updated_person %}
+                {% else %}
+                        a person record
+                {% endif %}
+        {% elif updated_story %}
+                <a href="{% url 'story' updated_story.id %}">this story
+                <img src="{% static 'familytree/book.png' %}" height="30"/>
+                </a>
+        {% elif content_type == 'family' %}
+                <a href="{% url 'family_detail' update.object_id %}">{{ update.object_repr }}</a>
+        {% elif content_type == 'story' %}
+                <a href="{% url 'story' update.object_id %}">this story
+                <img src="{% static 'familytree/book.png' %}" height="30"/>
+                </a>
+        {% elif content_type == 'note' %}
+                {% if 'person' in update.object_id or 'family' in update.object_id %}
+                        {% get_note_object update.object_id as result %}
+                        {% if 'person' in update.object_id %}
+                            note: <a href="{% url 'person_detail' result %}">{{ update.object_repr }}</a>
+                        {% elif 'family' in update.object_id %}
+                            note: <a href="{% url 'family_detail' result %}">{{ update.object_repr }}</a>
+                        {% endif %}
+                {% else %}
+                        a note
+                {% endif %}
+        {% endif %}
+
+        {{ timesince }}
+</div>

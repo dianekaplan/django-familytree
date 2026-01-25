@@ -1,0 +1,15 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - home movies{% endblock title %}
+{% block content %}
+
+<h1>Home Movies</h1>
+{% if video_list %}
+    {% for item in video_list %}
+        {% include "familytree/video_link.html" with video=item show_hover=True %}
+    {% endfor %}
+
+{% else %}
+    <p>No videos are available.</p>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% load familytree_extras %}
+
+<div style="float: left;" class="{{branch_class}} circled_section">
+    <h2 align="center">The {{branch_name}} Family:</h2>
+
+{%  if list_type == "person" %}
+    {% for person in person_list %}
+       {% if not user_is_guest or not person.living %}
+            {% include "familytree/_face_name_link.html" with person=person %} <br/>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+
+{% if list_type == "family" %}
+    {% for family in family_list %}
+        {% if not user_is_guest or family.branch_seq <= newest_generation_for_guest %}
+            {% generation_class family.branch_seq as classname %}
+            <a href="{% url 'family_detail' family.id %}" class="{{ classname }}">{{ family.display_name }}</a><br/>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+</div>

@@ -1,0 +1,172 @@
+{% extends 'familytree/base.html' %}
+{% block title %} - user metrics{% endblock title %}
+{% block content %}
+
+Past month's logins:
+        <ul>
+        {% for profile in last_login_past_month %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
+
+
+<div class="container">
+  <h2>User logins and activity</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No logins yet:</th>
+        <th>Site of last login:</th>
+        <th>Made actions/notes:</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{last_login_never | length}}</td>
+        <td>{{last_login_django_site | length}}, {{last_login_laravel_site | length}}, {{last_login_old_site_only | length}}</td>
+        <td>{{profiles_who_made_edits_new | length }}, {{profiles_who_made_notes_new | length}},
+            {{profiles_who_made_edits_old | length }},
+            {{profiles_who_made_notes_old | length}}</td>
+      </tr>
+      <tr>
+
+       <td>
+        <ul>
+        {% for profile in last_login_never %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
+       </td>
+
+        <td>
+        Django site:
+        <ul>
+        {% for profile in last_login_django_site %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
+
+        Laravel site:
+        <ul>
+        {% for profile in last_login_laravel_site %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
+
+
+        Old site:
+        <ul>
+        {% for profile in last_login_old_site_only %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
+        </td>
+
+
+        <td>
+            Made updates (Django site):
+            <ul>
+               {% for profile in profiles_who_made_edits_new %}
+                    <li>
+                        {{ profile.person.display_name }}: {{ profile.new_edits_made }}
+                    </li>
+                  {% endfor %}
+            </ul>
+
+            Shared notes (Django site):
+            <ul>
+                {% for profile in profiles_who_made_notes_new %}
+                <li>
+                    {{ profile.person.display_name }}: {{ profile.new_notes_written }}
+                </li>
+                {% endfor %}
+            </ul>
+
+            Made updates (Laravel site):
+            <ul>
+               {% for profile in profiles_who_made_edits_old %}
+                    <li>
+                        {{ profile.person.display_name }}: {{ profile.old_edits_made }}
+                    </li>
+                  {% endfor %}
+            </ul>
+
+            Added notes (Laravel site):
+            <ul>
+                {% for profile in profiles_who_made_notes_old %}
+                <li>
+                    {{profile.person.display_name}}: {{profile.old_notes_written}}
+                </li>
+                {% endfor %}
+            </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<div class="container">
+  <h2>Users by branch access</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{{ existing_branches_list.0 }}:</th>
+        <th>{{ existing_branches_list.1 }}:</th>
+        <th>{{ existing_branches_list.2 }}:</th>
+        <th>{{ existing_branches_list.3 }}:</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{branch1_users | length}}</td>
+        <td>{{branch2_users | length}}</td>
+        <td>{{branch3_users | length}}</td>
+        <td>{{branch4_users | length}}</td>
+      </tr>
+
+      <tr>
+       <td>
+        <ul style="margin-left: 0; padding-left: 0">
+        {% for profile in branch1_users %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
+       </td>
+
+       <td>
+        <ul style="margin-left: 0; padding-left: 0">
+        {% for profile in branch2_users %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
+       </td>
+
+       <td>
+        <ul style="margin-left: 0; padding-left: 0">
+        {% for profile in branch3_users %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
+       </td>
+
+       <td>
+        <ul style="margin-left: 0; padding-left: 0">
+        {% for profile in branch4_users %}
+            {% include "familytree/_user_link_display.html" with profile=profile %}
+        {% endfor %}
+        </ul>
+       </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+Users needing password change (they have logged in, but still have original default password)
+
+
+
+{% endblock content %}
