@@ -2,7 +2,7 @@
 
 #exclude any gedcom file, and interim import files
 #*.gedcom
-/familytree/management/commands/export_files
+/mysite/familytree/management/commands/export_files
 
 # Django #
 *.log
@@ -13,7 +13,7 @@ db.sqlite3
 media
 
 # Temporary files for this app #
-ImportInfo.txt
+mysite/ImportInfo.txt
 
 # Backup files #
 *.bak

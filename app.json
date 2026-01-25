@@ -2,7 +2,7 @@
   "environments": {
     "test": {
       "scripts": {
-        "test": "python3 manage.py test familytree"
+        "test": "python3 mysite/manage.py test familytree"
       }
     }
   }
