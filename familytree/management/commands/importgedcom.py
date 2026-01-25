@@ -21,7 +21,7 @@ class Command(BaseCommand):
     child_family_dict = {}  # map of gedcom child/family associations (eg. I7: F1)
 
     gedcom_data_path = Path(
-        "mysite/familytree/management/commands/gedcom_files/"
+        "familytree/management/commands/gedcom_files/"
     )  # @@TODO: update to take the whole path (so it doesn't need to be saved in a particular folder)
 
     path_plus_person_skip_file = gedcom_data_path.joinpath("person_skip_list.txt")
