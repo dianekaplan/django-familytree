@@ -29,7 +29,7 @@ pytz==2025.2
 PyYAML==6.0.3
 ruff==0.14.8
 six==1.17.0
-sqlparse==0.5.3
+sqlparse==0.5.4
 turbo-django
 tzdata==2025.2  # added to fix tz recognition issue on user metrics page
 ua-parser==1.0.1
