@@ -1,3 +1,4 @@
+import bleach
 from django.conf import settings
 from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import User
@@ -9,6 +10,9 @@ from django.template.loader import render_to_string  # used by mailing signals
 from django.utils.safestring import mark_safe
 
 from mysite.settings import get_env_variable
+
+ALLOWED_TAGS = ["b", "i", "u", "em", "strong", "a", "br", "ul", "ol", "li"]
+ALLOWED_ATTRIBUTES = {"a": ["href", "title", "target"]}
 
 DJANGO_SITE_CREATION = settings.DJANGO_SITE_CREATION
 DEFAULT_TIME_ZONE = settings.DEFAULT_TIME_ZONE
@@ -68,6 +72,11 @@ class Person(models.Model):
     living = models.BooleanField(null=True, default=False)
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if self.work:
+            self.work = bleach.clean(self.work, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
+        super().save(*args, **kwargs)
 
     def has_stories(self):
         try:
@@ -484,6 +493,11 @@ class Note(models.Model):
 
     def __str__(self):
         return self.body
+
+    def save(self, *args, **kwargs):
+        if self.body:
+            self.body = bleach.clean(self.body, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
+        super().save(*args, **kwargs)
 
 
 class Audiofile(models.Model):
