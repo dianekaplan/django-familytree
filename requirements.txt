@@ -36,5 +36,5 @@ tzdata==2025.2  # added to fix tz recognition issue on user metrics page
 ua-parser==1.0.1
 ua-parser-builtins==0.18.0.post1
 user-agents==2.2.0
-virtualenv==20.34.0
+virtualenv==20.36.1
 whitenoise==6.11.0  # used for static files
