@@ -23,7 +23,7 @@ pre_commit==4.5.0
 psycopg2==2.9.10
 psycopg2-binary==2.9.11  # PostgreSQL database adapter
 Pygments==2.20.0
-pytest==9.0.1
+pytest==9.0.3
 python-dateutil==2.9.0.post0
 python-gedcom==1.0.0
 pytz==2025.2
